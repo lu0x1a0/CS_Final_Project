@@ -1,0 +1,5 @@
+wk1 - started choosing project ideas, pitched a spin-off of family-feud style bingo and refined the general idea of an svg canvas, agar.io style pirate game.
+
+created a list of epics and started to idealises user-stories.
+
+wk2 - pitched more user-stories and collaborated with Prem on story board.
