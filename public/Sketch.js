@@ -32,8 +32,23 @@ function startGame(usernameInput) {
 
 //If the game has started draws all players on the screen
 //
+let K_W = 87;
+let K_A = 65;
+let K_S = 83;
+let K_D = 68;
 function draw() {
   if (gameStarted == 1) {
+    if (keyIsDown(K_W)){
+      player.yacc += -0.5
+      console.log(player.xacc)
+    } else if (keyIsDown(K_A)){
+      player.xacc += -0.5
+    } else if (keyIsDown(K_S)){
+      player.yacc += 0.5
+    } else if (keyIsDown(K_D)){
+      player.xacc += 0.5  
+    }
+
     //Adjust the backgroun based on the players inputs
     background(0);
     translate(width / 2, height / 2);
@@ -73,5 +88,13 @@ function draw() {
       dir: player.dir
     };
     socket.emit('update',data); 
+  }
+}
+function keyReleased(){
+  console.log('---------------------------\n  RELEASED \n -----------------------------------')
+  if (keyCode === K_W || keyCode === K_S){
+    player.yacc = 0
+  } else if (keyCode === K_A || keyCode === K_D){
+    player.xacc = 0
   }
 }

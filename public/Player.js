@@ -4,20 +4,36 @@ function Player(Username, x, y, dir ) {
     this.vel = createVector(0, 0);
     this.Username = Username
     //this.health = health;
-  
-
+    this.xacc = 0 
+    this.yacc = 0
+    this.maxspeed = 10
+    this.drag = 1
     //updates the player position based on mouse position
     this.update = function() {
-      var newvel = createVector(mouseX - width / 2, mouseY - height / 2);
-      newvel.setMag(3);
-      this.vel.lerp(newvel, 0.2);
-      this.pos.add(this.vel);
+      //var newvel = createVector(mouseX - width / 2, mouseY - height / 2);
+      //newvel.setMag(3);
+      //this.vel.lerp(newvel, 0.2);
+      //this.pos.add(this.vel);
+      
+      // wasd acc movement version
+      this.vel = createVector(this.xacc,this.yacc)
+      this.vel.setMag( min (max(mag(this.vel.x,this.vel.y)-this.drag,0),this.maxspeed ) ) 
+      this.pos.add(this.vel)
+      //if (this.xacc != 0){
+      //  console.log("--------------------------------------")
+      //  console.log(mouseX,mouseY)
+      //  console.log(mouseX - width / 2, mouseY - height / 2)
+      //  console.log(this.xacc,this.yacc)  
+      //}
     };
 
     //ensures the player doesn't go beyond the map
     this.constrain = function() {
-      if ( abs(this.pos.y) >= 600) { this.pos.y = 600; }
-      if ( abs(this.pos.x) >= 600) { this.pos.x = 600; }
+      if ( this.pos.y >= 600) { this.pos.y = 600; }
+      if ( this.pos.x >= 600) { this.pos.x = 600; }
+      if ( this.pos.y <= 0) { this.pos.y = 0; }
+      if ( this.pos.x <= 0) { this.pos.x = 0; }
+      
     }
   
     //displays the player on the screen
