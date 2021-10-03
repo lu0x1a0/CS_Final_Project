@@ -66,11 +66,11 @@ function draw() {
       var id = players[i].id;
       if (id !== socket.id) {
         fill(0,0,255);
-        ellipse(players[i].x,players[i].y,players[i].size,players[i].size);
+        ellipse(players[i].x,players[i].y,players[i].dir,players[i].dir);
         fill(255);
         textAlign(CENTER);
         textSize(12);
-        text(players[i].username, players[i].x, players[i].y + players[i].size*1.5);
+        text(players[i].username, players[i].x, players[i].y + players[i].dir*1.5);
       }
     }
     
