@@ -39,22 +39,22 @@ let K_D = 68;
 function draw() {
   if (gameStarted == 1) {
     if (keyIsDown(K_W)){
-      player.yacc += -0.5
+      player.yacc = -0.5
       console.log(player.xacc)
     } else if (keyIsDown(K_A)){
-      player.xacc += -0.5
+      player.xacc = -0.5
     } else if (keyIsDown(K_S)){
-      player.yacc += 0.5
+      player.yacc = 0.5
     } else if (keyIsDown(K_D)){
-      player.xacc += 0.5  
+      player.xacc = 0.5  
     }
 
     //Adjust the backgroun based on the players inputs
     background(0);
     translate(width / 2, height / 2);
-    var newzoom = 64 / player.r;
-    zoom = lerp(zoom, newzoom, 0.1);
-    scale(zoom);
+    //var newzoom = 64 / player.r;
+    //zoom = lerp(zoom, newzoom, 0.1);
+    //scale(zoom);
     translate(-player.pos.x, -player.pos.y);
 
     //Displays every other ship other than the players boat
@@ -62,14 +62,13 @@ function draw() {
       var id = players[i].id;
       if (id !== socket.id) {
         fill(0,0,255);
-        ellipse(players[i].x,players[i].y,players[i].dir*2,players[i].dir*2);
+        ellipse(players[i].x,players[i].y,players[i].dir,players[i].dir);
         fill(255);
         textAlign(CENTER);
         textSize(12);
         text(players[i].username, players[i].x, players[i].y + players[i].dir*1.5);
       }
     }
-    
     
     player.show(); //displays the player
     player.update(); //updates the players position based on user input

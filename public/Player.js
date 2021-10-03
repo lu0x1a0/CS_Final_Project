@@ -7,7 +7,9 @@ function Player(Username, x, y, dir ) {
     this.xacc = 0 
     this.yacc = 0
     this.maxspeed = 10
-    this.drag = 1
+    this.drag = 0.2
+
+    this.cannon = new Cannon(range = this.dir*2, visionfield = PI/4,player = this)
     //updates the player position based on mouse position
     this.update = function() {
       //var newvel = createVector(mouseX - width / 2, mouseY - height / 2);
@@ -16,9 +18,10 @@ function Player(Username, x, y, dir ) {
       //this.pos.add(this.vel);
       
       // wasd acc movement version
-      this.vel = createVector(this.xacc,this.yacc)
+      this.vel = createVector(this.vel.x+this.xacc,this.vel.y+this.yacc)
       this.vel.setMag( min (max(mag(this.vel.x,this.vel.y)-this.drag,0),this.maxspeed ) ) 
       this.pos.add(this.vel)
+      this.cannon.update()
       //if (this.xacc != 0){
       //  console.log("--------------------------------------")
       //  console.log(mouseX,mouseY)
@@ -39,11 +42,12 @@ function Player(Username, x, y, dir ) {
     //displays the player on the screen
     this.show = function() {
       fill(255);
-      ellipse(this.pos.x, this.pos.y, this.dir * 2, this.dir * 2);
+      ellipse(this.pos.x, this.pos.y, this.dir, this.dir);
       
       fill(255);
       textAlign(CENTER);
       textSize(12);
       text(this.Username, this.pos.x, this.pos.y + this.dir*1.5);
+      this.cannon.showRange()
     };
   }
