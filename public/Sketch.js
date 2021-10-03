@@ -1,6 +1,7 @@
 var player;
 var socket;
 var players = [];
+var projectiles = [];
 var zoom = 1;
 var gameStarted = 0;
 
@@ -36,6 +37,7 @@ let K_W = 87;
 let K_A = 65;
 let K_S = 83;
 let K_D = 68;
+let K_Space = 32;
 function draw() {
   if (gameStarted == 1) {
     if (keyIsDown(K_W)){
@@ -56,6 +58,8 @@ function draw() {
     //zoom = lerp(zoom, newzoom, 0.1);
     //scale(zoom);
     translate(-player.pos.x, -player.pos.y);
+    
+    //camera(player.pos.x, player.pos.y, 1000, player.pos.x, player.pos.y, 0, 0, 1, 0);
 
     //Displays every other ship other than the players boat
     for (var i = players.length - 1; i >= 0; i--) {
@@ -74,6 +78,12 @@ function draw() {
     player.update(); //updates the players position based on user input
     player.constrain(); //stops the user from going outside the map
 
+    for (var i = 0;i<projectiles.length;i++){
+      // to be moved to serverside
+      this.projectiles[i].update()
+      // keep
+      this.projectiles[i].show()
+    }
     //Updates player list when new information is sent to the server
     socket.on('heartbeat',
       function(data) {
@@ -87,6 +97,14 @@ function draw() {
       dir: player.dir
     };
     socket.emit('update',data); 
+  }
+}
+
+function keyPressed(){
+  if (keyCode === K_Space){
+    console.log("FIRE")
+    cannonball = player.tryfire()
+    projectiles.push(cannonball)
   }
 }
 function keyReleased(){

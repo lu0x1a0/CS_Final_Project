@@ -9,7 +9,7 @@ function Player(Username, x, y, dir ) {
     this.maxspeed = 10
     this.drag = 0.2
 
-    this.cannon = new Cannon(range = this.dir*2, visionfield = PI/4,player = this)
+    this.cannon = new Cannon(range = this.dir*10, visionfield = PI/4,player = this)
     //updates the player position based on mouse position
     this.update = function() {
       //var newvel = createVector(mouseX - width / 2, mouseY - height / 2);
@@ -50,4 +50,9 @@ function Player(Username, x, y, dir ) {
       text(this.Username, this.pos.x, this.pos.y + this.dir*1.5);
       this.cannon.showRange()
     };
+    this.tryfire = function(){
+      if (this.cannon.checkclickinrange()){
+        return this.cannon.fireData()
+      }
+    }
   }
