@@ -1,6 +1,7 @@
 function Player(Username, x, y, dir ) {
     this.pos = createVector(x, y);
     this.dir = dir;
+    this.size = 64
     this.vel = createVector(0, 0);
     this.Username = Username
     //this.health = health;
@@ -9,7 +10,7 @@ function Player(Username, x, y, dir ) {
     this.maxspeed = 10
     this.drag = 0.2
 
-    this.cannon = new Cannon(range = this.dir*10, visionfield = PI/4,player = this)
+    this.cannon = new Cannon(range = this.size*10, visionfield = PI/4,player = this)
     //updates the player position based on mouse position
     this.update = function() {
       //var newvel = createVector(mouseX - width / 2, mouseY - height / 2);
@@ -42,12 +43,12 @@ function Player(Username, x, y, dir ) {
     //displays the player on the screen
     this.show = function() {
       fill(255);
-      ellipse(this.pos.x, this.pos.y, this.dir, this.dir);
+      ellipse(this.pos.x, this.pos.y, this.size, this.size);
       
       fill(255);
       textAlign(CENTER);
       textSize(12);
-      text(this.Username, this.pos.x, this.pos.y + this.dir*1.5);
+      text(this.Username, this.pos.x, this.pos.y + this.size*1.5);
       this.cannon.showRange()
     };
     this.tryfire = function(){

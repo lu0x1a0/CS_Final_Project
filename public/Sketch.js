@@ -66,11 +66,11 @@ function draw() {
       var id = players[i].id;
       if (id !== socket.id) {
         fill(0,0,255);
-        ellipse(players[i].x,players[i].y,players[i].dir,players[i].dir);
+        ellipse(players[i].x,players[i].y,players[i].size,players[i].size);
         fill(255);
         textAlign(CENTER);
         textSize(12);
-        text(players[i].username, players[i].x, players[i].y + players[i].dir*1.5);
+        text(players[i].username, players[i].x, players[i].y + players[i].size*1.5);
       }
     }
     
@@ -102,13 +102,13 @@ function draw() {
 
 function keyPressed(){
   if (keyCode === K_Space){
-    console.log("FIRE")
+    //console.log("FIRE")
     cannonball = player.tryfire()
     projectiles.push(cannonball)
   }
 }
 function keyReleased(){
-  console.log('---------------------------\n  RELEASED \n -----------------------------------')
+  //console.log('---------------------------\n  RELEASED \n -----------------------------------')
   if (keyCode === K_W || keyCode === K_S){
     player.yacc = 0
   } else if (keyCode === K_A || keyCode === K_D){
