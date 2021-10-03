@@ -9,6 +9,8 @@ var gameStarted = 0;
 function setup() {
   socket = io.connect('http://localhost:5000'  );// Change to if pushing to heroku 'https://hidden-reef-26635.herokuapp.com/' 
   createCanvas(600, 600);
+  gamemap = new GameMap();
+  gamemap.preload()
 }
 
 
@@ -34,6 +36,7 @@ function startGame(usernameInput) {
 //
 function draw() {
   if (gameStarted == 1) {
+
     //Adjust the backgroun based on the players inputs
     background(0);
     translate(width / 2, height / 2);
@@ -41,6 +44,9 @@ function draw() {
     zoom = lerp(zoom, newzoom, 0.1);
     scale(zoom);
     translate(-player.pos.x, -player.pos.y);
+
+    // Create game map background
+    gamemap.display()
 
     //Displays every other ship other than the players boat
     for (var i = players.length - 1; i >= 0; i--) {
@@ -59,6 +65,8 @@ function draw() {
     player.show(); //displays the player
     player.update(); //updates the players position based on user input
     player.constrain(); //stops the user from going outside the map
+
+
 
     //Updates player list when new information is sent to the server
     socket.on('heartbeat',
