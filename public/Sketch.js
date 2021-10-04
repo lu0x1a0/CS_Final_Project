@@ -19,7 +19,7 @@ function setup() {
 //Creates a variable containing the player data and sends it to the server
 function startGame(usernameInput) {
   console.log(usernameInput);
-  player = new Player(usernameInput, random(width), random(height), 64);
+  player = new Player(usernameInput, 32, 32, 16);
 
   var data = {
     username: usernameInput,
@@ -63,7 +63,7 @@ function draw() {
     
     
     player.show(); //displays the player
-    player.update(); //updates the players position based on user input
+    player.update(gamemap); //updates the players position based on user input
     player.constrain(); //stops the user from going outside the map
 
 

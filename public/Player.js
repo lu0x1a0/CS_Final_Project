@@ -3,21 +3,27 @@ function Player(Username, x, y, dir ) {
     this.dir = dir;
     this.vel = createVector(0, 0);
     this.Username = Username
+    this.hitbox_size = 16
     //this.health = health;
   
 
     //updates the player position based on mouse position
-    this.update = function() {
+    this.update = function(gamemap) {
       var newvel = createVector(mouseX - width / 2, mouseY - height / 2);
       newvel.setMag(3);
       this.vel.lerp(newvel, 0.2);
-      this.pos.add(this.vel);
+
+      // Check if we may move to the location on the map
+      let newpos = p5.Vector.add(this.pos, this.vel)
+      this.pos = gamemap.player_move(this.pos, this.vel, this.hitbox_size)
     };
 
     //ensures the player doesn't go beyond the map
     this.constrain = function() {
-      if ( abs(this.pos.y) >= 600) { this.pos.y = 600; }
-      if ( abs(this.pos.x) >= 600) { this.pos.x = 600; }
+      if ( this.pos.x <= 0) { this.pos.x = 0; }
+      if ( this.pos.x >= 20*16) { this.pos.x = 20*16; }
+      if ( this.pos.y <= 0) { this.pos.y = 0; }
+      if ( this.pos.y >= 20*16) { this.pos.y = 20*16; }
     }
   
     //displays the player on the screen
