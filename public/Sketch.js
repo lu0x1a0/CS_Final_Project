@@ -26,6 +26,7 @@ function startGame(usernameInput) {
     y: player.pos.y,
     dir: player.dir
   };
+  console.log('--------------------------startgame ran')
   socket.emit('start',data);
   gameStarted = 1;
 }
@@ -40,15 +41,23 @@ let K_D = 68;
 let K_Space = 32;
 function draw() {
   if (gameStarted == 1) {
-    if (keyIsDown(K_W)){
-      player.yacc = -0.5
-      console.log(player.xacc)
-    } else if (keyIsDown(K_A)){
-      player.xacc = -0.5
-    } else if (keyIsDown(K_S)){
-      player.yacc = 0.5
-    } else if (keyIsDown(K_D)){
-      player.xacc = 0.5  
+    //if (keyIsDown(K_W)){
+    //  player.yacc = -0.5
+    //  console.log(player.xacc)
+    //} else if (keyIsDown(K_A)){
+    //  player.xacc = -0.5
+    //} else if (keyIsDown(K_S)){
+    //  player.yacc = 0.5
+    //} else if (keyIsDown(K_D)){
+    //  player.xacc = 0.5  
+    //}
+    if (keyIsPressed === true){
+      if(keyIsDown(K_W) || keyIsDown(K_A) || keyIsDown(K_S) || keyIsDown(K_D)){
+        data = {
+          pressedkeycode: keyCode
+        }
+        socket.emit('updatepressed',data)
+      }
     }
 
     //Adjust the backgroun based on the players inputs
@@ -72,11 +81,16 @@ function draw() {
         textSize(12);
         text(players[i].username, players[i].x, players[i].y + players[i].dir*1.5);
       }
+      else{
+        player.pos = createVector(players[i].x,players[i].y)
+        player.dir = players[i].dir
+        player.show()
+      }
     }
     
-    player.show(); //displays the player
-    player.update(); //updates the players position based on user input
-    player.constrain(); //stops the user from going outside the map
+    //player.show(); //displays the player
+    //player.update(); //updates the players position based on user input
+    //player.constrain(); //stops the user from going outside the map
 
     for (var i = 0;i<projectiles.length;i++){
       // to be moved to serverside
@@ -88,30 +102,40 @@ function draw() {
     socket.on('heartbeat',
       function(data) {
           players = data;
+          //console.log(data)
       })
 
     //packages new player data then sends to the server
-    var data = {
-      x: player.pos.x,
-      y: player.pos.y,
-      dir: player.dir
-    };
-    socket.emit('update',data); 
+    //var data = {
+    //  x: player.pos.x,
+    //  y: player.pos.y,
+    //  dir: player.dir
+    //};
+    //socket.emit('update',data); 
   }
 }
 
 function keyPressed(){
-  if (keyCode === K_Space){
-    //console.log("FIRE")
-    cannonball = player.tryfire()
-    projectiles.push(cannonball)
+  if(gameStarted){
+    if (keyCode === K_Space){
+      //console.log("FIRE")
+      var data = {pressedkeycode:keyCode}
+      socket.emit('updatepressed',data)
+      //cannonball = player.tryfire()
+      //projectiles.push(cannonball)
+    }  
   }
 }
 function keyReleased(){
   //console.log('---------------------------\n  RELEASED \n -----------------------------------')
-  if (keyCode === K_W || keyCode === K_S){
-    player.yacc = 0
-  } else if (keyCode === K_A || keyCode === K_D){
-    player.xacc = 0
+  //if (keyCode === K_W || keyCode === K_S){
+  //  player.yacc = 0
+  //  data = {releasedkeycode:keycode}
+  //} else if (keyCode === K_A || keyCode === K_D){
+  //  player.xacc = 0
+  //}
+  if (gameStarted){
+    data = {releasedkeycode:keyCode}
+    socket.emit('updatereleased',data)  
   }
 }
