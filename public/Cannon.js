@@ -5,13 +5,11 @@ function Cannon(range,visionfield,player){
     this.angle = 0
     this.player = player
     this.speed = player.maxspeed*1.5
-    //this.update = function(){
-    //  this.pos = this.player.pos
-    //  this.angle = atan2(mouseY - height / 2, mouseX - width / 2);
-    //}
+    this.update = function(){
+      this.pos = this.player.pos
+      this.angle = atan2(mouseY - height / 2, mouseX - width / 2);
+    }
     this.showRange = function (){
-        this.pos = this.player.pos
-        this.angle = atan2(mouseY - height / 2, mouseX - width / 2);
         // grey, transparency(63/255)
         fill(100,63);
         arc(this.pos.x,this.pos.y,this.range,this.range,
@@ -47,15 +45,6 @@ function Cannonball(start,end,speed){
     this.speed = speed;
     this.delta = createVector(end.x-start.x,end.y-start.y).setMag(this.speed)
     this.done = false;
-    this.diameter = 8
-    this.contactcheck = function(players){
-        for(var i = 0; i < players.length;i++){
-            //if the distance between two points are less than two collision circle - contact.
-            if (mag(players[i].pos.x-this.pos.x,players[i].pos.y-this.pos.y)<(players[i].size/2+this.diameter) ){
-                return players[i]
-            }
-        }
-    }
     this.update = function(){
         //delta = end.sub(this.start).setMag(this.speed);
         this.pos = this.pos.add(this.delta);
@@ -63,18 +52,11 @@ function Cannonball(start,end,speed){
             this.done = true;
             //console.log("done");
         }
-        else {
-            touched = 0 //this.contactcheck(Players)
-            if (touched){
-                //touched.takedamage()
-                this.done = true
-            }
-        }
     }
     this.show = function(){
         if (this.done === false){
             fill(255);
-            circle(this.pos.x,this.pos.y,this.diameter)
+            circle(this.pos.x,this.pos.y,16)
         }
     }
 }

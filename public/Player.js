@@ -11,26 +11,25 @@ function Player(Username, x, y, dir ) {
     this.drag = 0.2
 
     this.cannon = new Cannon(range = this.size*10, visionfield = PI/4,player = this)
-    //updates the player position based on mouse position -- moved to server
-    //this.update = function() { 
+    //updates the player position based on mouse position
+    this.update = function() {
       //var newvel = createVector(mouseX - width / 2, mouseY - height / 2);
       //newvel.setMag(3);
       //this.vel.lerp(newvel, 0.2);
       //this.pos.add(this.vel);
       
-      // wasd acc movement version 
-      //this.vel = createVector(this.vel.x+this.xacc,this.vel.y+this.yacc)
-      //this.vel.setMag( min (max(mag(this.vel.x,this.vel.y)-this.drag,0),this.maxspeed ) ) 
-      //this.pos.add(this.vel)
-      //this.cannon.update()
-
+      // wasd acc movement version
+      this.vel = createVector(this.vel.x+this.xacc,this.vel.y+this.yacc)
+      this.vel.setMag( min (max(mag(this.vel.x,this.vel.y)-this.drag,0),this.maxspeed ) ) 
+      this.pos.add(this.vel)
+      this.cannon.update()
       //if (this.xacc != 0){
       //  console.log("--------------------------------------")
       //  console.log(mouseX,mouseY)
       //  console.log(mouseX - width / 2, mouseY - height / 2)
       //  console.log(this.xacc,this.yacc)  
       //}
-    //};
+    };
 
     //ensures the player doesn't go beyond the map
     this.constrain = function() {
