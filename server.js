@@ -11,7 +11,7 @@ let K_S = 83;
 let K_D = 68;
 let K_Space = 32;
 //process.env.PORT is used for heroku to connect when running locally use LocalHost:5000
-var PORT = process.env.PORT || 5000 
+var PORT = process.env.PORT //|| 5000 
 
 var express = require("express");
 //import express from 'express'
@@ -52,7 +52,7 @@ playerlocjsons = function(){
 //}
 
 //Sends a new update out every 50 ms containing all player info
-setInterval(heartbeat,20);
+setInterval(heartbeat,50);
 function heartbeat() {
     for (var i = 0; i < players.length; i++ ) {
         //console.log("LOOP ENTERED")
