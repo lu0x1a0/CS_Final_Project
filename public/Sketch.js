@@ -8,7 +8,7 @@ var gameStarted = 0;
 
 //Runs when first connected to the webpage
 function setup() {
-  socket = io.connect('https://studentpirate.heroku.com'  );// Change to if pushing to heroku 'https://hidden-reef-26635.herokuapp.com/' http://localhost:5000
+  socket = io.connect('https://studentpirate.herokuapp.com'  );// Change to if pushing to heroku 'https://hidden-reef-26635.herokuapp.com/' http://localhost:5000
   createCanvas(600, 600);
 }
 
