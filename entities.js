@@ -20,13 +20,13 @@ class Player{
         //this.pos.add(this.vel);
         
         // wasd acc movement version
-        console.log("------------------------------")
-        console.log("velocity (old)              : ",this.vel)
+        //console.log("------------------------------")
+        //console.log("velocity (old)              : ",this.vel)
         this.vel = {x:this.vel.x+this.xacc,y:this.vel.y+this.yacc}
-        console.log("velocity (adde acceleration): ",this.vel)
+        //console.log("velocity (adde acceleration): ",this.vel)
         this.vel = this.setMag(this.vel, Math.min (Math.max(this.calcMag(this.vel.x,this.vel.y)-this.drag,0),this.maxspeed ) ) 
-        console.log("velocity (mag capped)       : ",this.vel)
-        console.log(this.username,this.pos)
+        //console.log("velocity (mag capped)       : ",this.vel)
+        //console.log(this.username,this.pos)
         this.pos = this.addVec(this.pos,this.vel)
         //console.log(this.username,this.pos)
         this.cannon.update()

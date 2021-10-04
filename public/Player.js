@@ -1,8 +1,8 @@
 function Player(Username, x, y, dir ) {
-  this.pos = createVector(x, y);
+  this.pos = createVector(x,y)//{x:x, y:y};
   this.dir = dir;
   this.size = 64
-  this.vel = createVector(0, 0);
+  this.vel = {x:0, y:0};
   this.Username = Username
   //this.health = health;
   this.xacc = 0 

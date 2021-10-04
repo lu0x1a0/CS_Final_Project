@@ -8,7 +8,7 @@ var gameStarted = 0;
 
 //Runs when first connected to the webpage
 function setup() {
-  socket = io.connect('https://studentpirate.herokuapp.com'  );// Change to if pushing to heroku 'https://hidden-reef-26635.herokuapp.com/' http://localhost:5000
+  socket = io.connect('http://localhost:5000'  );// Change to if pushing to heroku 'https://hidden-reef-26635.herokuapp.com/' http://localhost:5000
   createCanvas(600, 600);
 }
 
@@ -29,6 +29,13 @@ function startGame(usernameInput) {
   console.log('--------------------------startgame ran')
   socket.emit('start',data);
   gameStarted = 1;
+  //Updates player list when new information is sent to the server
+  socket.on('heartbeat',
+    function(data) {
+      players = data;
+      //console.log(data)
+    }
+  )
 }
 
 
@@ -41,33 +48,19 @@ let K_D = 68;
 let K_Space = 32;
 function draw() {
   if (gameStarted == 1) {
-    //if (keyIsDown(K_W)){
-    //  player.yacc = -0.5
-    //  console.log(player.xacc)
-    //} else if (keyIsDown(K_A)){
-    //  player.xacc = -0.5
-    //} else if (keyIsDown(K_S)){
-    //  player.yacc = 0.5
-    //} else if (keyIsDown(K_D)){
-    //  player.xacc = 0.5  
-    //}
-    if (keyIsPressed === true){
-      if(keyIsDown(K_W) || keyIsDown(K_A) || keyIsDown(K_S) || keyIsDown(K_D)){
-        data = {
-          pressedkeycode: keyCode
-        }
-        socket.emit('updatepressed',data)
-      }
-    }
 
     //Adjust the backgroun based on the players inputs
     background(0);
+    for (var i = players.length - 1; i >= 0; i--) {
+      var id = players[i].id;
+      if (id === socket.id) {
+        player.pos = createVector(players[i].x,players[i].y) //{x: players[i].x,y:players[i].y}
+        player.dir = players[i].dir
+        break;
+      }
+    }
     translate(width / 2, height / 2);
-    //var newzoom = 64 / player.r;
-    //zoom = lerp(zoom, newzoom, 0.1);
-    //scale(zoom);
     translate(-player.pos.x, -player.pos.y);
-    
     //camera(player.pos.x, player.pos.y, 1000, player.pos.x, player.pos.y, 0, 0, 1, 0);
 
     //Displays every other ship other than the players boat
@@ -82,12 +75,14 @@ function draw() {
         text(players[i].username, players[i].x, players[i].y + players[i].dir*1.5);
       }
       else{
-        player.pos = createVector(players[i].x,players[i].y)
-        player.dir = players[i].dir
+        //console.log("should update player")
+        //player.pos = createVector(players[i].x,players[i].y) //{x: players[i].x,y:players[i].y}
+        //player.dir = players[i].dir
         player.show()
       }
     }
-    
+
+
     //player.show(); //displays the player
     //player.update(); //updates the players position based on user input
     //player.constrain(); //stops the user from going outside the map
@@ -98,12 +93,6 @@ function draw() {
       // keep
       this.projectiles[i].show()
     }
-    //Updates player list when new information is sent to the server
-    socket.on('heartbeat',
-      function(data) {
-          players = data;
-          //console.log(data)
-      })
 
     //packages new player data then sends to the server
     //var data = {
@@ -112,6 +101,14 @@ function draw() {
     //  dir: player.dir
     //};
     //socket.emit('update',data); 
+    if (keyIsPressed === true){
+      if(keyIsDown(K_W) || keyIsDown(K_A) || keyIsDown(K_S) || keyIsDown(K_D)){
+        data = {
+          pressedkeycode: keyCode
+        }
+        socket.emit('updatepressed',data)
+      }
+    }
   }
 }
 
