@@ -14,6 +14,9 @@ function Cannon(range,visionfield,player){
         this.angle = atan2(mouseY - height / 2, mouseX - width / 2);
         // grey, transparency(63/255)
         fill(100,63);
+        //if ( range() ){
+
+        //}
         //*2 because it is the diameter of full circle
         arc(this.pos.x,this.pos.y,this.range*2,this.range*2,
             this.angle-this.visionfield/2,this.angle+this.visionfield/2)

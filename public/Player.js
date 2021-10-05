@@ -11,9 +11,13 @@ class Player{
     this.maxspeed = 10
     this.drag = 0.2
     this.health = 100
+
     this.cannon = new Cannon(this.size*5,PI/4,this)
     this.hitbox_size = 32
   }
+
+
+
   preload() {
     this.img_boat = loadImage('assets/img_boat.png');
     this.img_water = loadImage('assets/img_water.png');
@@ -40,6 +44,7 @@ class Player{
 
   //displays the player on the screen
   show() {
+
     image(this.img_boat, this.pos.x -40, this.pos.y - 24);
     //fill(255);
     //ellipse(this.pos.x, this.pos.y, this.size, this.size);
@@ -56,6 +61,7 @@ class Player{
       // line(this.pos.x + this.hitbox_size/2, this.pos.y + this.hitbox_size/2, this.pos.x - this.hitbox_size/2, this.pos.y + this.hitbox_size/2)
       // color(255,0,0)
     }
+
 
 
 
