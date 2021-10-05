@@ -16,6 +16,7 @@ class Player{
         this.drag = 0.2
         this.cannon = new Cannon(this.size*5,Math.PI/4,this)
         this.health = 100
+        this.hitbox_size = 16 // need help from arkie with what this is
     }
     update() {
         //var newvel = createVector(mouseX - width / 2, mouseY - height / 2);
@@ -24,22 +25,10 @@ class Player{
         //this.pos.add(this.vel);
         
         // wasd acc movement version
-        //console.log("------------------------------")
-        //console.log("velocity (old)              : ",this.vel)
         this.vel = {x:this.vel.x+this.xacc,y:this.vel.y+this.yacc}
-        //console.log("velocity (adde acceleration): ",this.vel)
         this.vel = setMag(this.vel, Math.min (Math.max(mag(this.vel.x,this.vel.y)-this.drag,0),this.maxspeed ) ) 
-        //console.log("velocity (mag capped)       : ",this.vel)
-        //console.log(this.username,this.pos)
         this.pos = addVec(this.pos,this.vel)
-        //console.log(this.username,this.pos)
         this.cannon.update()
-        //if (this.xacc != 0){
-        //  console.log("--------------------------------------")
-        //  console.log(mouseX,mouseY)
-        //  console.log(mouseX - width / 2, mouseY - height / 2)
-        //  console.log(this.xacc,this.yacc)  
-        //}
       };
   
       //ensures the player doesn't go beyond the map

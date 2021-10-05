@@ -4,7 +4,7 @@ var players = [];
 var projectiles = [];
 var zoom = 1;
 var gameStarted = 0;
-
+var gamemap 
 
 //Runs when first connected to the webpage
 function setup() {
