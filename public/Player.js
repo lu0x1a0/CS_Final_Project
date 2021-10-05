@@ -4,6 +4,7 @@ function Player(Username, x, y, dir ) {
     this.size = 64
     this.vel = createVector(0, 0);
     this.Username = Username
+    this.hitbox_size = 16
     //this.health = health;
     this.xacc = 0 
     this.yacc = 0
@@ -12,7 +13,8 @@ function Player(Username, x, y, dir ) {
 
     this.cannon = new Cannon(range = this.size*10, visionfield = PI/4,player = this)
     //updates the player position based on mouse position
-    this.update = function() {
+
+    this.update = function(gamemap) {
       //var newvel = createVector(mouseX - width / 2, mouseY - height / 2);
       //newvel.setMag(3);
       //this.vel.lerp(newvel, 0.2);
@@ -21,7 +23,9 @@ function Player(Username, x, y, dir ) {
       // wasd acc movement version
       this.vel = createVector(this.vel.x+this.xacc,this.vel.y+this.yacc)
       this.vel.setMag( min (max(mag(this.vel.x,this.vel.y)-this.drag,0),this.maxspeed ) ) 
-      this.pos.add(this.vel)
+
+      let newpos = p5.Vector.add(this.pos, this.vel)
+      this.pos = gamemap.player_move(this.pos, this.vel, this.hitbox_size)
       this.cannon.update()
       //if (this.xacc != 0){
       //  console.log("--------------------------------------")
@@ -33,11 +37,11 @@ function Player(Username, x, y, dir ) {
 
     //ensures the player doesn't go beyond the map
     this.constrain = function() {
-      if ( this.pos.y >= 600) { this.pos.y = 600; }
-      if ( this.pos.x >= 600) { this.pos.x = 600; }
-      if ( this.pos.y <= 0) { this.pos.y = 0; }
       if ( this.pos.x <= 0) { this.pos.x = 0; }
-      
+      if ( this.pos.x >= 20*16) { this.pos.x = 20*16; }
+      if ( this.pos.y <= 0) { this.pos.y = 0; }
+      if ( this.pos.y >= 20*16) { this.pos.y = 20*16; }
+
     }
   
     //displays the player on the screen

@@ -10,6 +10,8 @@ var gameStarted = 0;
 function setup() {
   socket = io.connect('http://localhost:5000'  );// Change to if pushing to heroku 'https://hidden-reef-26635.herokuapp.com/' 
   createCanvas(600, 600);
+  gamemap = new GameMap();
+  gamemap.preload()
 }
 
 
@@ -18,7 +20,7 @@ function setup() {
 //Creates a variable containing the player data and sends it to the server
 function startGame(usernameInput) {
   console.log(usernameInput);
-  player = new Player(usernameInput, random(width), random(height), 64);
+  player = new Player(usernameInput, 32, 32, 16);
 
   var data = {
     username: usernameInput,
@@ -40,6 +42,7 @@ let K_D = 68;
 let K_Space = 32;
 function draw() {
   if (gameStarted == 1) {
+
     if (keyIsDown(K_W)){
       player.yacc = -0.5
       console.log(player.xacc)
@@ -61,6 +64,9 @@ function draw() {
     
     //camera(player.pos.x, player.pos.y, 1000, player.pos.x, player.pos.y, 0, 0, 1, 0);
 
+    // Create game map background
+    gamemap.display()
+
     //Displays every other ship other than the players boat
     for (var i = players.length - 1; i >= 0; i--) {
       var id = players[i].id;
@@ -75,8 +81,9 @@ function draw() {
     }
     
     player.show(); //displays the player
-    player.update(); //updates the players position based on user input
+    player.update(gamemap); //updates the players position based on user input
     player.constrain(); //stops the user from going outside the map
+
 
     for (var i = 0;i<projectiles.length;i++){
       // to be moved to serverside
@@ -84,6 +91,7 @@ function draw() {
       // keep
       this.projectiles[i].show()
     }
+
     //Updates player list when new information is sent to the server
     socket.on('heartbeat',
       function(data) {
