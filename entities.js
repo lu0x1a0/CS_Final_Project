@@ -32,6 +32,9 @@ class Player{
         //console.log("velocity (mag capped)       : ",this.vel)
         //console.log(this.username,this.pos)
         this.pos = addVec(this.pos,this.vel)
+        if (mag(vel)){
+            this.dir = Math.atan2(this.vel.y,this.vel.x)
+        }
         //console.log(this.username,this.pos)
         this.cannon.update()
         //if (this.xacc != 0){

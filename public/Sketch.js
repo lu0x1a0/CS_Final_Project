@@ -75,7 +75,7 @@ function draw() {
       var id = players[i].id;
       if (id !== socket.id) {
         fill(0,0,255);
-        ellipse(players[i].x,players[i].y,64,64)// players[i].dir,players[i].dir);
+        ellipse(players[i].x,players[i].y,64/2,64)// players[i].dir,players[i].dir);
         fill(255);
         textAlign(CENTER);
         textSize(12);

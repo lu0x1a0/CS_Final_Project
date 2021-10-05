@@ -44,7 +44,7 @@ function Player(Username, x, y, dir ) {
   //displays the player on the screen
   this.show = function() {
     fill(255);
-    ellipse(this.pos.x, this.pos.y, this.size, this.size);
+    ellipse(this.pos.x, this.pos.y, this.size/2, this.size);
     
     fill(255);
     textAlign(CENTER);
