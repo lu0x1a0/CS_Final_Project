@@ -27,13 +27,13 @@ class GameMap {
           ];
         this.length = 20
         this.width = 20
-        this.tilesize = 16
+        this.tilesize = 32
     }
+
 
     preload() {
         this.img_water = loadImage('assets/img_water.png');
         this.img_land = loadImage('assets/img_land.png');
-        this.img = loadImage('assets/test.jpg');
     }
 
     display() {
@@ -91,11 +91,11 @@ class GameMap {
         // }
 
         // Wall left
-        if (this.map[px-1][py] === 'L') { new_pos.x = Math.max(new_pos.x, (px+1)*this.tilesize) }
+        if (this.map[px-1][py] === 'L') { new_pos.x = Math.max(new_pos.x, (px)*this.tilesize) }
         // Wall right
         if (this.map[px+1][py] === 'L') { new_pos.x = Math.min(new_pos.x, (px)*this.tilesize) }
         // Wall above
-        if (this.map[px][py-1] === 'L') { new_pos.y = Math.max(new_pos.y, (py+1)*this.tilesize) }
+        if (this.map[px][py-1] === 'L') { new_pos.y = Math.max(new_pos.y, (py)*this.tilesize) }
         // Wall below
         if (this.map[px][py+1] === 'L') { new_pos.y = Math.min(new_pos.y, (py)*this.tilesize) }
         
