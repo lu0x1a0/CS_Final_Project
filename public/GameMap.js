@@ -9,10 +9,10 @@ class GameMap {
             ['L','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','L'],
             ['L','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','L'],
             ['L','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','L'],
-            ['L','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','L'],
-            ['L','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','L'],
-            ['L','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','L'],
-            ['L','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','L'],
+            ['L','W','W','W','W','W','W','L','W','W','W','W','W','W','W','W','W','W','W','L'],
+            ['L','W','W','W','W','W','W','L','L','W','W','W','W','W','W','W','W','W','W','L'],
+            ['L','W','W','W','W','W','W','W','W','L','W','W','W','W','W','W','W','W','W','L'],
+            ['L','W','W','W','W','W','W','W','W','L','W','W','W','W','W','W','W','W','W','L'],
             ['L','W','W','W','W','W','W','W','W','W','L','L','W','W','W','W','W','W','W','L'],
             ['L','W','W','W','W','W','W','W','W','W','W','L','W','W','W','W','W','W','W','L'],
             ['L','W','W','W','W','W','W','W','W','W','W','L','W','W','W','W','W','W','W','L'],
@@ -25,6 +25,7 @@ class GameMap {
             ['L','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','L'],
             ['L','L','L','L','L','L','L','L','L','L','L','L','L','L','L','L','L','L','L','L'],
           ];
+        this.map = this.map.reduce((prev, next) => next.map((item, i) => (prev[i] || []).concat(next[i])), []);
         this.length = 20
         this.width = 20
         this.tilesize = 32
@@ -74,9 +75,30 @@ class GameMap {
 
         var new_pos = p5.Vector.add(pos, vel)
 
-        // Currently just check centre point
-        var px = Math.floor((pos.x)/this.tilesize)
-        var py = Math.floor((pos.y)/this.tilesize)
+        // Check each of four corners
+        for (let i = 0; i <= 1; i++) {
+            for (let j = 0; j <= 1; j++) {
+
+                // Set (px,py) to be the coordinates of the map square containing the corner
+                var px = Math.floor((pos.x+(i-0.5)*hitbox_size)/this.tilesize)
+                var py = Math.floor((pos.y+(j-0.5)*hitbox_size)/this.tilesize)
+                
+                console.log(px, py)
+
+                // Wall left
+                if (this.map[px-1][py] === 'L') { new_pos.x = Math.max(new_pos.x, (px)*this.tilesize+(i-0.5)*hitbox_size) }
+                // Wall right
+                if (this.map[px+1][py] === 'L') { new_pos.x = Math.min(new_pos.x, (px+1)*this.tilesize+(i-0.5)*hitbox_size-0.001) }
+                // Wall above
+                if (this.map[px][py-1] === 'L') { new_pos.y = Math.max(new_pos.y, (py)*this.tilesize+(j-0.5)*hitbox_size) }
+                // Wall below
+                if (this.map[px][py+1] === 'L') { new_pos.y = Math.min(new_pos.y, (py+1)*this.tilesize+(j-0.5)*hitbox_size-0.001) }
+                
+            }
+        }
+
+
+
 
         // For now, let's assume we cannot move more than one tile in a tick
         
@@ -90,15 +112,7 @@ class GameMap {
         //     }
         // }
 
-        // Wall left
-        if (this.map[px-1][py] === 'L') { new_pos.x = Math.max(new_pos.x, (px)*this.tilesize) }
-        // Wall right
-        if (this.map[px+1][py] === 'L') { new_pos.x = Math.min(new_pos.x, (px)*this.tilesize) }
-        // Wall above
-        if (this.map[px][py-1] === 'L') { new_pos.y = Math.max(new_pos.y, (py)*this.tilesize) }
-        // Wall below
-        if (this.map[px][py+1] === 'L') { new_pos.y = Math.min(new_pos.y, (py)*this.tilesize) }
-        
+
         return new_pos;
 
     }

@@ -45,7 +45,7 @@ function Player(Username, x, y, dir ) {
     }
   
     //displays the player on the screen
-    this.show = function() {
+    this.show = function(debug = false) {
       fill(255);
       ellipse(this.pos.x, this.pos.y, this.size, this.size);
       
@@ -54,6 +54,21 @@ function Player(Username, x, y, dir ) {
       textSize(12);
       text(this.Username, this.pos.x, this.pos.y + this.size*1.5);
       this.cannon.showRange()
+
+      if (debug) {
+
+        stroke(255, 0, 0);
+        strokeWeight(1);
+        rect(this.pos.x-this.hitbox_size/2, this.pos.y-this.hitbox_size/2, this.hitbox_size, this.hitbox_size);
+        stroke(255,255,255);
+
+        // line(this.pos.x - this.hitbox_size/2, this.pos.y - this.hitbox_size/2, this.pos.x + this.hitbox_size/2, this.pos.y - this.hitbox_size/2)
+        // line(this.pos.x - this.hitbox_size/2, this.pos.y - this.hitbox_size/2, this.pos.x - this.hitbox_size/2, this.pos.y + this.hitbox_size/2)
+        // line(this.pos.x + this.hitbox_size/2, this.pos.y + this.hitbox_size/2, this.pos.x + this.hitbox_size/2, this.pos.y - this.hitbox_size/2)
+        // line(this.pos.x + this.hitbox_size/2, this.pos.y + this.hitbox_size/2, this.pos.x - this.hitbox_size/2, this.pos.y + this.hitbox_size/2)
+        // color(255,0,0)
+      }
+
     };
     this.tryfire = function(){
       if (this.cannon.checkclickinrange()){
