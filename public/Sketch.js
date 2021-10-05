@@ -8,10 +8,16 @@ var gameStarted = 0;
 
 //Runs when first connected to the webpage
 function setup() {
-  socket = io.connect('http://localhost:5000'  );// Change to if pushing to heroku 'https://hidden-reef-26635.herokuapp.com/' http://localhost:5000
-  createCanvas(600, 600);
+  socket = io.connect('http://localhost:5000'  );// Change to if pushing to heroku 'https://hidden-reef-26635.herokuapp.com/'
+  createCanvas(windowWidth, windowHeight);
+
+
   gamemap = new GameMap();
-  gamemap.preload()
+  gamemap.preload();
+
+  player = new Player(32, 32, 16);
+  player.preload();
+
 }
 
 
@@ -19,8 +25,11 @@ function setup() {
 //Generates a play
 //Creates a variable containing the player data and sends it to the server
 function startGame(usernameInput) {
+
   console.log(usernameInput);
-  player = new Player(usernameInput, 64, 64, 16);
+
+  player.setUsername(usernameInput);
+
 
   var data = {
     username: usernameInput,
@@ -52,6 +61,19 @@ let K_Space = 32;
 function draw() {
   if (gameStarted == 1) {
 
+
+    if (keyIsDown(K_W)){
+      player.yacc = -0.5
+      console.log(player.xacc)
+    } else if (keyIsDown(K_A)){
+      player.xacc = -0.5
+    } else if (keyIsDown(K_S)){
+      player.yacc = 0.5
+    } else if (keyIsDown(K_D)){
+      player.xacc = 0.5
+    }
+
+
     //Adjust the backgroun based on the players inputs
     background(0);
     for (var i = players.length - 1; i >= 0; i--) {
@@ -65,6 +87,7 @@ function draw() {
     }
     translate(width / 2, height / 2);
     translate(-player.pos.x, -player.pos.y);
+
     //camera(player.pos.x, player.pos.y, 1000, player.pos.x, player.pos.y, 0, 0, 1, 0);
 
     // Create game map background
@@ -97,7 +120,8 @@ function draw() {
       }
     }
 
-    player.show(debug=true); //displays the player
+    player.show(); //displays the player
+
     player.update(gamemap); //updates the players position based on user input
     //player.constrain(); //stops the user from going outside the map
 
@@ -110,7 +134,7 @@ function draw() {
       cannonballshow(projectiles[i].pos,projectiles[i].diameter)
     }
 
-    //packages new player data then sends to the server
+
     //var data = {
     //  x: player.pos.x,
     //  y: player.pos.y,
@@ -145,6 +169,7 @@ function keyPressed(){
 }
 function keyReleased(){
   //console.log('---------------------------\n  RELEASED \n -----------------------------------')
+
   //if (keyCode === K_W || keyCode === K_S){
   //  player.yacc = 0
   //  data = {releasedkeycode:keycode}
