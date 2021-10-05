@@ -62,4 +62,9 @@ function newConnection(socket) {
             player.dir = data.dir;
 
         })
+    socket.on('fire',
+        function(data){
+            var player
+        }
+    )
 }
