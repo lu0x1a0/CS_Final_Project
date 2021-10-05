@@ -25,11 +25,10 @@ var socket = require('socket.io');
 var io = socket(server);
 io.sockets.on('connection',newConnection);
 
-
-
 //List of all players and bots connected to the server
 var players = [];
-playerlocjsons = function(){
+var projectiles = {};
+playerslocjson = function(){
     var l = []
     for(var i = 0; i<players.length;i++){
         l.push({
@@ -42,15 +41,19 @@ playerlocjsons = function(){
     }
     return l
 }
-//Player class to record players who are connected to the server
-//function Player(id, username , x ,y ,dir) {
-//    this.id = id;
-//    this.username = username;
-//    this.x = x;
-//    this.y = y;
-//    this.dir = dir;
-//}
-
+projectileslocjson = function(){
+    var l = []
+    for (var key in projectiles) {
+        if (projectiles.hasOwnProperty(key)) {
+            l.push({
+                id:key,
+                pos:projectiles[key].pos,
+                diameter:projectiles[key].diameter
+            })
+        }
+    }
+    return l
+}
 //Sends a new update out every 50 ms containing all player info
 setInterval(heartbeat,10);
 function heartbeat() {
@@ -59,8 +62,24 @@ function heartbeat() {
         players[i].update();
         players[i].constrain();
     }
-    io.sockets.emit('heartbeat', playerlocjsons());
-    //console.log(players.length);
+    for (var key in projectiles) {
+        if (projectiles.hasOwnProperty(key)) {
+            projectiles[key].update()
+            if (projectiles[key].done){
+                delete projectiles[key]
+            }
+            projectiles[key].contactcheck(players)
+            
+        }
+    }
+    io.sockets.emit('heartbeat', {
+        players:playerslocjson(),
+        projectiles:projectileslocjson()
+    });
+    if (Object.keys(projectiles).length){
+        console.log(projectiles);
+    }
+
 }
 
 //Runs after a new connection is established with a client
@@ -98,6 +117,13 @@ function newConnection(socket) {
                 player.yacc = 0.5
             } else if (data.pressedkeycode ===K_D){
                 player.xacc = 0.5  
+            } else if (data.pressedkeycode ===K_Space){
+                cannonball = player.fire(data.targetX,data.targetY)
+                console.log("----------------genball----------------\n",cannonball)
+                if (cannonball){
+                    // use playerid+current time stamp as id, might not safe from server attack with spamming io
+                    projectiles[player.id+(new Date()).getTime()] = cannonball
+                }
             }
         })
     socket.on('updatereleased',

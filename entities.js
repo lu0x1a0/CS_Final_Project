@@ -1,3 +1,5 @@
+const mag = require("./utils.js").mag
+const addVec = require("./utils.js").addVec
 class Player{
     constructor(id,Username, x, y, dir){
         this.pos = {x:x, y:y};
@@ -11,7 +13,7 @@ class Player{
         this.yacc = 0
         this.maxspeed = 10
         this.drag = 0.2
-        this.cannon = new Cannon(this.size*10,Math.PI/4,this)
+        this.cannon = new Cannon(this.size*5,Math.PI/4,this)
     }
     update() {
         //var newvel = createVector(mouseX - width / 2, mouseY - height / 2);
@@ -24,10 +26,10 @@ class Player{
         //console.log("velocity (old)              : ",this.vel)
         this.vel = {x:this.vel.x+this.xacc,y:this.vel.y+this.yacc}
         //console.log("velocity (adde acceleration): ",this.vel)
-        this.vel = this.setMag(this.vel, Math.min (Math.max(this.calcMag(this.vel.x,this.vel.y)-this.drag,0),this.maxspeed ) ) 
+        this.vel = this.setMag(this.vel, Math.min (Math.max(mag(this.vel.x,this.vel.y)-this.drag,0),this.maxspeed ) ) 
         //console.log("velocity (mag capped)       : ",this.vel)
         //console.log(this.username,this.pos)
-        this.pos = this.addVec(this.pos,this.vel)
+        this.pos = addVec(this.pos,this.vel)
         //console.log(this.username,this.pos)
         this.cannon.update()
         //if (this.xacc != 0){
@@ -56,11 +58,8 @@ class Player{
             return vel
         }
     }
-    addVec(v1,v2){
-        return {x:v1.x+v2.x,y:v1.y+v2.y}
-    }
-    calcMag(x,y){
-        return Math.sqrt(x**2+y**2)
+    fire(targetX,targetY){
+        return this.cannon.fire(targetX, targetY)
     }
 }
 function Cannon(range,visionfield,player){
@@ -76,29 +75,36 @@ function Cannon(range,visionfield,player){
       this.angle = Math.atan2(x,y);
     }
 
-    this.fireData = function (){
-        startpos = createVector(this.pos.x,this.pos.y)
-        var data = {
-            start:startpos,
-            end:createVector(startpos.x+mouseX-width/2, startpos.y+mouseY - height / 2), //startpos.add(createVector(mouseY - height / 2, mouseX - width / 2)),
-            speed: this.speed 
-        }
-        console.log('----------------------')
-        console.log(data.start)
-        console.log(data.end)
-        //return data
-        return new Cannonball(data.start,data.end,data.speed)
+    this.fire = function (targetX,targetY){
+        //input validity checking
+        var dist = mag(targetX,targetY) 
+        if ( dist <= this.range ){
+            startpos = {x:this.pos.x,y:this.pos.y}
+            var data = {
+                start:startpos,
+                end:{x:startpos.x+targetX, y:startpos.y+targetY}, 
+                speed: this.speed 
+            }
+            console.log('-----------fired-----------')
+            console.log(data.start)
+            console.log(data.end)
+            //return data
+            return new Cannonball(data.start,data.end,data.speed)
+        } 
+
     }
 }
-function Cannonball(start,end,speed){
-    this.pos = createVector(start.x,start.y);
-    this.start = start;
-    this.end = end;
-    this.speed = speed;
-    this.delta = createVector(end.x-start.x,end.y-start.y).setMag(this.speed)
-    this.done = false;
-    this.diameter = 8
-    this.contactcheck = function(players){
+class Cannonball{
+    constructor(start,end,speed){
+        this.pos = {x:start.x,y:start.y};
+        this.start = start;
+        this.end = end;
+        this.speed = speed;
+        this.delta = this.calcDelta()
+        this.done = false;
+        this.diameter = 8    
+    }
+    contactcheck(players){
         for(var i = 0; i < players.length;i++){
             //if the distance between two points are less than two collision circle - contact.
             if (mag(players[i].pos.x-this.pos.x,players[i].pos.y-this.pos.y)<(players[i].size/2+this.diameter) ){
@@ -106,27 +112,33 @@ function Cannonball(start,end,speed){
             }
         }
     }
-    this.update = function(){
+    calcDelta(){
+        var d = {x:(this.end.x-this.start.x),y:(this.end.y-this.start.y) }
+        var oldmag = mag(d.x,d.y)
+        var delta = {x:d.x/oldmag*this.speed,y:d.y/oldmag*this.speed}
+        return delta
+    }
+    update(){
         //delta = end.sub(this.start).setMag(this.speed);
-        this.pos = this.pos.add(this.delta);
+        this.pos = addVec(this.pos,this.delta);
         if (mag(this.pos.x-this.start.x,this.pos.y-this.start.y)>=mag(this.end.x-this.start.x,this.end.y-this.start.y)){
             this.done = true;
             //console.log("done");
         }
         else {
-            touched = 0 //this.contactcheck(Players)
+            var touched = 0 //this.contactcheck(Players)
             if (touched){
                 //touched.takedamage()
                 this.done = true
             }
         }
     }
-    this.show = function(){
-        if (this.done === false){
-            fill(255);
-            circle(this.pos.x,this.pos.y,this.diameter)
-        }
-    }
+    //this.show = function(){
+    //    if (this.done === false){
+    //        fill(255);
+    //        circle(this.pos.x,this.pos.y,this.diameter)
+    //    }
+    //}
 }
 
 module.exports = {

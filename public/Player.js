@@ -10,7 +10,7 @@ function Player(Username, x, y, dir ) {
   this.maxspeed = 10
   this.drag = 0.2
 
-  this.cannon = new Cannon(range = this.size*10, visionfield = PI/4,player = this)
+  this.cannon = new Cannon(range = this.size*5, visionfield = PI/4,player = this)
   //updates the player position based on mouse position -- moved to server
   //this.update = function() { 
     //var newvel = createVector(mouseX - width / 2, mouseY - height / 2);

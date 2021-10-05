@@ -32,7 +32,8 @@ function startGame(usernameInput) {
   //Updates player list when new information is sent to the server
   socket.on('heartbeat',
     function(data) {
-      players = data;
+      players = data.players;
+      projectiles = data.projectiles;
       //console.log(data)
     }
   )
@@ -89,9 +90,10 @@ function draw() {
 
     for (var i = 0;i<projectiles.length;i++){
       // to be moved to serverside
-      this.projectiles[i].update()
+      // this.projectiles[i].update()
       // keep
-      this.projectiles[i].show()
+      //this.projectiles[i].show()
+      cannonballshow(projectiles[i].pos,projectiles[i].diameter)
     }
 
     //packages new player data then sends to the server
@@ -116,7 +118,11 @@ function keyPressed(){
   if(gameStarted){
     if (keyCode === K_Space){
       //console.log("FIRE")
-      var data = {pressedkeycode:keyCode}
+      var data = {
+        pressedkeycode:keyCode,
+        targetX:mouseX - width / 2,
+        targetY:mouseY - height / 2,
+      }
       socket.emit('updatepressed',data)
       //cannonball = player.tryfire()
       //projectiles.push(cannonball)
