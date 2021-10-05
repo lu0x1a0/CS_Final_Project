@@ -82,7 +82,7 @@ function draw() {
     
     player.show(); //displays the player
     player.update(gamemap); //updates the players position based on user input
-    player.constrain(); //stops the user from going outside the map
+    //player.constrain(); //stops the user from going outside the map
 
 
     for (var i = 0;i<projectiles.length;i++){
