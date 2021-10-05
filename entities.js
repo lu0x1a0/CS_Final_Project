@@ -28,13 +28,6 @@ class Player{
         this.vel = {x:this.vel.x+this.xacc,y:this.vel.y+this.yacc}
         this.vel = setMag(this.vel, Math.min (Math.max(mag(this.vel.x,this.vel.y)-this.drag,0),this.maxspeed ) ) 
         this.pos = addVec(this.pos,this.vel)
-<<<<<<< HEAD
-        if (mag(vel)){
-            this.dir = Math.atan2(this.vel.y,this.vel.x)
-        }
-        //console.log(this.username,this.pos)
-=======
->>>>>>> 4649fa427e6693c65dbc1ed7138e1233f1f130ae
         this.cannon.update()
       };
   
