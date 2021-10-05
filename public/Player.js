@@ -60,6 +60,22 @@ function Player(Username, x, y, dir ) {
     rect(this.pos.x-this.size/2, this.pos.y-this.size/2-20,this.size*abs(this.health)/100,10);
 
     this.cannon.showRange()
+    
+    // Debug hitboxes
+    if (debug) {
+
+      stroke(255, 0, 0);
+      strokeWeight(1);
+      rect(this.pos.x-this.hitbox_size/2, this.pos.y-this.hitbox_size/2, this.hitbox_size, this.hitbox_size);
+      stroke(255,255,255);
+
+      // line(this.pos.x - this.hitbox_size/2, this.pos.y - this.hitbox_size/2, this.pos.x + this.hitbox_size/2, this.pos.y - this.hitbox_size/2)
+      // line(this.pos.x - this.hitbox_size/2, this.pos.y - this.hitbox_size/2, this.pos.x - this.hitbox_size/2, this.pos.y + this.hitbox_size/2)
+      // line(this.pos.x + this.hitbox_size/2, this.pos.y + this.hitbox_size/2, this.pos.x + this.hitbox_size/2, this.pos.y - this.hitbox_size/2)
+      // line(this.pos.x + this.hitbox_size/2, this.pos.y + this.hitbox_size/2, this.pos.x - this.hitbox_size/2, this.pos.y + this.hitbox_size/2)
+      // color(255,0,0)
+    }
+    
   };
   this.tryfire = function(){
     if (this.cannon.checkclickinrange()){
