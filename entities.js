@@ -1,5 +1,6 @@
 const mag = require("./utils.js").mag
 const addVec = require("./utils.js").addVec
+const setMag = require("./utils.js").setMag
 class Player{
     constructor(id,Username, x, y, dir){
         this.pos = {x:x, y:y};
@@ -26,7 +27,7 @@ class Player{
         //console.log("velocity (old)              : ",this.vel)
         this.vel = {x:this.vel.x+this.xacc,y:this.vel.y+this.yacc}
         //console.log("velocity (adde acceleration): ",this.vel)
-        this.vel = this.setMag(this.vel, Math.min (Math.max(mag(this.vel.x,this.vel.y)-this.drag,0),this.maxspeed ) ) 
+        this.vel = setMag(this.vel, Math.min (Math.max(mag(this.vel.x,this.vel.y)-this.drag,0),this.maxspeed ) ) 
         //console.log("velocity (mag capped)       : ",this.vel)
         //console.log(this.username,this.pos)
         this.pos = addVec(this.pos,this.vel)
@@ -47,16 +48,6 @@ class Player{
         if ( this.pos.y <= 0) { this.pos.y = 0; }
         if ( this.pos.x <= 0) { this.pos.x = 0; }
         
-    }
-    setMag(vel,newmag){
-        var oldmag = Math.sqrt(vel.x**2+vel.y**2)
-        if (oldmag){
-            var newvel = {x:vel.x/oldmag*newmag, y:vel.y/oldmag*newmag}
-            return newvel
-        }
-        else{
-            return vel
-        }
     }
     fire(targetX,targetY){
         return this.cannon.fire(targetX, targetY)
@@ -80,11 +71,15 @@ function Cannon(range,visionfield,player){
         var dist = mag(targetX,targetY) 
         if ( dist <= this.range ){
             startpos = {x:this.pos.x,y:this.pos.y}
+            // move slightly off player's collision zone
+            shift = setMag({x:targetX,y:targetY},this.player.size/2+5)
+            shiftstart = addVec(startpos,shift)
             var data = {
-                start:startpos,
+                start:shiftstart,
                 end:{x:startpos.x+targetX, y:startpos.y+targetY}, 
                 speed: this.speed 
             }
+            
             console.log('-----------fired-----------')
             console.log(data.start)
             console.log(data.end)
@@ -108,6 +103,7 @@ class Cannonball{
         for(var i = 0; i < players.length;i++){
             //if the distance between two points are less than two collision circle - contact.
             if (mag(players[i].pos.x-this.pos.x,players[i].pos.y-this.pos.y)<(players[i].size/2+this.diameter) ){
+                this.done = true
                 return players[i]
             }
         }

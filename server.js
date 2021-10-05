@@ -67,8 +67,15 @@ function heartbeat() {
             projectiles[key].update()
             if (projectiles[key].done){
                 delete projectiles[key]
+                continue;
+            }else{
+                hit = projectiles[key].contactcheck(players)
+                console.log("---------hit--------------\n",hit)
+                if (projectiles[key].done){
+                    delete projectiles[key]
+                    continue;
+                }
             }
-            projectiles[key].contactcheck(players)
             
         }
     }
@@ -79,7 +86,6 @@ function heartbeat() {
     if (Object.keys(projectiles).length){
         console.log(projectiles);
     }
-
 }
 
 //Runs after a new connection is established with a client
