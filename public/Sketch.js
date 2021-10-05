@@ -59,6 +59,7 @@ function draw() {
       if (id === socket.id) {
         player.pos = createVector(players[i].x,players[i].y) //{x: players[i].x,y:players[i].y}
         player.dir = players[i].dir
+        player.health = players[i].health
         break;
       }
     }
@@ -79,6 +80,14 @@ function draw() {
         textAlign(CENTER);
         textSize(12);
         text(players[i].username, players[i].x, players[i].y + players[i].dir*1.5);
+
+        //health bar
+        fill(100,63)
+        //base
+        rect(players[i].x-players[i].size/2, players[i].y-players[i].size/2-20,players[i].size,10);
+        //health
+        fill(0,220,0)
+        rect(players[i].x-players[i].size/2, players[i].y-players[i].size/2-20,players[i].size*abs(players[i].health)/100,10);
       }
       else{
         //console.log("should update player")

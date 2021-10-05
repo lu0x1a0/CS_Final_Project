@@ -36,7 +36,9 @@ playerslocjson = function(){
             id:players[i].id,
             x:players[i].pos.x,
             y:players[i].pos.y,
-            dir:players[i].dir
+            dir:players[i].dir,
+            health:players[i].health,
+            size:players[i].size
         })
     }
     return l
@@ -73,6 +75,7 @@ function heartbeat() {
                 console.log("---------hit--------------\n",hit)
                 if (projectiles[key].done){
                     delete projectiles[key]
+                    hit.health -= 10;
                     continue;
                 }
             }

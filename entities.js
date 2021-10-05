@@ -15,6 +15,7 @@ class Player{
         this.maxspeed = 10
         this.drag = 0.2
         this.cannon = new Cannon(this.size*5,Math.PI/4,this)
+        this.health = 100
     }
     update() {
         //var newvel = createVector(mouseX - width / 2, mouseY - height / 2);

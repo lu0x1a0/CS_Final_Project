@@ -9,7 +9,7 @@ function Player(Username, x, y, dir ) {
   this.yacc = 0
   this.maxspeed = 10
   this.drag = 0.2
-
+  this.health = 100
   this.cannon = new Cannon(range = this.size*5, visionfield = PI/4,player = this)
   //updates the player position based on mouse position -- moved to server
   //this.update = function() { 
@@ -50,6 +50,15 @@ function Player(Username, x, y, dir ) {
     textAlign(CENTER);
     textSize(12);
     text(this.Username, this.pos.x, this.pos.y + this.size*1.5);
+
+    //health bar
+    fill(100,63)
+    //base
+    rect(this.pos.x-this.size/2, this.pos.y-this.size/2-20,this.size,10);
+    //health
+    fill(0,220,0)
+    rect(this.pos.x-this.size/2, this.pos.y-this.size/2-20,this.size*abs(this.health)/100,10);
+
     this.cannon.showRange()
   };
   this.tryfire = function(){
