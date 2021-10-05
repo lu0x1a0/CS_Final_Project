@@ -10,7 +10,7 @@ class Player{
         this.id = id;
         this.username = Username;
         //this.health = health;
-        this.xacc = 0 
+        this.xacc = 0
         this.yacc = 0
         this.maxspeed = 10
         this.drag = 0.2
@@ -23,28 +23,21 @@ class Player{
         //newvel.setMag(3);
         //this.vel.lerp(newvel, 0.2);
         //this.pos.add(this.vel);
-        
+
         // wasd acc movement version
         this.vel = {x:this.vel.x+this.xacc,y:this.vel.y+this.yacc}
-        this.vel = setMag(this.vel, Math.min (Math.max(mag(this.vel.x,this.vel.y)-this.drag,0),this.maxspeed ) ) 
+        this.vel = setMag(this.vel, Math.min (Math.max(mag(this.vel.x,this.vel.y)-this.drag,0),this.maxspeed ) )
         this.pos = addVec(this.pos,this.vel)
-<<<<<<< HEAD
-        if (mag(vel)){
-            this.dir = Math.atan2(this.vel.y,this.vel.x)
-        }
-        //console.log(this.username,this.pos)
-=======
->>>>>>> 4649fa427e6693c65dbc1ed7138e1233f1f130ae
         this.cannon.update()
       };
-  
+
       //ensures the player doesn't go beyond the map
     constrain() {
         if ( this.pos.y >= 600) { this.pos.y = 600; }
         if ( this.pos.x >= 600) { this.pos.x = 600; }
         if ( this.pos.y <= 0) { this.pos.y = 0; }
         if ( this.pos.x <= 0) { this.pos.x = 0; }
-        
+
     }
     fire(targetX,targetY){
         return this.cannon.fire(targetX, targetY)
@@ -65,7 +58,7 @@ function Cannon(range,visionfield,player){
 
     this.fire = function (targetX,targetY){
         //input validity checking
-        var dist = mag(targetX,targetY) 
+        var dist = mag(targetX,targetY)
         if ( dist <= this.range ){
             startpos = {x:this.pos.x,y:this.pos.y}
             // move slightly off player's collision zone
@@ -73,16 +66,16 @@ function Cannon(range,visionfield,player){
             shiftstart = addVec(startpos,shift)
             var data = {
                 start:shiftstart,
-                end:{x:startpos.x+targetX, y:startpos.y+targetY}, 
-                speed: this.speed 
+                end:{x:startpos.x+targetX, y:startpos.y+targetY},
+                speed: this.speed
             }
-            
+
             console.log('-----------fired-----------')
             console.log(data.start)
             console.log(data.end)
             //return data
             return new Cannonball(data.start,data.end,data.speed)
-        } 
+        }
 
     }
 }
@@ -94,7 +87,7 @@ class Cannonball{
         this.speed = speed;
         this.delta = this.calcDelta()
         this.done = false;
-        this.diameter = 8    
+        this.diameter = 8
     }
     contactcheck(players){
         for(var i = 0; i < players.length;i++){
