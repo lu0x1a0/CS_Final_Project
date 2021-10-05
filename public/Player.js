@@ -1,16 +1,18 @@
-function Player(Username, x, y, dir ) {
-  this.pos = createVector(x,y)//{x:x, y:y};
-  this.dir = dir;
-  this.size = 64
-  this.vel = {x:0, y:0};
-  this.Username = Username
-  //this.health = health;
-  this.xacc = 0 
-  this.yacc = 0
-  this.maxspeed = 10
-  this.drag = 0.2
-  this.health = 100
-  this.cannon = new Cannon(range = this.size*5, visionfield = PI/4,player = this)
+class Player{
+  constructor(Username, x, y, dir ){
+    this.pos = createVector(x,y)//{x:x, y:y};
+    this.dir = dir;
+    this.size = 64
+    this.vel = {x:0, y:0};
+    this.Username = Username
+    //this.health = health;
+    this.xacc = 0 
+    this.yacc = 0
+    this.maxspeed = 10
+    this.drag = 0.2
+    this.health = 100
+    this.cannon = new Cannon(range = this.size*5, visionfield = PI/4,player = this)  
+  }
   //updates the player position based on mouse position -- moved to server
   //this.update = function() { 
     //var newvel = createVector(mouseX - width / 2, mouseY - height / 2);
@@ -33,7 +35,7 @@ function Player(Username, x, y, dir ) {
   //};
 
   //ensures the player doesn't go beyond the map
-  this.constrain = function() {
+  constrain() {
     if ( this.pos.y >= 600) { this.pos.y = 600; }
     if ( this.pos.x >= 600) { this.pos.x = 600; }
     if ( this.pos.y <= 0) { this.pos.y = 0; }
@@ -42,7 +44,7 @@ function Player(Username, x, y, dir ) {
   }
 
   //displays the player on the screen
-  this.show = function() {
+  show() {
     fill(255);
     ellipse(this.pos.x, this.pos.y, this.size/2, this.size);
     
@@ -61,7 +63,7 @@ function Player(Username, x, y, dir ) {
 
     this.cannon.showRange()
   };
-  this.tryfire = function(){
+  tryfire(){
     if (this.cannon.checkclickinrange()){
       return this.cannon.fireData()
     }
