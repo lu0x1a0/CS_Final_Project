@@ -33,14 +33,6 @@ class Player{
     this.xacc = inputAcceleration;
   }
 
-  //ensures the player doesn't go beyond the map
-  constrain() {
-    if ( this.pos.y >= 600) { this.pos.y = 600; }
-    if ( this.pos.x >= 600) { this.pos.x = 600; }
-    if ( this.pos.y <= 0) { this.pos.y = 0; }
-    if ( this.pos.x <= 0) { this.pos.x = 0; }
-
-  }
 
   //displays the player on the screen
   show() {

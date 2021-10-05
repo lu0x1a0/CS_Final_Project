@@ -1,5 +1,5 @@
 //Run using "node server.js" or heroku local web
-//pirate server. 
+//pirate server.
 
 const entities = require('./entities.js')
 //import * as entities from './entities.js'
@@ -11,7 +11,7 @@ let K_S = 83;
 let K_D = 68;
 let K_Space = 32;
 //process.env.PORT is used for heroku to connect when running locally use LocalHost:5000
-var PORT = process.env.PORT || 5000 
+var PORT = process.env.PORT || 5000
 
 var express = require("express");
 //import express from 'express'
@@ -65,9 +65,9 @@ function heartbeat() {
     for (var i = 0; i < players.length; i++ ) {
         //console.log("LOOP ENTERED")
         players[i].update();
-        players[i].constrain();
+        //players[i].constrain();
         newpos = gamemap.player_move(players[i].pos, players[i].vel, players[i].hitbox_size)
-        players[i].pos = newpos 
+        players[i].pos = newpos
     }
     for (var key in projectiles) {
         if (projectiles.hasOwnProperty(key)) {
@@ -84,7 +84,7 @@ function heartbeat() {
                     continue;
                 }
             }
-            
+
         }
     }
     io.sockets.emit('heartbeat', {
@@ -130,7 +130,7 @@ function newConnection(socket) {
             } else if (data.pressedkeycode ===K_S){
                 player.yacc = 0.5
             } else if (data.pressedkeycode ===K_D){
-                player.xacc = 0.5  
+                player.xacc = 0.5
             } else if (data.pressedkeycode ===K_Space){
                 cannonball = player.fire(data.targetX,data.targetY)
                 console.log("----------------genball----------------\n",cannonball)
