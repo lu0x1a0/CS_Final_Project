@@ -8,10 +8,15 @@ var gameStarted = 0;
 
 //Runs when first connected to the webpage
 function setup() {
-  socket = io.connect('http://localhost:5000'  );// Change to if pushing to heroku 'https://hidden-reef-26635.herokuapp.com/' 
-  createCanvas(600, 600);
+  socket = io.connect('http://localhost:5000'  );// Change to if pushing to heroku 'https://hidden-reef-26635.herokuapp.com/'
+  createCanvas(windowWidth, windowHeight);
+
   gamemap = new GameMap();
-  gamemap.preload()
+  gamemap.preload();
+
+  player = new Player(32, 32, 16);
+  player.preload();
+
 }
 
 
@@ -19,8 +24,9 @@ function setup() {
 //Generates a play
 //Creates a variable containing the player data and sends it to the server
 function startGame(usernameInput) {
+
   console.log(usernameInput);
-  player = new Player(usernameInput, 32, 32, 16);
+  player.setUsername(usernameInput);
 
   var data = {
     username: usernameInput,
@@ -51,7 +57,7 @@ function draw() {
     } else if (keyIsDown(K_S)){
       player.yacc = 0.5
     } else if (keyIsDown(K_D)){
-      player.xacc = 0.5  
+      player.xacc = 0.5
     }
 
     //Adjust the backgroun based on the players inputs
@@ -61,7 +67,7 @@ function draw() {
     //zoom = lerp(zoom, newzoom, 0.1);
     //scale(zoom);
     translate(-player.pos.x, -player.pos.y);
-    
+
     //camera(player.pos.x, player.pos.y, 1000, player.pos.x, player.pos.y, 0, 0, 1, 0);
 
     // Create game map background
@@ -79,7 +85,7 @@ function draw() {
         text(players[i].username, players[i].x, players[i].y + players[i].dir*1.5);
       }
     }
-    
+
     player.show(); //displays the player
     player.update(gamemap); //updates the players position based on user input
     //player.constrain(); //stops the user from going outside the map
@@ -104,7 +110,7 @@ function draw() {
       y: player.pos.y,
       dir: player.dir
     };
-    socket.emit('update',data); 
+    socket.emit('update',data);
   }
 }
 
@@ -118,8 +124,8 @@ function keyPressed(){
 function keyReleased(){
   //console.log('---------------------------\n  RELEASED \n -----------------------------------')
   if (keyCode === K_W || keyCode === K_S){
-    player.yacc = 0
+    player.setYacc(0)
   } else if (keyCode === K_A || keyCode === K_D){
-    player.xacc = 0
+    player.setXacc(0)
   }
 }
