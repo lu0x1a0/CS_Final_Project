@@ -25,6 +25,9 @@ var socket = require('socket.io');
 var io = socket(server);
 io.sockets.on('connection',newConnection);
 
+// initialize gamemap -- assume we only have 1 map
+const GameMap = require("./GameMap.js").GameMap
+const gamemap = new GameMap()
 //List of all players and bots connected to the server
 var players = [];
 var projectiles = {};
@@ -63,6 +66,8 @@ function heartbeat() {
         //console.log("LOOP ENTERED")
         players[i].update();
         players[i].constrain();
+        newpos = gamemap.player_move(players[i].pos, players[i].vel, players[i].hitbox_size)
+        players[i].pos = newpos 
     }
     for (var key in projectiles) {
         if (projectiles.hasOwnProperty(key)) {

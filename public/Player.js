@@ -11,6 +11,7 @@ class Player{
     this.maxspeed = 10
     this.drag = 0.2
     this.health = 100
+<<<<<<< HEAD
     this.cannon = new Cannon(range = this.size*5, visionfield = PI/4,player = this)  
   }
   //updates the player position based on mouse position -- moved to server
@@ -25,14 +26,24 @@ class Player{
     //this.vel.setMag( min (max(mag(this.vel.x,this.vel.y)-this.drag,0),this.maxspeed ) ) 
     //this.pos.add(this.vel)
     //this.cannon.update()
+=======
+    this.cannon = new Cannon(this.size*5,PI/4,this)  
+  } 
+  preload() {
+    this.img_boat = loadImage('assets/img_boat.png');
+    this.img_water = loadImage('assets/img_water.png');
+  }
+>>>>>>> 4649fa427e6693c65dbc1ed7138e1233f1f130ae
 
-    //if (this.xacc != 0){
-    //  console.log("--------------------------------------")
-    //  console.log(mouseX,mouseY)
-    //  console.log(mouseX - width / 2, mouseY - height / 2)
-    //  console.log(this.xacc,this.yacc)  
-    //}
-  //};
+  setUsername(username) {
+    this.Username = username;
+  }
+  setYacc(inputAcceleration) {
+    this.yacc = inputAcceleration;
+  }
+  setXacc(inputAcceleration) {
+    this.xacc = inputAcceleration;
+  }
 
   //ensures the player doesn't go beyond the map
   constrain() {
