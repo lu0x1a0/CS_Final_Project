@@ -6,34 +6,22 @@ class Player{
     this.vel = {x:0, y:0};
     this.Username = Username
     //this.health = health;
-    this.xacc = 0 
+    this.xacc = 0
     this.yacc = 0
     this.maxspeed = 10
     this.drag = 0.2
     this.health = 100
-<<<<<<< HEAD
-    this.cannon = new Cannon(range = this.size*5, visionfield = PI/4,player = this)  
+
+    this.cannon = new Cannon(this.size*5,PI/4,this)
+    this.hitbox_size = 32
   }
-  //updates the player position based on mouse position -- moved to server
-  //this.update = function() { 
-    //var newvel = createVector(mouseX - width / 2, mouseY - height / 2);
-    //newvel.setMag(3);
-    //this.vel.lerp(newvel, 0.2);
-    //this.pos.add(this.vel);
-    
-    // wasd acc movement version 
-    //this.vel = createVector(this.vel.x+this.xacc,this.vel.y+this.yacc)
-    //this.vel.setMag( min (max(mag(this.vel.x,this.vel.y)-this.drag,0),this.maxspeed ) ) 
-    //this.pos.add(this.vel)
-    //this.cannon.update()
-=======
-    this.cannon = new Cannon(this.size*5,PI/4,this)  
-  } 
+
+
+
   preload() {
     this.img_boat = loadImage('assets/img_boat.png');
     this.img_water = loadImage('assets/img_water.png');
   }
->>>>>>> 4649fa427e6693c65dbc1ed7138e1233f1f130ae
 
   setUsername(username) {
     this.Username = username;
@@ -51,14 +39,32 @@ class Player{
     if ( this.pos.x >= 600) { this.pos.x = 600; }
     if ( this.pos.y <= 0) { this.pos.y = 0; }
     if ( this.pos.x <= 0) { this.pos.x = 0; }
-    
+
   }
 
   //displays the player on the screen
   show() {
-    fill(255);
-    ellipse(this.pos.x, this.pos.y, this.size/2, this.size);
-    
+
+    image(this.img_boat, this.pos.x -40, this.pos.y - 24);
+    //fill(255);
+    //ellipse(this.pos.x, this.pos.y, this.size, this.size);
+    var debug = 1;
+    if (true) {
+      stroke(255, 0, 0);
+      strokeWeight(1);
+      rect(this.pos.x-this.hitbox_size/2, this.pos.y-this.hitbox_size/2, this.hitbox_size, this.hitbox_size);
+      stroke(255,255,255);
+
+      // line(this.pos.x - this.hitbox_size/2, this.pos.y - this.hitbox_size/2, this.pos.x + this.hitbox_size/2, this.pos.y - this.hitbox_size/2)
+      // line(this.pos.x - this.hitbox_size/2, this.pos.y - this.hitbox_size/2, this.pos.x - this.hitbox_size/2, this.pos.y + this.hitbox_size/2)
+      // line(this.pos.x + this.hitbox_size/2, this.pos.y + this.hitbox_size/2, this.pos.x + this.hitbox_size/2, this.pos.y - this.hitbox_size/2)
+      // line(this.pos.x + this.hitbox_size/2, this.pos.y + this.hitbox_size/2, this.pos.x - this.hitbox_size/2, this.pos.y + this.hitbox_size/2)
+      // color(255,0,0)
+    }
+
+
+
+
     fill(255);
     textAlign(CENTER);
     textSize(12);

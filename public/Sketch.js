@@ -4,19 +4,17 @@ var players = [];
 var projectiles = [];
 var zoom = 1;
 var gameStarted = 0;
-var gamemap 
+var gamemap
 
 //Runs when first connected to the webpage
 function setup() {
-  socket = io.connect('http://localhost:5000'  );// Change to if pushing to heroku 'https://hidden-reef-26635.herokuapp.com/'
+
+  socket = io.connect('http://localhost:5000'  );// Change to if pushing to heroku 'https://hidden-reef-26635.herokuapp.com/' http://localhost:5000
   createCanvas(windowWidth, windowHeight);
-
-
   gamemap = new GameMap();
-  gamemap.preload();
-
-  player = new Player(128, 128, 16);
-  player.preload();
+  gamemap.preload()
+  player = new Player("", 32, 32, 16);
+  player.preload()
 
 }
 
@@ -29,7 +27,6 @@ function startGame(usernameInput) {
   console.log(usernameInput);
 
   player.setUsername(usernameInput);
-
 
   var data = {
     username: usernameInput,
@@ -140,7 +137,7 @@ function draw() {
     //  y: player.pos.y,
     //  dir: player.dir
     //};
-    //socket.emit('update',data); 
+    //socket.emit('update',data);
     if (keyIsPressed === true){
       if(keyIsDown(K_W) || keyIsDown(K_A) || keyIsDown(K_S) || keyIsDown(K_D)){
         data = {
@@ -164,7 +161,7 @@ function keyPressed(){
       socket.emit('updatepressed',data)
       //cannonball = player.tryfire()
       //projectiles.push(cannonball)
-    }  
+    }
   }
 }
 function keyReleased(){
@@ -178,6 +175,6 @@ function keyReleased(){
   //}
   if (gameStarted){
     data = {releasedkeycode:keyCode}
-    socket.emit('updatereleased',data)  
+    socket.emit('updatereleased',data)
   }
 }
