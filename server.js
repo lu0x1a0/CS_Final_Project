@@ -78,7 +78,6 @@ function heartbeat() {
                 continue;
             }else{
                 hit = projectiles[key].contactcheck(players)
-                console.log("---------hit--------------\n",hit)
                 if (projectiles[key].done){
                     delete projectiles[key]
                     hit.health -= 10;
@@ -92,9 +91,9 @@ function heartbeat() {
         players:playerslocjson(),
         projectiles:projectileslocjson()
     });
-    if (Object.keys(projectiles).length){
-        console.log(projectiles);
-    }
+    //if (Object.keys(projectiles).length){
+        //console.log(projectiles);
+    //}
 }
 
 //Runs after a new connection is established with a client
@@ -114,8 +113,8 @@ function newConnection(socket) {
     socket.on('updatepressed',
         function(data) {
             var player;
-            console.log('-----------------updatepressed-----------------------')
-            console.log(data)
+            //console.log('-----------------updatepressed-----------------------')
+            //console.log(data)
             //console.log(player)
             //console.log(players)
             for (var i = 0; i < players.length; i++ ) {
@@ -124,14 +123,14 @@ function newConnection(socket) {
                 }
             }
             if (data.pressedkeycode ===K_W){
-                player.yacc = -0.5
-                console.log(player.xacc)
+                player.yacc = -0.3
+                //console.log(player.xacc)
             } else if (data.pressedkeycode ===K_A){
-                player.xacc = -0.5
+                player.xacc = -0.3
             } else if (data.pressedkeycode ===K_S){
-                player.yacc = 0.5
+                player.yacc = 0.3
             } else if (data.pressedkeycode ===K_D){
-                player.xacc = 0.5
+                player.xacc = 0.3
             } else if (data.pressedkeycode ===K_Space){
                 cannonball = player.fire(data.targetX,data.targetY)
                 console.log("----------------genball----------------\n",cannonball)
@@ -154,8 +153,8 @@ function newConnection(socket) {
             } else if (data.releasedkeycode === K_A || data.releasedkeycode === K_D){
                 player.xacc = 0
             }
-            console.log('-----------------updatereleased-----------------------')
-            console.log(data)
+            //console.log('-----------------updatereleased-----------------------')
+            //console.log(data)
         }
     )
     socket.on('fire',

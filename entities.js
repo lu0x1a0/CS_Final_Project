@@ -12,7 +12,7 @@ class Player{
         //this.health = health;
         this.xacc = 0
         this.yacc = 0
-        this.maxspeed = 5
+        this.maxspeed = 4
         this.drag = 0.1
         this.cannon = new Cannon(this.size*5,Math.PI/4,this)
         this.health = 100
@@ -28,7 +28,7 @@ class Player{
         this.vel = {x:this.vel.x+this.xacc,y:this.vel.y+this.yacc}
         this.vel = setMag(this.vel, Math.min (Math.max(mag(this.vel.x,this.vel.y)-this.drag,0),this.maxspeed ) )
         this.pos = addVec(this.pos,this.vel)
-        if (mag(this.vel.x,this.vel.x)>0.0001){
+        if (mag(this.vel.x,this.vel.y)>0.0001){
             this.dir = Math.atan2(this.vel.y,this.vel.x)
         }
         this.cannon.update()
