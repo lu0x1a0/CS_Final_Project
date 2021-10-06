@@ -44,6 +44,14 @@ function startGame(usernameInput) {
       //console.log(data)
     }
   )
+  socket.on("disconnect", (reason) => {
+    if (reason === "io server disconnect") {
+      // the disconnection was initiated by the server, you need to reconnect manually
+      //socket.connect();
+    }
+    console.log(reason)
+    // else the socket will automatically try to reconnect
+  });
 }
 
 
@@ -122,14 +130,15 @@ function draw() {
     //  dir: player.dir
     //};
     //socket.emit('update',data);
-    if (keyIsPressed === true){
-      if(keyIsDown(K_W) || keyIsDown(K_A) || keyIsDown(K_S) || keyIsDown(K_D)){
-        data = {
-          pressedkeycode: keyCode
-        }
-        socket.emit('updatepressed',data)
-      }
-    }
+    
+    //if (keyIsPressed === true){
+    //  if(keyIsDown(K_W) || keyIsDown(K_A) || keyIsDown(K_S) || keyIsDown(K_D)){
+    //    data = {
+    //      pressedkeycode: keyCode
+    //    }
+    //    socket.emit('updatepressed',data)
+    //  }
+    //}
   }
 }
 
@@ -146,6 +155,14 @@ function keyPressed(){
       //cannonball = player.tryfire()
       //projectiles.push(cannonball)
     }
+    //if (keyIsPressed === true){
+    else if(keyIsDown(K_W) || keyIsDown(K_A) || keyIsDown(K_S) || keyIsDown(K_D)){
+        data = {
+          pressedkeycode: keyCode
+        }
+        socket.emit('updatepressed',data)
+      }
+    //}
   }
 }
 function keyReleased(){

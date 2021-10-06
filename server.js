@@ -162,4 +162,8 @@ function newConnection(socket) {
             var player
         }
     )
+    socket.on("disconnect", (reason) => {
+        console.log("--------------------reason-------------------")
+        console.log(reason)
+      });
 }
