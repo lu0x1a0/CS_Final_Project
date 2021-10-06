@@ -36,8 +36,11 @@ class Player{
 
   //displays the player on the screen
   show() {
-
-    image(this.img_boat, this.pos.x -40, this.pos.y - 24);
+    rotate(this.dir+PI)
+    var imgx = this.pos.x //-40
+    var imgy = this.pos.y //- 24
+    image(this.img_boat,imgx*cos(-this.dir-PI)-imgy*sin(-this.dir-PI),imgx*sin(-this.dir-PI)+imgy*cos(-this.dir-PI));
+    rotate(-this.dir-PI)
     //fill(255);
     //ellipse(this.pos.x, this.pos.y, this.size, this.size);
     var debug = 1;

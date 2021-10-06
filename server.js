@@ -41,7 +41,8 @@ playerslocjson = function(){
             y:players[i].pos.y,
             dir:players[i].dir,
             health:players[i].health,
-            size:players[i].size
+            size:players[i].size,
+            vel: players[i].vel//for debugging 
         })
     }
     return l

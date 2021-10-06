@@ -10,9 +10,11 @@ var gamemap
 function setup() {
   socket = io.connect('http://localhost:5000'  );// Change to if pushing to heroku 'https://hidden-reef-26635.herokuapp.com/' http://localhost:5000
   createCanvas(windowWidth, windowHeight);
+  imageMode(CENTER)
   gamemap = new GameMap();
   gamemap.preload()
-  player = new Player("", 32, 32, 16);
+  // changed start angle to 0
+  player = new Player("", 32, 32, 0);
   player.preload()
 }
 
