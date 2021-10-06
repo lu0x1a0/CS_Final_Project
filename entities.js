@@ -32,7 +32,7 @@ class Player{
             this.dir = Math.atan2(this.vel.y,this.vel.x)
         }
         this.cannon.update()
-      };
+    };
 
       //ensures the player doesn't go beyond the map
     constrain() {
@@ -44,6 +44,9 @@ class Player{
     }
     fire(targetX,targetY){
         return this.cannon.fire(targetX, targetY)
+    }
+    convert2treasure(){
+
     }
 }
 function Cannon(range,visionfield,player){
@@ -62,7 +65,8 @@ function Cannon(range,visionfield,player){
     this.fire = function (targetX,targetY){
         //input validity checking
         var dist = mag(targetX,targetY)
-        if ( dist <= this.range ){
+        //Math.atan2(targetY,targetX)
+        if ( dist <= this.range && 1 ){
             startpos = {x:this.pos.x,y:this.pos.y}
             // move slightly off player's collision zone
             shift = setMag({x:targetX,y:targetY},this.player.size/2+5)

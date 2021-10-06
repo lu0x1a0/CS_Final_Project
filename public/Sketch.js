@@ -122,23 +122,6 @@ function draw() {
       //this.projectiles[i].show()
       cannonballshow(projectiles[i].pos,projectiles[i].diameter)
     }
-
-    //packages new player data then sends to the server
-    //var data = {
-    //  x: player.pos.x,
-    //  y: player.pos.y,
-    //  dir: player.dir
-    //};
-    //socket.emit('update',data);
-    
-    //if (keyIsPressed === true){
-    //  if(keyIsDown(K_W) || keyIsDown(K_A) || keyIsDown(K_S) || keyIsDown(K_D)){
-    //    data = {
-    //      pressedkeycode: keyCode
-    //    }
-    //    socket.emit('updatepressed',data)
-    //  }
-    //}
   }
 }
 
@@ -166,13 +149,6 @@ function keyPressed(){
   }
 }
 function keyReleased(){
-  //console.log('---------------------------\n  RELEASED \n -----------------------------------')
-  //if (keyCode === K_W || keyCode === K_S){
-  //  player.yacc = 0
-  //  data = {releasedkeycode:keycode}
-  //} else if (keyCode === K_A || keyCode === K_D){
-  //  player.xacc = 0
-  //}
   if (gameStarted){
     data = {releasedkeycode:keyCode}
     socket.emit('updatereleased',data)
