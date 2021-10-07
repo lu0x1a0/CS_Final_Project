@@ -103,9 +103,6 @@ function draw() {
         rect(players[i].x-players[i].size/2, players[i].y-players[i].size/2-20,players[i].size*abs(players[i].health)/100,10);
       }
       else{
-        //console.log("should update player")
-        //player.pos = createVector(players[i].x,players[i].y) //{x: players[i].x,y:players[i].y}
-        //player.dir = players[i].dir
         player.show()
       }
     }
@@ -116,36 +113,30 @@ function draw() {
     //player.constrain(); //stops the user from going outside the map
 
     for (var i = 0;i<projectiles.length;i++){
-      // to be moved to serverside
-      // this.projectiles[i].update()
-      // keep
-      //this.projectiles[i].show()
       cannonballshow(projectiles[i].pos,projectiles[i].diameter)
     }
   }
 }
 
+function mouseClicked() {
+  if(gameStarted){
+    var data = {
+      pressedkeycode:"mouse",
+      targetX:mouseX - width / 2,
+      targetY:mouseY - height / 2,
+    }
+    socket.emit('updatepressed',data)
+  }
+}
 function keyPressed(){
   if(gameStarted){
-    if (keyCode === K_Space){
-      //console.log("FIRE")
-      var data = {
-        pressedkeycode:keyCode,
-        targetX:mouseX - width / 2,
-        targetY:mouseY - height / 2,
+    //if (keyCode === K_Space){
+    if(keyIsDown(K_W) || keyIsDown(K_A) || keyIsDown(K_S) || keyIsDown(K_D)){
+      data = {
+        pressedkeycode: keyCode
       }
       socket.emit('updatepressed',data)
-      //cannonball = player.tryfire()
-      //projectiles.push(cannonball)
     }
-    //if (keyIsPressed === true){
-    else if(keyIsDown(K_W) || keyIsDown(K_A) || keyIsDown(K_S) || keyIsDown(K_D)){
-        data = {
-          pressedkeycode: keyCode
-        }
-        socket.emit('updatepressed',data)
-      }
-    //}
   }
 }
 function keyReleased(){

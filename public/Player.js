@@ -36,6 +36,7 @@ class Player{
 
   //displays the player on the screen
   show() {
+    push()
     rotate(this.dir+PI)
     var imgx = this.pos.x //-40
     var imgy = this.pos.y //- 24
@@ -56,6 +57,7 @@ class Player{
       // line(this.pos.x + this.hitbox_size/2, this.pos.y + this.hitbox_size/2, this.pos.x - this.hitbox_size/2, this.pos.y + this.hitbox_size/2)
       // color(255,0,0)
     }
+    pop()
 
 
 
@@ -66,13 +68,14 @@ class Player{
     text(this.Username, this.pos.x, this.pos.y + this.size*1.5);
 
     //health bar
+    push()
     fill(100,63)
     //base
     rect(this.pos.x-this.size/2, this.pos.y-this.size/2-20,this.size,10);
     //health
     fill(0,220,0)
     rect(this.pos.x-this.size/2, this.pos.y-this.size/2-20,this.size*abs(this.health)/100,10);
-
+    pop()
     this.cannon.showRange()
   };
   tryfire(){

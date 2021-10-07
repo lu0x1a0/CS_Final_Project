@@ -5,14 +5,9 @@ function Cannon(range,visionfield,player){
     this.angle = 0
     this.player = player
     this.speed = player.maxspeed*1.5
-    //this.update = function(){
-    //  this.pos = this.player.pos
-    //  this.angle = atan2(mouseY - height / 2, mouseX - width / 2);
-    //}
     this.showRange = function (){
         this.pos = this.player.pos
         this.angle = atan2(mouseY - height / 2, mouseX - width / 2);
-        var perp = [(this.player.dir+PI),(this.player.dir-PI) ]
         // angle goes from -pi to pi
         var altangle = Math.sign(this.angle)*(-1) *(2*PI-abs(this.angle)) 
         var absdiff = abs(this.angle-this.player.dir)
@@ -21,24 +16,12 @@ function Cannon(range,visionfield,player){
         if ( (absdiff>field && absdiff<(PI-field)) || (absdiff2> field && absdiff2<(PI-field)) ){
             //*2 because it is the diameter of full circle
             // grey, transparency(63/255)
+            push()
             fill(100,63);
             arc(this.pos.x,this.pos.y,this.range*2,this.range*2,
                 this.angle-this.visionfield/2,this.angle+this.visionfield/2)
+            pop()
         }
-        //if ((PI-abs(this.player.dir))<2*PI/3){
-        //    //var bs = [this.player.dir+PI/3,this.player.dir-PI/3,this.player.dir+2*PI/3,this.player.dir-2*PI/3]//boundaries
-        //    var altangle = Math.sign(this.angle)*(-1) *(2*PI-abs(this.angle)) 
-        //}else{
-        //    if (Math.abs(this.angle-this.player.dir)>PI/3 &&  Math.abs(this.angle-this.player.dir)<2*PI/3){
-        //        //*2 because it is the diameter of full circle
-        //        // grey, transparency(63/255)
-        //        fill(100,63);
-        //        arc(this.pos.x,this.pos.y,this.range*2,this.range*2,
-        //            this.angle-this.visionfield/2,this.angle+this.visionfield/2)
-        //    }
-        //}
-
-        
         
     }
     this.convertraddomain = function (angle){
@@ -58,6 +41,11 @@ function Cannon(range,visionfield,player){
 
     }
     this.checkclickinrange = function(){
+        // checks 
+        // 1. whether the mouse is within this.range pixels of the ship,
+        // 2. the difference between the mouse angle and the ship's steering angle (where the front points to) 
+        //    is between the field size and PI-field. i.e. valid firing angle is from either side of the ship 
+        //    with allowed variability to left or right of (PI-2*field)/2 radian.  
         var altangle = Math.sign(this.angle)*(-1) *(2*PI-abs(this.angle)) 
         var absdiff = abs(this.angle-this.player.dir)
         var absdiff2 = abs(altangle-this.player.dir)

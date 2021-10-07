@@ -131,7 +131,7 @@ function newConnection(socket) {
                 player.yacc = 0.3
             } else if (data.pressedkeycode ===K_D){
                 player.xacc = 0.3
-            } else if (data.pressedkeycode ===K_Space){
+            } else if (data.pressedkeycode ==="mouse"){
                 cannonball = player.fire(data.targetX,data.targetY)
                 //console.log("----------------genball----------------\n",cannonball)
                 if (cannonball){

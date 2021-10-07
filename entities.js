@@ -18,6 +18,7 @@ class Player{
         this.health = 100
         this.hitbox_size = 16 // need help from arkie with what this is
     }
+    // change the velocity according to current drag and acceleration..
     update() {
         //var newvel = createVector(mouseX - width / 2, mouseY - height / 2);
         //newvel.setMag(3);
@@ -34,7 +35,7 @@ class Player{
         this.cannon.update()
     };
 
-      //ensures the player doesn't go beyond the map
+    //ensures the player doesn't go beyond the map
     constrain() {
         if ( this.pos.y >= 600) { this.pos.y = 600; }
         if ( this.pos.x >= 600) { this.pos.x = 600; }
@@ -66,20 +67,23 @@ function Cannon(range,visionfield,player){
     this.fire = function (targetX,targetY){
         //input validity checking
         var dist = mag(targetX,targetY)
+        // this.angle in [-pi,pi]
         this.angle = Math.atan2(targetY,targetX)
+        // altangle expresses this angle in the alternative domain that goes either +- [0,2*PI]
         var altangle = Math.sign(this.angle)*(-1) *(2*Math.PI-Math.abs(this.angle)) 
         var absdiff = Math.abs(this.angle-this.player.dir)
         var absdiff2 = Math.abs(altangle-this.player.dir)
         var field = this.visionfield // PI/3
-        //console.log(dist <= this.range)
-        //console.log(this.x,)
-        //console.log(Math.sign(this.angle),this.angle)
-        //console.log(absdiff,absdiff2,field)
+        // checks 
+        // 1. whether the mouse is within this.range pixels of the ship,
+        // 2. the difference between the mouse angle and the ship's steering angle (where the front points to) 
+        //    is between the field size and PI-field. i.e. valid firing angle is from either side of the ship 
+        //    with allowed variability to left or right of (PI-2*field)/2 radian.  
         if (    (dist <= this.range) &&
                 ((absdiff>field && absdiff<(Math.PI-field)) || (absdiff2> field && absdiff2<(Math.PI-field)))
             ){
             startpos = {x:this.pos.x,y:this.pos.y}
-            // move slightly off player's collision zone
+            // move slightly off player's collision zone so the ball doesn't hit the player
             shift = setMag({x:targetX,y:targetY},this.player.size/2+5)
             shiftstart = addVec(startpos,shift)
             var data = {
@@ -87,11 +91,6 @@ function Cannon(range,visionfield,player){
                 end:{x:startpos.x+targetX, y:startpos.y+targetY},
                 speed: this.speed
             }
-
-            //console.log('-----------fired-----------')
-            //console.log(data.start)
-            //console.log(data.end)
-            //return data
             return new Cannonball(data.start,data.end,data.speed)
         }
 
@@ -107,6 +106,7 @@ class Cannonball{
         this.done = false;
         this.diameter = 8
     }
+    //checks whether the ball's euclidian distance from a player is less than the two radius combined. 
     contactcheck(players){
         for(var i = 0; i < players.length;i++){
             //if the distance between two points are less than two collision circle - contact.
@@ -116,12 +116,14 @@ class Cannonball{
             }
         }
     }
+    //calculates the distace the ball travels per heartbeat
     calcDelta(){
         var d = {x:(this.end.x-this.start.x),y:(this.end.y-this.start.y) }
         var oldmag = mag(d.x,d.y)
         var delta = {x:d.x/oldmag*this.speed,y:d.y/oldmag*this.speed}
         return delta
     }
+    //update the position of the ball each heartbeat and if it now travels further from the target, removes it.
     update(){
         //delta = end.sub(this.start).setMag(this.speed);
         this.pos = addVec(this.pos,this.delta);
