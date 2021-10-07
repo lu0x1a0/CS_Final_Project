@@ -87,20 +87,26 @@ function draw() {
     for (var i = players.length - 1; i >= 0; i--) {
       var id = players[i].id;
       if (id !== socket.id) {
-        fill(0,0,255);
-        ellipse(players[i].x,players[i].y,64,64)// players[i].dir,players[i].dir);
-        fill(255);
-        textAlign(CENTER);
-        textSize(12);
-        text(players[i].username, players[i].x, players[i].y + players[i].dir*1.5);
-
-        //health bar
-        fill(100,63)
-        //base
-        rect(players[i].x-players[i].size/2, players[i].y-players[i].size/2-20,players[i].size,10);
-        //health
-        fill(0,220,0)
-        rect(players[i].x-players[i].size/2, players[i].y-players[i].size/2-20,players[i].size*abs(players[i].health)/100,10);
+        showship(
+          players[i].dir,
+          players[i].x,players[i].y,
+          player.img_boat,
+          players[i].username,players[i].size,
+          players[i].health,[]
+        )
+        //fill(0,0,255);
+        //ellipse(players[i].x,players[i].y,64,64)// players[i].dir,players[i].dir);
+        //fill(255);
+        //textAlign(CENTER);
+        //textSize(12);
+        //text(players[i].username, players[i].x, players[i].y + players[i].dir*1.5);
+        ////health bar
+        //fill(100,63)
+        ////base
+        //rect(players[i].x-players[i].size/2, players[i].y-players[i].size/2-20,players[i].size,10);
+        ////health
+        //fill(0,220,0)
+        //rect(players[i].x-players[i].size/2, players[i].y-players[i].size/2-20,players[i].size*abs(players[i].health)/100,10);
       }
       else{
         player.show()

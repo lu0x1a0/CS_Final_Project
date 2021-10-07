@@ -59,9 +59,6 @@ class Player{
     }
     pop()
 
-
-
-
     fill(255);
     textAlign(CENTER);
     textSize(12);
@@ -82,5 +79,34 @@ class Player{
     if (this.cannon.checkclickinrange()){
       return this.cannon.fireData()
     }
+  }
+}
+
+function showship(dir,x,y,img_boat,Username,size,health,funcs){
+  push()
+  rotate(dir+PI)
+  var imgx = x //-40
+  var imgy = y //- 24
+  image(img_boat,imgx*cos(-dir-PI)-imgy*sin(-dir-PI),imgx*sin(-dir-PI)+imgy*cos(-dir-PI));
+  rotate(-dir-PI)
+
+  pop()
+
+  fill(255);
+  textAlign(CENTER);
+  textSize(12);
+  text(Username, x, y + size*1.5);
+
+  //health bar
+  push()
+  fill(100,63)
+  //base
+  rect(x-size/2, y-size/2-20,size,10);
+  //health
+  fill(0,220,0)
+  rect(x-size/2, y-size/2-20,size*abs(health)/100,10);
+  pop()
+  for(f in funcs){
+    funcs()
   }
 }
