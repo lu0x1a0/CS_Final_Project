@@ -14,7 +14,7 @@ class Player{
         this.yacc = 0
         this.maxspeed = 4
         this.drag = 0.1
-        this.cannon = new Cannon(this.size*5,Math.PI/4,this)
+        this.cannon = new Cannon(this.size*5,Math.PI/3,this)
         this.health = 100
         this.hitbox_size = 16 // need help from arkie with what this is
     }
@@ -56,17 +56,28 @@ function Cannon(range,visionfield,player){
     this.angle = 0
     this.player = player
     this.speed = player.maxspeed*1.5
-    this.update = function(x,y){
+    this.update = function(){//x,y){
       this.pos = this.player.pos
       //this.angle = Math.atan2(mouseY - height / 2, mouseX - width / 2);
-      this.angle = Math.atan2(x,y);
+      //this.angle = Math.atan2(x,y);
+      //console.log("------------cannon-update---------\n",x,y,this.angle)
     }
 
     this.fire = function (targetX,targetY){
         //input validity checking
         var dist = mag(targetX,targetY)
-        //Math.atan2(targetY,targetX)
-        if ( dist <= this.range && 1 ){
+        this.angle = Math.atan2(targetY,targetX)
+        var altangle = Math.sign(this.angle)*(-1) *(2*Math.PI-Math.abs(this.angle)) 
+        var absdiff = Math.abs(this.angle-this.player.dir)
+        var absdiff2 = Math.abs(altangle-this.player.dir)
+        var field = this.visionfield // PI/3
+        //console.log(dist <= this.range)
+        //console.log(this.x,)
+        //console.log(Math.sign(this.angle),this.angle)
+        //console.log(absdiff,absdiff2,field)
+        if (    (dist <= this.range) &&
+                ((absdiff>field && absdiff<(Math.PI-field)) || (absdiff2> field && absdiff2<(Math.PI-field)))
+            ){
             startpos = {x:this.pos.x,y:this.pos.y}
             // move slightly off player's collision zone
             shift = setMag({x:targetX,y:targetY},this.player.size/2+5)
@@ -77,9 +88,9 @@ function Cannon(range,visionfield,player){
                 speed: this.speed
             }
 
-            console.log('-----------fired-----------')
-            console.log(data.start)
-            console.log(data.end)
+            //console.log('-----------fired-----------')
+            //console.log(data.start)
+            //console.log(data.end)
             //return data
             return new Cannonball(data.start,data.end,data.speed)
         }

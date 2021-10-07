@@ -1,6 +1,6 @@
 function Cannon(range,visionfield,player){
     this.pos = player.pos
-    this.range = range
+    this.range = range    // max distance you can shoot out from ship
     this.visionfield = visionfield
     this.angle = 0
     this.player = player
@@ -14,27 +14,57 @@ function Cannon(range,visionfield,player){
         this.angle = atan2(mouseY - height / 2, mouseX - width / 2);
         var perp = [(this.player.dir+PI),(this.player.dir-PI) ]
         // angle goes from -pi to pi
-        //if (  (this.angle>perp[0]-PI/6 && this.angle<perp[0]+PI/6)     ){ 
+        var altangle = Math.sign(this.angle)*(-1) *(2*PI-abs(this.angle)) 
+        var absdiff = abs(this.angle-this.player.dir)
+        var absdiff2 = abs(altangle-this.player.dir)
+        var field = this.visionfield // PI/3
+        if ( (absdiff>field && absdiff<(PI-field)) || (absdiff2> field && absdiff2<(PI-field)) ){
             //*2 because it is the diameter of full circle
             // grey, transparency(63/255)
             fill(100,63);
             arc(this.pos.x,this.pos.y,this.range*2,this.range*2,
                 this.angle-this.visionfield/2,this.angle+this.visionfield/2)
+        }
+        //if ((PI-abs(this.player.dir))<2*PI/3){
+        //    //var bs = [this.player.dir+PI/3,this.player.dir-PI/3,this.player.dir+2*PI/3,this.player.dir-2*PI/3]//boundaries
+        //    var altangle = Math.sign(this.angle)*(-1) *(2*PI-abs(this.angle)) 
+        //}else{
+        //    if (Math.abs(this.angle-this.player.dir)>PI/3 &&  Math.abs(this.angle-this.player.dir)<2*PI/3){
+        //        //*2 because it is the diameter of full circle
+        //        // grey, transparency(63/255)
+        //        fill(100,63);
+        //        arc(this.pos.x,this.pos.y,this.range*2,this.range*2,
+        //            this.angle-this.visionfield/2,this.angle+this.visionfield/2)
+        //    }
         //}
+
+        
         
     }
     this.convertraddomain = function (angle){
         if (angle>PI){
-            remain = Math.floor(angle/(2*PI))
+            remain = angle%(2*PI)
+            if (remain>PI){
+                return -(PI-remain%PI)
+            }
         } else if (angle<PI) {
-
+            remain = angle%(2*PI)
+            if (remain<-PI){
+                return (PI+remain%PI)
+            }
         }else{
             return angle
         }
 
     }
     this.checkclickinrange = function(){
-        if ( mag(mouseY - height / 2, mouseX - width / 2)< this.range ){
+        var altangle = Math.sign(this.angle)*(-1) *(2*PI-abs(this.angle)) 
+        var absdiff = abs(this.angle-this.player.dir)
+        var absdiff2 = abs(altangle-this.player.dir)
+        var field = this.visionfield // PI/3
+        if (    (mag(mouseY - height / 2, mouseX - width / 2)< this.range) &&
+                ((absdiff>field && absdiff<(PI-field)) || (absdiff2> field && absdiff2<(PI-field)))
+            ){
             return true
         }
         else {

@@ -12,7 +12,7 @@ class Player{
     this.drag = 0.2
     this.health = 100
 
-    this.cannon = new Cannon(this.size*5,PI/4,this)
+    this.cannon = new Cannon(this.size*5,PI/3,this)
     this.hitbox_size = 32
   }
 

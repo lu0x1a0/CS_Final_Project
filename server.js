@@ -133,7 +133,7 @@ function newConnection(socket) {
                 player.xacc = 0.3
             } else if (data.pressedkeycode ===K_Space){
                 cannonball = player.fire(data.targetX,data.targetY)
-                console.log("----------------genball----------------\n",cannonball)
+                //console.log("----------------genball----------------\n",cannonball)
                 if (cannonball){
                     // use playerid+current time stamp as id, might not safe from server attack with spamming io
                     projectiles[player.id+(new Date()).getTime()] = cannonball
