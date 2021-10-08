@@ -1,7 +1,6 @@
 const addVec = require("./utils.js").addVec
 class GameMap {
 
-    // These should eventually be moved to a separate image file
 
     constructor() {
       this.map = [
@@ -38,10 +37,41 @@ class GameMap {
           ['L','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','L'],
           ['L','L','L','L','L','L','L','L','L','L','L','L','L','L','L','L','L','L','L','L','L','L','L','L','L','L','L','L','L','L','L','L'],
         ];
-        this.length = 32
-        this.width = 32
+
+        // Transpose so that x/y coords match board
+        this.map = this.map.reduce((prev, next) => next.map((item, i) => (prev[i] || []).concat(next[i])), []);
+        
+        // Map parameters
+        this.xlen = 32
+        this.ylen = 32
         this.tilesize = 32
+
+        this.max_treasure = 8
+
+        this.treasure_array = [];
+        // Attempt to generate treasure
+        for (let i = 0; i < this.max_treasure; i++) {
+            // If we hit a water tile, add to list
+            this.generate_treasure()
+        }
     }
+
+
+    generate_treasure() {
+
+        // Tries to generate tresure if we have space for more treasure
+        if (this.treasure_array.length >= this.max_treasure) { return; }
+
+        var randx = Math.floor(Math.random()*this.xlen);
+        var randy = Math.floor(Math.random()*this.ylen);
+
+        // Only generates if we randomly pick Water
+        if (this.map[randx][randy] === 'W') {
+            this.treasure_array.push({x:randx, y:randy})
+        }
+        // This can lead to  double treasure
+    }
+
     player_move(pos, vel, hitbox_size) {
 
         var new_pos = addVec(pos,vel)//p5.Vector.add(pos, vel)
@@ -49,27 +79,7 @@ class GameMap {
         // Currently just check centre point
         var px = Math.floor((pos.x)/this.tilesize)
         var py = Math.floor((pos.y)/this.tilesize)
-        //console.log(
-        //    "------------------------------\n\n",
-        //    px,py,"\n",
-        //    "------------------------------\n\n",
-        //)
-        //console.log(
-        //    this.map.length,
-        //    this.map[0].length
-        //)
 
-        // For now, let's assume we cannot move more than one tile in a tick
-
-        // // Ensure that if there are any walls around, they restrict movement
-        // for (let i = -1; i <= 1; i++) {
-        //     for (let j = -1; j <= 1; j++) {
-        //         if (i == 0 && j == 0) { continue; }
-        //         if (this.map[px+i][py+j]) {
-        //             // We have a wall at (px+i, py+j)
-        //         }
-        //     }
-        // }
 
         // Wall left
         if (this.map[px-1][py] === 'L') { new_pos.x = Math.max(new_pos.x, (px+1)*this.tilesize) }
@@ -81,7 +91,6 @@ class GameMap {
         if (this.map[px][py+1] === 'L') { new_pos.y = Math.min(new_pos.y, (py)*this.tilesize) }
 
         return new_pos;
-
     }
 
 }

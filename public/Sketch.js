@@ -4,18 +4,21 @@ var players = [];
 var projectiles = [];
 var zoom = 1;
 var gameStarted = 0;
-var gamemap
+var gamemaprender
 
 //Runs when first connected to the webpage
 function setup() {
   socket = io.connect('http://localhost:5000'  );// Change to if pushing to heroku 'https://hidden-reef-26635.herokuapp.com/' http://localhost:5000
   createCanvas(windowWidth, windowHeight);
   imageMode(CENTER)
-  gamemap = new GameMap();
-  gamemap.preload()
+
+
   // changed start angle to 0
-  player = new Player("", 32, 32, 0);
+  player = new Player("", 128, 128, 0);
   player.preload()
+
+  gamemaprender = new GameMapRender();
+  gamemaprender.preload()
 }
 
 
@@ -35,13 +38,21 @@ function startGame(usernameInput) {
   };
   console.log('--------------------------startgame ran')
   socket.emit('start',data);
-  gameStarted = 1;
+
+  // Must receive map before beginning game
+  socket.once('client_start',
+    function(data) {
+      gamemaprender.load_map(data.gamemap);
+      gameStarted = 1;
+    }
+  )
+
+
   //Updates player list when new information is sent to the server
   socket.on('heartbeat',
     function(data) {
       players = data.players;
       projectiles = data.projectiles;
-      //console.log(data)
     }
   )
   socket.on("disconnect", (reason) => {
@@ -81,7 +92,7 @@ function draw() {
     //camera(player.pos.x, player.pos.y, 1000, player.pos.x, player.pos.y, 0, 0, 1, 0);
 
     // Create game map background
-    gamemap.display()
+    gamemaprender.display()
 
     //Displays every other ship other than the players boat
     for (var i = players.length - 1; i >= 0; i--) {
