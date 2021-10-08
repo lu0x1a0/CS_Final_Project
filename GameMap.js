@@ -76,6 +76,10 @@ class GameMap {
 
         var new_pos = addVec(pos, vel)
 
+        console.log(pos)
+        console.log(vel)
+        console.log(hitbox_size)
+
         // Check each of four corners
         for (let i = 0; i <= 1; i++) {
             for (let j = 0; j <= 1; j++) {
@@ -84,8 +88,6 @@ class GameMap {
                 var px = Math.floor((pos.x+(i-0.5)*hitbox_size)/this.tilesize)
                 var py = Math.floor((pos.y+(j-0.5)*hitbox_size)/this.tilesize)
                 
-                console.log(px, py)
-
                 // Wall left
                 if (this.map[px-1][py] === 'L') { new_pos.x = Math.max(new_pos.x, (px)*this.tilesize+(i-0.5)*hitbox_size) }
                 // Wall right
