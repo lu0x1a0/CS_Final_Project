@@ -11,8 +11,8 @@ function setup() {
   socket = io.connect('http://localhost:5000'  );// Change to if pushing to heroku 'https://hidden-reef-26635.herokuapp.com/' http://localhost:5000
   createCanvas(windowWidth, windowHeight);
   imageMode(CENTER)
-  gamemap = new GameMap();
-  gamemap.preload()
+
+
   // changed start angle to 0
   player = new Player("", 32, 32, 0);
   player.preload()
@@ -35,7 +35,15 @@ function startGame(usernameInput) {
   };
   console.log('--------------------------startgame ran')
   socket.emit('start',data);
+  socket.on('sendmap',
+    function(data) {
+      gamemap = new GameMapRender(data.backend_map);
+      gamemap.preload();
+    }
+  )
+
   gameStarted = 1;
+
   //Updates player list when new information is sent to the server
   socket.on('heartbeat',
     function(data) {

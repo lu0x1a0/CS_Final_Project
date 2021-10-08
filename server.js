@@ -28,9 +28,13 @@ io.sockets.on('connection',newConnection);
 // initialize gamemap -- assume we only have 1 map
 const GameMap = require("./GameMap.js").GameMap
 const gamemap = new GameMap()
+
+
 //List of all players and bots connected to the server
 var players = [];
 var projectiles = {};
+
+
 playerslocjson = function(){
     var l = []
     for(var i = 0; i<players.length;i++){
@@ -60,6 +64,7 @@ projectileslocjson = function(){
     }
     return l
 }
+
 //Sends a new update out every 50 ms containing all player info
 setInterval(heartbeat,10);
 function heartbeat() {
@@ -87,27 +92,33 @@ function heartbeat() {
 
         }
     }
+
+    // ON HEARBEAT - DATA WE SEND TO THE BACKEND
     io.sockets.emit('heartbeat', {
         players:playerslocjson(),
         projectiles:projectileslocjson()
+        // TODO: send out treasure data too
     });
-    //if (Object.keys(projectiles).length){
-        //console.log(projectiles);
-    //}
 }
 
 //Runs after a new connection is established with a client
 function newConnection(socket) {
     console.log("new connection " + socket.id)
 
-    //Generate a new player and add them to the list of players when first connecting
+    // Generate a new player and add them to the list of players when first connecting
+    // Also send gamemap
     socket.on('start',
         function(data) {
             var player = new entities.Player(socket.id, data.username, data.x, data.y, data.dir);
             players.push(player);
             console.log("-----------start---------------")
             console.log(players)
-        })
+            // Send gamemap on start
+            io.sockets.emit('sendmap', {
+                backend_map:gamemap
+            });
+        }
+    )
 
     //finds the player in the list of players and updates them based on new information sent from the client
     socket.on('updatepressed',
@@ -139,7 +150,9 @@ function newConnection(socket) {
                     projectiles[player.id+(new Date()).getTime()] = cannonball
                 }
             }
-        })
+        }
+    )
+
     socket.on('updatereleased',
         function(data){
             var player
@@ -165,5 +178,6 @@ function newConnection(socket) {
     socket.on("disconnect", (reason) => {
         console.log("--------------------reason-------------------")
         console.log(reason)
-      });
+      }
+    );
 }
