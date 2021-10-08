@@ -1,6 +1,7 @@
 //Run using "node server.js" or heroku local web
 //pirate server.
 
+
 const entities = require('./entities.js')
 stub = new entities.Player(1,2,3,4)
 console.log(stub)
@@ -29,9 +30,10 @@ io.sockets.on('connection',newConnection);
 
 //------------------------------ BACKEND SETUP -------------------------------//
 
-// initialize gamemap -- assume we only have 1 map
+// initialize gamemap -- MAP SELECTION NOT IMPLEMENTED
 const GameMap = require("./GameMap.js").GameMap
-var gamemap = new GameMap()
+require("./MapFiles.js")
+var gamemap = new GameMap(Maps.MapRocky)
 
 //List of all players and bots connected to the server
 var players = [];
