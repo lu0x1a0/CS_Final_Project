@@ -27,13 +27,13 @@ class GameMapRender {
             for (let y = 0; y < this.ylen; y++) {
                 switch (this.map[x][y]) {
                     case 'L':
-                        image(this.img_land, x*this.tilesize, y*this.tilesize);
+                        image(this.img_land, x*this.tilesize, y*this.tilesize, this.tilesize, this.tilesize);
                         break;
                     case 'W':
-                        image(this.img_water, x*this.tilesize, y*this.tilesize);
+                        image(this.img_water, x*this.tilesize, y*this.tilesize, this.tilesize, this.tilesize);
                         break;
                     default:
-                        image(this.img_water, x*this.tilesize, y*this.tilesize);
+                        image(this.img_water, x*this.tilesize, y*this.tilesize, this.tilesize, this.tilesize);
                     
                 }
             }
@@ -41,7 +41,7 @@ class GameMapRender {
 
         // Display all treasure
         for (let treasure of this.treasure_array) {
-            image(this.img_treasure_water, treasure.x*this.tilesize, treasure.y*this.tilesize);
+            image(this.img_treasure_water, treasure.x*this.tilesize, treasure.y*this.tilesize, this.tilesize, this.tilesize);
         }
     }
 
