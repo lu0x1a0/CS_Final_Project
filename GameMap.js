@@ -74,7 +74,7 @@ class GameMap {
 
     player_move(pos, vel, hitbox_size) {
 
-        var new_pos = p5.Vector.add(pos, vel)
+        var new_pos = addVec(pos, vel)
 
         // Check each of four corners
         for (let i = 0; i <= 1; i++) {
@@ -99,6 +99,17 @@ class GameMap {
         }
 
         return new_pos;
+    }
+
+    tojson() {
+        return {
+            map:this.map,
+            xlen:this.xlen,
+            ylen:this.ylen,
+            tilesize:this.tilesize,
+            treasure_array:this.treasure_array,
+        }
+        
     }
 
 }

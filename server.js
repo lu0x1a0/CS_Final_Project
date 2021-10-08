@@ -115,7 +115,7 @@ function newConnection(socket) {
             console.log(players)
             // Send gamemap on start
             io.sockets.emit('sendmap', {
-                backend_map:gamemap
+                gamemap:gamemap.tojson()
             });
         }
     )

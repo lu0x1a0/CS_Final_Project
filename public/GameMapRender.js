@@ -1,13 +1,6 @@
 class GameMapRender {
 
-    constructor(gamemap) {
-
-        // Load from a GameMap
-        this.map = gamemap.map;
-        this.xlen = gamemap.xlen;
-        this.ylen = gamemap.ylan;
-        this.tilesize = gamemap.tilesize;
-        this.treasure_array = gamemap.treasure_array;
+    constructor() {
 
     }
 
@@ -18,7 +11,26 @@ class GameMapRender {
         this.img_water = loadImage('assets/img_water.png');
     }
 
+    load_map(gamemap) {
+
+        // Load from a GameMap
+        this.map = gamemap.map;
+        this.xlen = gamemap.xlen;
+        this.ylen = gamemap.ylen;
+        this.tilesize = gamemap.tilesize;
+        this.treasure_array = gamemap.treasure_array;
+
+        for (let x = 0; x < xlen; x++) {
+            for (let y = 0; y < ylen; y++) {
+                console.log(map[x][y])
+            }
+        }
+
+    }
+
     display() {
+
+        console.log("WE TRY TO DISPLAY");
 
         // Display background map
         for (let x = 0; x < this.xlen; x++) {
@@ -37,10 +49,10 @@ class GameMapRender {
             }
         }
 
-        // Display all treasure
-        for (let treasure of this.treasure_array) {
-            image(this.img_treasure_water, treasure.x*this.tilesize, treasure.y*this.tilesize);
-        }
+        // // Display all treasure
+        // for (let treasure of this.treasure_array) {
+        //     image(this.img_treasure_water, treasure.x*this.tilesize, treasure.y*this.tilesize);
+        // }
     }
 
 }
