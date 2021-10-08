@@ -38,20 +38,21 @@ function startGame(usernameInput) {
   };
   console.log('--------------------------startgame ran')
   socket.emit('start',data);
-  socket.on('sendmap',
+
+  // Must receive map before beginning game
+  socket.once('client_start',
     function(data) {
       gamemaprender.load_map(data.gamemap);
+      gameStarted = 1;
     }
   )
 
-  gameStarted = 1;
 
   //Updates player list when new information is sent to the server
   socket.on('heartbeat',
     function(data) {
       players = data.players;
       projectiles = data.projectiles;
-      //console.log(data)
     }
   )
   socket.on("disconnect", (reason) => {

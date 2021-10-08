@@ -2,14 +2,15 @@
 //pirate server.
 
 const entities = require('./entities.js')
-//import * as entities from './entities.js'
 stub = new entities.Player(1,2,3,4)
 console.log(stub)
+
 let K_W = 87;
 let K_A = 65;
 let K_S = 83;
 let K_D = 68;
 let K_Space = 32;
+
 //process.env.PORT is used for heroku to connect when running locally use LocalHost:5000
 var PORT = process.env.PORT || 5000
 
@@ -25,15 +26,19 @@ var socket = require('socket.io');
 var io = socket(server);
 io.sockets.on('connection',newConnection);
 
+
+//------------------------------ BACKEND SETUP -------------------------------//
+
 // initialize gamemap -- assume we only have 1 map
 const GameMap = require("./GameMap.js").GameMap
-const gamemap = new GameMap()
-
+var gamemap = new GameMap()
 
 //List of all players and bots connected to the server
 var players = [];
 var projectiles = {};
 
+
+//------------------------------ JSON HELPER FUNCTIONS -------------------------------//
 
 playerslocjson = function(){
     var l = []
@@ -65,8 +70,12 @@ projectileslocjson = function(){
     return l
 }
 
-//Sends a new update out every 50 ms containing all player info
+//------------------------------ SERVER EVENTS -------------------------------//
+
+// Update every 50 ms
 setInterval(heartbeat,10);
+
+// RUNS EVERY SERVER-WIDE UPDATE
 function heartbeat() {
     for (var i = 0; i < players.length; i++ ) {
         //console.log("LOOP ENTERED")
@@ -92,8 +101,7 @@ function heartbeat() {
 
         }
     }
-
-    // ON HEARBEAT - DATA WE SEND TO THE BACKEND
+    // Data we send to front end
     io.sockets.emit('heartbeat', {
         players:playerslocjson(),
         projectiles:projectileslocjson()
@@ -101,7 +109,7 @@ function heartbeat() {
     });
 }
 
-//Runs after a new connection is established with a client
+// RUNS WHEN A NEW CONNECTION JOINS
 function newConnection(socket) {
     console.log("new connection " + socket.id)
 
@@ -113,9 +121,10 @@ function newConnection(socket) {
             players.push(player);
             console.log("-----------start---------------")
             console.log(players)
+
             // Send gamemap on start
-            io.sockets.emit('sendmap', {
-                gamemap:gamemap.tojson()
+            io.sockets.emit('client_start', {
+                gamemap:gamemap
             });
         }
     )

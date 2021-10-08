@@ -67,51 +67,30 @@ class GameMap {
 
         // Only generates if we randomly pick Water
         if (this.map[randx][randy] === 'W') {
-            this.treasure_array.push([randx,randy])
+            this.treasure_array.push({x:randx, y:randy})
         }
         // This can lead to  double treasure
     }
 
     player_move(pos, vel, hitbox_size) {
 
-        var new_pos = addVec(pos, vel)
+        var new_pos = addVec(pos,vel)//p5.Vector.add(pos, vel)
 
-        console.log(pos)
-        console.log(vel)
-        console.log(hitbox_size)
+        // Currently just check centre point
+        var px = Math.floor((pos.x)/this.tilesize)
+        var py = Math.floor((pos.y)/this.tilesize)
 
-        // Check each of four corners
-        for (let i = 0; i <= 1; i++) {
-            for (let j = 0; j <= 1; j++) {
 
-                // Set (px,py) to be the coordinates of the map square containing the corner
-                var px = Math.floor((pos.x+(i-0.5)*hitbox_size)/this.tilesize)
-                var py = Math.floor((pos.y+(j-0.5)*hitbox_size)/this.tilesize)
-                
-                // Wall left
-                if (this.map[px-1][py] === 'L') { new_pos.x = Math.max(new_pos.x, (px)*this.tilesize+(i-0.5)*hitbox_size) }
-                // Wall right
-                if (this.map[px+1][py] === 'L') { new_pos.x = Math.min(new_pos.x, (px+1)*this.tilesize+(i-0.5)*hitbox_size-0.001) }
-                // Wall above
-                if (this.map[px][py-1] === 'L') { new_pos.y = Math.max(new_pos.y, (py)*this.tilesize+(j-0.5)*hitbox_size) }
-                // Wall below
-                if (this.map[px][py+1] === 'L') { new_pos.y = Math.min(new_pos.y, (py+1)*this.tilesize+(j-0.5)*hitbox_size-0.001) }
-                
-            }
-        }
+        // Wall left
+        if (this.map[px-1][py] === 'L') { new_pos.x = Math.max(new_pos.x, (px+1)*this.tilesize) }
+        // Wall right
+        if (this.map[px+1][py] === 'L') { new_pos.x = Math.min(new_pos.x, (px)*this.tilesize) }
+        // Wall above
+        if (this.map[px][py-1] === 'L') { new_pos.y = Math.max(new_pos.y, (py+1)*this.tilesize) }
+        // Wall below
+        if (this.map[px][py+1] === 'L') { new_pos.y = Math.min(new_pos.y, (py)*this.tilesize) }
 
         return new_pos;
-    }
-
-    tojson() {
-        return {
-            map:this.map,
-            xlen:this.xlen,
-            ylen:this.ylen,
-            tilesize:this.tilesize,
-            treasure_array:this.treasure_array,
-        }
-        
     }
 
 }

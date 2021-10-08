@@ -1,9 +1,6 @@
 class GameMapRender {
 
-    constructor() {
-
-    }
-
+    constructor() { }
 
     preload() {
         this.img_land = loadImage('assets/img_land.png');
@@ -20,17 +17,10 @@ class GameMapRender {
         this.tilesize = gamemap.tilesize;
         this.treasure_array = gamemap.treasure_array;
 
-        for (let x = 0; x < xlen; x++) {
-            for (let y = 0; y < ylen; y++) {
-                console.log(map[x][y])
-            }
-        }
 
     }
 
     display() {
-
-        console.log("WE TRY TO DISPLAY");
 
         // Display background map
         for (let x = 0; x < this.xlen; x++) {
@@ -49,10 +39,10 @@ class GameMapRender {
             }
         }
 
-        // // Display all treasure
-        // for (let treasure of this.treasure_array) {
-        //     image(this.img_treasure_water, treasure.x*this.tilesize, treasure.y*this.tilesize);
-        // }
+        // Display all treasure
+        for (let treasure of this.treasure_array) {
+            image(this.img_treasure_water, treasure.x*this.tilesize, treasure.y*this.tilesize);
+        }
     }
 
 }
