@@ -1,6 +1,9 @@
 const mag = require("./utils.js").mag
 const addVec = require("./utils.js").addVec
 const setMag = require("./utils.js").setMag
+const Maps = require("./MapFiles.js").Maps
+
+
 class Player{
     constructor(id,Username, x, y, dir){
         this.pos = {x:x, y:y};
@@ -17,23 +20,175 @@ class Player{
         this.cannon = new Cannon(this.size*5,Math.PI/3,this)
         this.health = 100
         this.hitbox_size = 16 // need help from arkie with what this is
+        this.isBot = false;
     }
     // change the velocity according to current drag and acceleration..
-    update() {
+    update(players) {
         //var newvel = createVector(mouseX - width / 2, mouseY - height / 2);
         //newvel.setMag(3);
         //this.vel.lerp(newvel, 0.2);
         //this.pos.add(this.vel);
 
         // wasd acc movement version
+        if (!this.isBot) {
+            this.vel = {x:this.vel.x+this.xacc,y:this.vel.y+this.yacc}
+            this.vel = setMag(this.vel, Math.min (Math.max(mag(this.vel.x,this.vel.y)-this.drag,0),this.maxspeed ) )
+            this.pos = addVec(this.pos,this.vel)
+            if (mag(this.vel.x,this.vel.y)>0.0001){
+                this.dir = Math.atan2(this.vel.y,this.vel.x)
+            }
+            this.cannon.update()
+        } else {
+            this.updateBot(players);
+        }
+    };
+
+    updateBot(players) {
+        const GameMap = require("./GameMap.js").GameMap
+        var Gmap = new GameMap(Maps.MapSquare)
+        var map = Gmap.map;
+
+        var playerSet = new Set();
+
+
+        for(let i = 0; i<players.length;i++) {
+            let pixelX = players[i].pos.x
+            let pixelY = players[i].pos.y
+            let factor = Gmap.tilesize
+            let x = Math.floor(pixelX/factor)
+            let y = Math.floor(pixelY/factor)
+            let tmp = [x,y]
+            playerSet.add(tmp)
+            map[x][y] = 'P'
+        }
+        
+        let Visited = Array(Gmap.xlen).fill().map(() => Array(Gmap.ylen).fill(0));
+        var parents = {}
+        let BotX = Math.floor(this.pos.x/Gmap.tilesize)
+        let BotY = Math.floor(this.pos.y/Gmap.tilesize)
+        var start = [BotX,BotY]
+        console.log(Visited)
+        console.log(Visited.length)
+
+        Visited[BotX][BotY] = 1;
+        var end = []
+        var Q = []
+        Q.push(start)
+        let j = 20;
+
+        while (Q.length != 0) {
+        let V = Q.shift()
+        let AV = this.ComputeAdjacentVertex(V,map);
+        let k = 0;
+        for (let i = 0; i < AV.length; ++i) {
+            if (!Visited[AV[i][0]][AV[i][1]]) {
+                Visited[AV[i][0]][AV[i][1]] = 1;
+                if (map[AV[i][0]][AV[i][1]] == 'W') {
+                    parents[AV[i]] = V;
+                    Q.push(AV[i])
+                }
+                else if (map[AV[i][0]][AV[i][1]] == 'P') {
+                    end = AV[i];
+                    parents[AV[i]] = V;
+                    k = 1;
+                    break;
+                }
+            }
+        }
+            if (k) {
+                break;
+            }
+        }
+
+        for(let i = 0; i<players.length;i++) {
+            let pixelX = players[i].pos.x
+            let pixelY = players[i].pos.y
+            let factor = Gmap.tilesize
+            let x = Math.floor(pixelX/factor)
+            let y = Math.floor(pixelY/factor)
+            map[x][y] = 'W'
+        }
+
+        if (end.length != 0) {
+            var IndexDirection = this.Decision(parents,start,end)  
+            this.DecisionHandler(start, IndexDirection)
+        }
+
+
+    }
+
+    DecisionHandler(Start,DecisionIndex) {
+        let i = Start[0] - DecisionIndex[0]
+        let j = Start[1] - DecisionIndex[1]
+        if (i == -1) {
+            this.xacc = 0.3
+        }
+        else if (i == 1) {
+            this.xacc = -0.3
+        }
+        if (j == 1) {
+            this.yacc = -0.3
+        }
+        else if (j == -1) {
+
+            this.yacc = 0.3
+        }
+
         this.vel = {x:this.vel.x+this.xacc,y:this.vel.y+this.yacc}
         this.vel = setMag(this.vel, Math.min (Math.max(mag(this.vel.x,this.vel.y)-this.drag,0),this.maxspeed ) )
         this.pos = addVec(this.pos,this.vel)
         if (mag(this.vel.x,this.vel.y)>0.0001){
             this.dir = Math.atan2(this.vel.y,this.vel.x)
         }
-        this.cannon.update()
-    };
+    }
+
+    Decision(parent, start, end) {
+        //Start index
+        var path = []
+        path.push(end);
+        let size = 1;
+        while (path[size-1] != start) {
+          path.push(parent[path[size-1]])
+          size++;
+        }
+        return path[size-2];
+      }
+
+    ComputeAdjacentVertex(V,map) {
+        var AV = [];
+        if (map[V[0]-1][V[1]] != 'L') {
+          AV.push([V[0]-1,V[1]])
+        }
+        
+        if (map[V[0]-1][V[1]+1] != 'L') {
+          AV.push([V[0]-1,V[1]+1])
+        }
+        
+        if (map[V[0]-1][V[1]-1] != 'L') {
+          AV.push([V[0]-1,V[1]-1])
+        }
+        
+        if (map[V[0]+1][V[1]] != 'L') {
+          AV.push([V[0]+1,V[1]])
+        }
+        
+        if (map[V[0]+1][V[1]+1] != 'L') {
+          AV.push([V[0]+1,V[1]+1])
+        }
+        
+        if (map[V[0]+1][V[1]-1] != 'L') {
+          AV.push([V[0]+1,V[1]-1])
+        }
+        
+        if (map[V[0]][V[1]-1] != 'L') {
+          AV.push([V[0],V[1]-1])
+        }
+        
+        if (map[V[0]][V[1]+1] != 'L') {
+          AV.push([V[0],V[1]+1])
+        }
+        return AV;
+    }
 
     //ensures the player doesn't go beyond the map
     constrain() {

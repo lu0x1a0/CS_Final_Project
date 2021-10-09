@@ -1,7 +1,5 @@
 const addVec = require("./utils.js").addVec
 class GameMap {
-
-
     constructor(map) {
         
         this.map = map.map;

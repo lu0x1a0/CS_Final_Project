@@ -3,6 +3,8 @@
 
 
 const entities = require('./entities.js')
+const Maps = require('./MapFiles.js').Maps
+
 stub = new entities.Player(1,2,3,4)
 console.log(stub)
 
@@ -32,11 +34,10 @@ io.sockets.on('connection',newConnection);
 
 // initialize gamemap -- MAP SELECTION NOT IMPLEMENTED
 const GameMap = require("./GameMap.js").GameMap
-require("./MapFiles.js")
-var gamemap = new GameMap(Maps.MapRocky)
+var gamemap = new GameMap(Maps.MapSquare)
 
 //List of all players and bots connected to the server
-var players = [];
+var players = []; 
 var projectiles = {};
 
 
@@ -81,8 +82,8 @@ setInterval(heartbeat,10);
 function heartbeat() {
     for (var i = 0; i < players.length; i++ ) {
         //console.log("LOOP ENTERED")
-        players[i].update();
-        //players[i].constrain();
+        players[i].update(players);
+        //players[i].constrain();pl
         newpos = gamemap.player_move(players[i].pos, players[i].vel, players[i].hitbox_size)
         players[i].pos = newpos
     }
@@ -111,6 +112,14 @@ function heartbeat() {
     });
 }
 
+function InitialiseBot() {
+    console.log("A New Bot is being added");
+    //What sort of data do the bots have? 
+    var newBot = new entities.Player("","Pirate",800,300,1.75);
+    newBot.isBot = true;
+    players.push(newBot);
+}
+
 // RUNS WHEN A NEW CONNECTION JOINS
 function newConnection(socket) {
     console.log("new connection " + socket.id)
@@ -119,6 +128,9 @@ function newConnection(socket) {
     // Also send gamemap
     socket.on('start',
         function(data) {
+            if (players.length == 0) {
+                InitialiseBot();
+            }
             var player = new entities.Player(socket.id, data.username, data.x, data.y, data.dir);
             players.push(player);
             console.log("-----------start---------------")
@@ -166,10 +178,10 @@ function newConnection(socket) {
 
     socket.on('updatereleased',
         function(data){
-            var player
+            var player;
             for (var i = 0; i < players.length; i++ ) {
                 if (socket.id == players[i].id) {
-                    player = players[i];
+                    player = players[i]
                 }
             }
             if (data.releasedkeycode === K_W || data.releasedkeycode === K_S){
@@ -186,6 +198,7 @@ function newConnection(socket) {
             var player
         }
     )
+    
     socket.on("disconnect", (reason) => {
         console.log("--------------------reason-------------------")
         console.log(reason)
