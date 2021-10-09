@@ -52,7 +52,7 @@ function startGame(usernameInput) {
   socket.once('client_start',
     function(data) {
       gamemaprender.load_map(data.gamemap);
-      treasurerender.load_dimensions(data.gamemap);
+      treasurerender.first_load(data.gamemap);
       gameStarted = 1;
     }
   )
