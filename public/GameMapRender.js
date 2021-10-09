@@ -15,8 +15,6 @@ class GameMapRender {
         this.xlen = gamemap.xlen;
         this.ylen = gamemap.ylen;
         this.tilesize = gamemap.tilesize;
-        this.treasure_array = gamemap.treasure_array;
-
 
     }
 
@@ -38,11 +36,5 @@ class GameMapRender {
                 }
             }
         }
-
-        // Display all treasure
-        for (let treasure of this.treasure_array) {
-            image(this.img_treasure_water, treasure.x*this.tilesize, treasure.y*this.tilesize, this.tilesize, this.tilesize);
-        }
     }
-
 }

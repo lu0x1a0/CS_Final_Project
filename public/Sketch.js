@@ -1,10 +1,16 @@
 var player;
 var socket;
-var players = [];
-var projectiles = [];
 var zoom = 1;
 var gameStarted = 0;
-var gamemaprender
+
+// DATA VARIABLES
+var players = [];
+var projectiles = [];
+var treasures = [];
+
+// RENDER OBJECT VARIABLES
+var gamemaprender;
+var treasurerender;
 
 //Runs when first connected to the webpage
 function setup() {
@@ -18,7 +24,10 @@ function setup() {
   player.preload()
 
   gamemaprender = new GameMapRender();
-  gamemaprender.preload()
+  gamemaprender.preload();
+
+  treasurerender = new TreasureRender();
+  treasurerender.preload();
 }
 
 
@@ -43,6 +52,7 @@ function startGame(usernameInput) {
   socket.once('client_start',
     function(data) {
       gamemaprender.load_map(data.gamemap);
+      treasurerender.load_dimensions(data.gamemap);
       gameStarted = 1;
     }
   )
@@ -53,6 +63,7 @@ function startGame(usernameInput) {
     function(data) {
       players = data.players;
       projectiles = data.projectiles;
+      treasurerender.load_treasure(data.treasurelist);
     }
   )
   socket.on("disconnect", (reason) => {
@@ -91,8 +102,9 @@ function draw() {
     translate(-player.pos.x, -player.pos.y);
     //camera(player.pos.x, player.pos.y, 1000, player.pos.x, player.pos.y, 0, 0, 1, 0);
 
-    // Create game map background
+    // RENDERING
     gamemaprender.display()
+    treasurerender.display()
 
     //Displays every other ship other than the players boat
     for (var i = players.length - 1; i >= 0; i--) {

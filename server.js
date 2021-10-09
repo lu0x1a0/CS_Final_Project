@@ -104,11 +104,12 @@ function heartbeat() {
 
         }
     }
+    
     // Data we send to front end
     io.sockets.emit('heartbeat', {
         players:playerslocjson(),
-        projectiles:projectileslocjson()
-        // TODO: send out treasure data too
+        projectiles:projectileslocjson(),
+        treasurelist:gamemap.treasurelist,
     });
 }
 
