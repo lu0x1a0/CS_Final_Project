@@ -20,7 +20,7 @@ function setup() {
 
 
   // changed start angle to 0
-  player = new Player("", 128, 128, 0);
+  player = new Player();
   player.preload()
 
   gamemaprender = new GameMapRender();
@@ -39,18 +39,15 @@ function startGame(usernameInput) {
 
   player.setUsername(usernameInput);
 
-  var data = {
-    username: usernameInput,
-    x: player.pos.x,
-    y: player.pos.y,
-    dir: player.dir
-  };
   console.log('--------------------------startgame ran')
-  socket.emit('start',data);
+  socket.emit('start', {
+    username:usernameInput,
+  });
 
   // Must receive map before beginning game
   socket.once('client_start',
     function(data) {
+      player.setPos(data.position, data.dir);
       gamemaprender.load_map(data.gamemap);
       treasurerender.first_load(data.gamemap);
       gameStarted = 1;

@@ -17,6 +17,24 @@ class GameMap {
         // Initialize treasure
         this.treasurelist = new TreasureList(this)
 
+        // Initialize spawn positions
+        this.spawns = []
+        for (let x = 0; x < this.xlen; x++) {
+            for (let y = 0; y < this.ylen; y++) {
+                if (this.map[x][y] === 'S') {
+                    this.spawns.push({x:x,y:y});
+                }
+            }
+        }
+
+    }
+
+    get_spawn() {
+        // TODO: implement multiple spawn points
+        return {
+            x:(this.spawns[0].x + 0.5)*this.tilesize,
+            y:(this.spawns[0].y + 0.5)*this.tilesize,
+        }
     }
 
 

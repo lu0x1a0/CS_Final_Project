@@ -128,18 +128,22 @@ function newConnection(socket) {
     // Generate a new player and add them to the list of players when first connecting
     // Also send gamemap
     socket.on('start',
-        function(data) {
+        function(username) {
             if (players.length == 0) {
                 InitialiseBot();
             }
-            var player = new entities.Player(socket.id, data.username, data.x, data.y, data.dir);
+
+            var position = gamemap.get_spawn();
+            var player = new entities.Player(socket.id, username, position.x, position.y, 0);
             players.push(player);
             console.log("-----------start---------------")
             console.log(players)
 
-            // Send gamemap on start
+            // Send gamemap and player spawn on start
             io.sockets.emit('client_start', {
-                gamemap:gamemap
+                position:position,
+                dir:player.dir,
+                gamemap:gamemap,
             });
         }
     )
