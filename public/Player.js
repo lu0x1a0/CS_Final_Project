@@ -1,10 +1,10 @@
 class Player{
-  constructor(Username){
+  constructor(){
     this.pos = createVector(0,0)//{x:x, y:y};
     this.dir = 0;
     this.size = 64
     this.vel = {x:0, y:0};
-    this.Username = Username
+    this.Username = ""
     //this.health = health;
     this.xacc = 0
     this.yacc = 0
