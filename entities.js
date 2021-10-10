@@ -61,14 +61,14 @@ class Player{
             playerSet.add(tmp)
             map[x][y] = 'P'
         }
-        
+
         let Visited = Array(Gmap.xlen).fill().map(() => Array(Gmap.ylen).fill(0));
         var parents = {}
         let BotX = Math.floor(this.pos.x/Gmap.tilesize)
         let BotY = Math.floor(this.pos.y/Gmap.tilesize)
         var start = [BotX,BotY]
-        console.log(Visited)
-        console.log(Visited.length)
+        //console.log(Visited)
+        //console.log(Visited.length)
 
         Visited[BotX][BotY] = 1;
         var end = []
@@ -110,7 +110,7 @@ class Player{
         }
 
         if (end.length != 0) {
-            var IndexDirection = this.Decision(parents,start,end)  
+            var IndexDirection = this.Decision(parents,start,end)
             this.DecisionHandler(start, IndexDirection)
         }
 
@@ -159,31 +159,31 @@ class Player{
         if (map[V[0]-1][V[1]] != 'L') {
           AV.push([V[0]-1,V[1]])
         }
-        
+
         if (map[V[0]-1][V[1]+1] != 'L') {
           AV.push([V[0]-1,V[1]+1])
         }
-        
+
         if (map[V[0]-1][V[1]-1] != 'L') {
           AV.push([V[0]-1,V[1]-1])
         }
-        
+
         if (map[V[0]+1][V[1]] != 'L') {
           AV.push([V[0]+1,V[1]])
         }
-        
+
         if (map[V[0]+1][V[1]+1] != 'L') {
           AV.push([V[0]+1,V[1]+1])
         }
-        
+
         if (map[V[0]+1][V[1]-1] != 'L') {
           AV.push([V[0]+1,V[1]-1])
         }
-        
+
         if (map[V[0]][V[1]-1] != 'L') {
           AV.push([V[0],V[1]-1])
         }
-        
+
         if (map[V[0]][V[1]+1] != 'L') {
           AV.push([V[0],V[1]+1])
         }
@@ -225,15 +225,15 @@ function Cannon(range,visionfield,player){
         // this.angle in [-pi,pi]
         this.angle = Math.atan2(targetY,targetX)
         // altangle expresses this angle in the alternative domain that goes either +- [0,2*PI]
-        var altangle = Math.sign(this.angle)*(-1) *(2*Math.PI-Math.abs(this.angle)) 
+        var altangle = Math.sign(this.angle)*(-1) *(2*Math.PI-Math.abs(this.angle))
         var absdiff = Math.abs(this.angle-this.player.dir)
         var absdiff2 = Math.abs(altangle-this.player.dir)
         var field = this.visionfield // PI/3
-        // checks 
+        // checks
         // 1. whether the mouse is within this.range pixels of the ship,
-        // 2. the difference between the mouse angle and the ship's steering angle (where the front points to) 
-        //    is between the field size and PI-field. i.e. valid firing angle is from either side of the ship 
-        //    with allowed variability to left or right of (PI-2*field)/2 radian.  
+        // 2. the difference between the mouse angle and the ship's steering angle (where the front points to)
+        //    is between the field size and PI-field. i.e. valid firing angle is from either side of the ship
+        //    with allowed variability to left or right of (PI-2*field)/2 radian.
         if (    (dist <= this.range) &&
                 ((absdiff>field && absdiff<(Math.PI-field)) || (absdiff2> field && absdiff2<(Math.PI-field)))
             ){
@@ -261,7 +261,7 @@ class Cannonball{
         this.done = false;
         this.diameter = 8
     }
-    //checks whether the ball's euclidian distance from a player is less than the two radius combined. 
+    //checks whether the ball's euclidian distance from a player is less than the two radius combined.
     contactcheck(players){
         for(var i = 0; i < players.length;i++){
             //if the distance between two points are less than two collision circle - contact.
