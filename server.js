@@ -37,7 +37,7 @@ const GameMap = require("./GameMap.js").GameMap
 var gamemap = new GameMap(Maps.MapSquare)
 
 //List of all players and bots connected to the server
-var players = []; 
+var players = [];
 var projectiles = {};
 
 
@@ -54,7 +54,7 @@ playerslocjson = function(){
             dir:players[i].dir,
             health:players[i].health,
             size:players[i].size,
-            vel: players[i].vel//for debugging 
+            vel: players[i].vel//for debugging
         })
     }
     return l
@@ -114,7 +114,7 @@ function heartbeat() {
 
 function InitialiseBot() {
     console.log("A New Bot is being added");
-    //What sort of data do the bots have? 
+    //What sort of data do the bots have?
     var newBot = new entities.Player("","Pirate",800,300,1.75);
     newBot.isBot = true;
     players.push(newBot);
@@ -133,8 +133,8 @@ function newConnection(socket) {
             }
             var player = new entities.Player(socket.id, data.username, data.x, data.y, data.dir);
             players.push(player);
-            console.log("-----------start---------------")
-            console.log(players)
+            //console.log("-----------start---------------")
+            //console.log(players)
 
             // Send gamemap on start
             io.sockets.emit('client_start', {
@@ -198,10 +198,18 @@ function newConnection(socket) {
             var player
         }
     )
-    
+
     socket.on("disconnect", (reason) => {
-        console.log("--------------------reason-------------------")
-        console.log(reason)
+        //console.log("--------------------reason-------------------")
+        //console.log(reason)
+        var id = socket.id;
+        for (var i = 0; i < players.length; i++ ) {
+          if (id == players[i].id) {
+            players.splice(i,1)
+            break
+          }
+        }
+
       }
     );
 }
