@@ -1,10 +1,10 @@
 class Player{
-  constructor(Username, x, y, dir ){
-    this.pos = createVector(x,y)//{x:x, y:y};
-    this.dir = dir;
+  constructor(){
+    this.pos = createVector(0,0)//{x:x, y:y};
+    this.dir = 0;
     this.size = 64
     this.vel = {x:0, y:0};
-    this.Username = Username
+    this.Username = ""
     //this.health = health;
     this.xacc = 0
     this.yacc = 0
@@ -16,8 +16,6 @@ class Player{
     this.hitbox_size = 32
   }
 
-
-
   preload() {
     this.img_boat = loadImage('assets/img_boat.png');
     this.img_water = loadImage('assets/img_water.png');
@@ -25,6 +23,10 @@ class Player{
 
   setUsername(username) {
     this.Username = username;
+  }
+  setPos(coords, dir) {
+    this.pos = coords;
+    this.dir = dir;
   }
   setYacc(inputAcceleration) {
     this.yacc = inputAcceleration;
@@ -70,6 +72,7 @@ class Player{
     pop()
     this.cannon.showRange()
   };
+  
   tryfire(){
     if (this.cannon.checkclickinrange()){
       return this.cannon.fireData()
