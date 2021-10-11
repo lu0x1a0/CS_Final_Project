@@ -21,6 +21,7 @@ class Player{
         this.health = 100
         this.hitbox_size = 16 // need help from arkie with what this is // its the size of its hitbox so we know how wide around the ship we collide with land
         this.isBot = false;
+        this.gold = 10;
     }
     // change the velocity according to current drag and acceleration..
     update(players) {
