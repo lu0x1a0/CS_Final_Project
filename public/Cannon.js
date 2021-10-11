@@ -12,12 +12,13 @@ function Cannon(range,visionfield,player){
         var altangle = Math.sign(this.angle)*(-1) *(2*PI-abs(this.angle)) 
         var absdiff = abs(this.angle-this.player.dir)
         var absdiff2 = abs(altangle-this.player.dir)
-        var field = this.visionfield // PI/3
-        if ( (absdiff>field && absdiff<(PI-field)) || (absdiff2> field && absdiff2<(PI-field)) ){
-            //*2 because it is the diameter of full circle
+        var field = PI/4 //this.visionfield // PI/3
+        //if ( (absdiff>field && absdiff<(PI-field)) || (absdiff2> field && absdiff2<(PI-field)) ){
+        if ( (absdiff<(PI-field)) || (absdiff2<(PI-field)) ){
             // grey, transparency(63/255)
             push()
             fill(100,63);
+            //*2 because it is the diameter of full circle
             arc(this.pos.x,this.pos.y,this.range*2,this.range*2,
                 this.angle-this.visionfield/2,this.angle+this.visionfield/2)
             pop()
@@ -51,7 +52,8 @@ function Cannon(range,visionfield,player){
         var absdiff2 = abs(altangle-this.player.dir)
         var field = this.visionfield // PI/3
         if (    (mag(mouseY - height / 2, mouseX - width / 2)< this.range) &&
-                ((absdiff>field && absdiff<(PI-field)) || (absdiff2> field && absdiff2<(PI-field)))
+                //((absdiff>field && absdiff<(PI-field)) || (absdiff2> field && absdiff2<(PI-field)))
+                ((absdiff<(PI-field)) || (absdiff2<(PI-field)))
             ){
             return true
         }

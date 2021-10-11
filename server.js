@@ -76,7 +76,7 @@ projectileslocjson = function(){
 //------------------------------ SERVER EVENTS -------------------------------//
 
 // Update every 50 ms
-setInterval(heartbeat,10);
+setInterval(heartbeat,50);
 
 // RUNS EVERY SERVER-WIDE UPDATE
 function heartbeat() {

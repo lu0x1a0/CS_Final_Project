@@ -15,7 +15,7 @@ class Player{
         //this.health = health;
         this.xacc = 0
         this.yacc = 0
-        this.maxspeed = 4
+        this.maxspeed = 3
         this.drag = 0.1
         this.cannon = new Cannon(this.size*5,Math.PI/3,this)
         this.health = 100
@@ -228,14 +228,15 @@ function Cannon(range,visionfield,player){
         var altangle = Math.sign(this.angle)*(-1) *(2*Math.PI-Math.abs(this.angle))
         var absdiff = Math.abs(this.angle-this.player.dir)
         var absdiff2 = Math.abs(altangle-this.player.dir)
-        var field = this.visionfield // PI/3
+        var field = Math.PI/4 //this.visionfield // PI/3
         // checks
         // 1. whether the mouse is within this.range pixels of the ship,
         // 2. the difference between the mouse angle and the ship's steering angle (where the front points to)
         //    is between the field size and PI-field. i.e. valid firing angle is from either side of the ship
         //    with allowed variability to left or right of (PI-2*field)/2 radian.
         if (    (dist <= this.range) &&
-                ((absdiff>field && absdiff<(Math.PI-field)) || (absdiff2> field && absdiff2<(Math.PI-field)))
+                //((absdiff>field && absdiff<(Math.PI-field)) || (absdiff2> field && absdiff2<(Math.PI-field)))
+                ((absdiff<(Math.PI-field)) || (absdiff2<(Math.PI-field)))
             ){
             startpos = {x:this.pos.x,y:this.pos.y}
             // move slightly off player's collision zone so the ball doesn't hit the player
