@@ -11,6 +11,7 @@ class Player{
     this.maxspeed = 10
     this.drag = 0.2
     this.health = 100
+    this.gold = 10;
 
     this.cannon = new Cannon(this.size*5,PI/3,this)
     this.hitbox_size = 32
@@ -57,7 +58,12 @@ class Player{
     fill(255);
     textAlign(CENTER);
     textSize(12);
-    text(this.Username, this.pos.x, this.pos.y + this.size*1.5);
+    text(this.Username, this.pos.x, this.pos.y + this.size*1);
+
+    fill(255);
+    textAlign(CENTER);
+    textSize(12);
+    text(this.gold, this.pos.x, this.pos.y  + this.size*1.5);
 
     //health bar
     push()
@@ -77,7 +83,7 @@ class Player{
   }
 }
 
-function showship(dir,x,y,img_boat,Username,size,health,funcs){
+function showship(dir,x,y,img_boat,Username,size,health,funcs,gold){
   push()
   rotate(dir+PI)
   var imgx = x //-40
@@ -86,11 +92,16 @@ function showship(dir,x,y,img_boat,Username,size,health,funcs){
   rotate(-dir-PI)
 
   pop()
-
+  console.log(gold)
   fill(255);
   textAlign(CENTER);
   textSize(12);
   text(Username, x, y + size*1.5);
+
+  fill(255);
+  textAlign(CENTER);
+  textSize(12);
+  text(gold, x, y + size*2);
 
   //health bar
   push()
