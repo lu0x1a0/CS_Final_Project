@@ -32,7 +32,7 @@ class TreasureList {
 
     remove_treasure(coords) {
         for (let i = 0; i < this.treasure_array.length; i++) {
-            if (this.treasure_array[i] === coords) { 
+            if (this.treasure_array[i].x == coords.x && this.treasure_array[i].y == coords.y) { 
                 this.treasure_array.splice(i,1);
                 break;
             }
