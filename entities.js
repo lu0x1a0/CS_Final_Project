@@ -4,6 +4,7 @@ const setMag = require("./utils.js").setMag
 const Maps = require("./MapFiles.js").Maps
 
 
+
 class Player{
     constructor(id,Username, x, y, dir){
         this.pos = {x:x, y:y};
@@ -22,6 +23,10 @@ class Player{
         this.hitbox_size = 45 // need help from arkie with what this is // its the size of its hitbox so we know how wide around the ship we collide with land
         this.isBot = false;
         this.gold = 10;
+
+        this.SpaceCounter = 0
+        this.SpacePressed = false
+        this.OnTreasure = false
     }
     // change the velocity according to current drag and acceleration..
     update(players) {
@@ -44,6 +49,31 @@ class Player{
         }
     };
 
+    updateTreasure(gamemap) {
+        if (this.OnTreasure && this.SpacePressed) {
+            if (this.SpaceCounter == 150) {
+                //Remove Treasure coordinates 
+                //HOW TF isnt it BEING removed 
+                let encap = {x: Math.floor(this.pos.x/gamemap.tilesize), y: Math.floor(this.pos.y/gamemap.tilesize)};
+                gamemap.treasurelist.remove_treasure(encap)
+                this.gold += 10
+                this.SpaceCounter = 0;
+                this.OnTreasure = false;
+                this.SpacePressed = false;
+            } else if (this.SpaceCounter < 150) {
+                this.SpaceCounter++;
+            }
+        }
+    }
+
+    updateOnTreasure(x) {
+        this.OnTreasure = x
+    }
+
+    updateSpacePressed(x) {
+        this.SpacePressed = x
+    }
+
     updateBot(players) {
         const GameMap = require("./GameMap.js").GameMap
         var Gmap = new GameMap(Maps.MapSquare)
@@ -51,6 +81,10 @@ class Player{
 
         var playerSet = new Set();
 
+        let decision = 0; 
+        if (this.health <= 50) {
+            decision = 1;
+        }
 
         for(let i = 0; i<players.length;i++) {
             let pixelX = players[i].pos.x
@@ -110,13 +144,52 @@ class Player{
             map[x][y] = 'W'
         }
 
-        if (end.length != 0) {
-            var IndexDirection = this.Decision(parents,start,end)
+        let IndexDirection;
+        if (decision) {
+            if (end.length != 0) {
+                IndexDirection = this.RunAwayIndex(start,end,map)
+                this.DecisionHandler(start, IndexDirection)
+            } 
+        } 
+        else if (end.length != 0) {
+            IndexDirection = this.Decision(parents,start,end)  
+            this.DecisionHandler(start, IndexDirection)
+        } else {
+            IndexDirection = this.RandomIndex(start,map)
             this.DecisionHandler(start, IndexDirection)
         }
-
-
     }
+
+    RandomIndex(Start, map) {
+        let Adjacents = this.ComputeAdjacentVertex(Start,map);
+        return Adjacents[Math.floor(Math.random()*Adjacents.length)]
+    }
+
+    RunAwayIndex(Start, end, map) {
+        let Adjacents = this.ComputeAdjacentVertex(Start,map);
+        //Gets all the possible adjacent index
+        let MagAdjacents = []
+        for (let i = 0; i < Adjacents.length; ++i) {
+            MagAdjacents.push(mag(Adjacents[i][0] - end[0], Adjacents[i][1] - end[1]))
+        }
+        //Find the largest element. //We can just use brute force
+        let maxLists = []
+        let max = MagAdjacents[0];
+        let maxIndex = 0;
+        for (let i = 1; i < MagAdjacents.length; ++i) {
+            if (max < MagAdjacents[i]) {
+                max = MagAdjacents[i];
+                maxIndex = i;
+            }
+        }
+        for (let i = 0; i < MagAdjacents.length; ++i) {
+            if (max == MagAdjacents[i]) {
+                maxLists.push(MagAdjacents)
+            }
+        }
+
+        return maxLists[Math.floor(Math.random()*maxLists.length)]
+    } 
 
     DecisionHandler(Start,DecisionIndex) {
         let i = Start[0] - DecisionIndex[0]
