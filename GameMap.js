@@ -11,7 +11,7 @@ class GameMap {
         // Map parameters
         this.xlen = map.xlen;
         this.ylen = map.ylen;
-        this.tilesize = map.tilesize;
+        this.tilesize = 64;
         this.max_treasure = map.max_treasure;
 
         // Initialize treasure
