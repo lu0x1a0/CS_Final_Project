@@ -109,6 +109,9 @@ function heartbeat() {
 
         }
     }
+
+    // Try generate more treasure
+    gamemap.try_add_treasure()
     
     // Data we send to front end
     io.sockets.emit('heartbeat', {
