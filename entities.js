@@ -19,7 +19,7 @@ class Player{
         this.drag = 0.1
         this.cannon = new Cannon(this.size*5,Math.PI/3,this)
         this.health = 100
-        this.hitbox_size = 16 // need help from arkie with what this is // its the size of its hitbox so we know how wide around the ship we collide with land
+        this.hitbox_size = 45 // need help from arkie with what this is // its the size of its hitbox so we know how wide around the ship we collide with land
         this.isBot = false;
         this.gold = 10;
     }

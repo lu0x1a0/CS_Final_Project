@@ -62,15 +62,14 @@ class GameMap {
         var px = Math.floor((pos.x)/this.tilesize)
         var py = Math.floor((pos.y)/this.tilesize)
 
-
         // Wall left
-        if (this.map[px-1][py] === 'L') { new_pos.x = Math.max(new_pos.x, (px+1)*this.tilesize) }
+        if (this.map[px-1][py] === 'L') { new_pos.x = Math.max(new_pos.x, (px)*this.tilesize + 0.5*hitbox_size) }
         // Wall right
-        if (this.map[px+1][py] === 'L') { new_pos.x = Math.min(new_pos.x, (px)*this.tilesize) }
+        if (this.map[px+1][py] === 'L') { new_pos.x = Math.min(new_pos.x, (px+1)*this.tilesize - 0.5*hitbox_size) }
         // Wall above
-        if (this.map[px][py-1] === 'L') { new_pos.y = Math.max(new_pos.y, (py+1)*this.tilesize) }
+        if (this.map[px][py-1] === 'L') { new_pos.y = Math.max(new_pos.y, (py)*this.tilesize + 0.5*hitbox_size) }
         // Wall below
-        if (this.map[px][py+1] === 'L') { new_pos.y = Math.min(new_pos.y, (py)*this.tilesize) }
+        if (this.map[px][py+1] === 'L') { new_pos.y = Math.min(new_pos.y, (py+1)*this.tilesize - 0.5*hitbox_size) }
 
         return new_pos;
     }
