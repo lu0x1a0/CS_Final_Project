@@ -11,7 +11,7 @@ class GameMap {
         // Map parameters
         this.xlen = map.xlen;
         this.ylen = map.ylen;
-        this.tilesize = map.tilesize;
+        this.tilesize = 64;
         this.max_treasure = map.max_treasure;
 
         // Initialize treasure
@@ -51,6 +51,14 @@ class GameMap {
 
         // this.map[randx][randy] != 'W'
         return {x:randx, y:randy};
+    }
+
+    try_add_treasure() {
+        
+        if (this.treasurelist.treasure_array.length < this.max_treasure) {
+            this.treasurelist.add_treasure(this)
+        }
+
     }
 
 
