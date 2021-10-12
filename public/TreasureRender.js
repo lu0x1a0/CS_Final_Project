@@ -17,6 +17,7 @@ class TreasureRender {
     }
 
     display() {
+        imageMode(CORNER);
         for (let treasure of this.treasure_array) {
             image(this.img_treasure_water, treasure.x*this.tilesize, treasure.y*this.tilesize, this.tilesize, this.tilesize);
         }

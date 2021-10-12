@@ -14,7 +14,7 @@ class Player{
     this.gold = 10;
 
     this.cannon = new Cannon(this.size*5,PI/3,this)
-    this.hitbox_size = 32
+    this.hitbox_size = 45
   }
 
   preload() {
@@ -43,6 +43,7 @@ class Player{
     rotate(this.dir+PI)
     var imgx = this.pos.x //-40
     var imgy = this.pos.y //- 24
+    imageMode(CENTER);
     image(this.img_boat,imgx*cos(-this.dir-PI)-imgy*sin(-this.dir-PI),imgx*sin(-this.dir-PI)+imgy*cos(-this.dir-PI));
     rotate(-this.dir-PI)
     //fill(255);
@@ -51,7 +52,8 @@ class Player{
     if (true) {
       stroke(255, 0, 0);
       strokeWeight(1);
-      rect(this.pos.x-this.hitbox_size/2, this.pos.y-this.hitbox_size/2, this.hitbox_size, this.hitbox_size);
+      rectMode(CENTER);
+      rect(this.pos.x, this.pos.y, this.hitbox_size, this.hitbox_size);
       stroke(255,255,255);
 
     }

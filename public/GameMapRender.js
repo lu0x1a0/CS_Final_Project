@@ -20,6 +20,7 @@ class GameMapRender {
 
     display() {
 
+        imageMode(CORNER);
         // Display background map
         for (let x = 0; x < this.xlen; x++) {
             for (let y = 0; y < this.ylen; y++) {
