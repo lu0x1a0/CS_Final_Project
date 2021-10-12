@@ -95,6 +95,9 @@ function draw() {
         player.dir = players[i].dir
         player.health = players[i].health
         player.gold = players[i].gold
+        player.OnTreasure = players[i].OnTreasure
+        player.SpaceCounter = players[i].SpaceCounter
+        player.SpacePressed = players[i].SpacePressed
         break;
       }
     }
@@ -119,6 +122,9 @@ function draw() {
           players[i].size,
           players[i].health,[],
           players[i].gold,
+          players[i].OnTreasure, 
+          players[i].SpaceCounter, 
+          players[i].SpacePressed
         )
       }
       else{
@@ -146,7 +152,7 @@ function mouseClicked() {
 function keyPressed(){
   if(gameStarted){
     //if (keyCode === K_Space){
-    if(keyIsDown(K_W) || keyIsDown(K_A) || keyIsDown(K_S) || keyIsDown(K_D)){
+    if(keyIsDown(K_W) || keyIsDown(K_A) || keyIsDown(K_S) || keyIsDown(K_D) || keyIsDown(K_Space)){
       data = {
         pressedkeycode: keyCode
       }

@@ -56,6 +56,9 @@ playerslocjson = function(){
             size:players[i].size,
             vel:players[i].vel,//for debugging
             gold:players[i].gold,
+            OnTreasure:players[i].OnTreasure,
+            SpaceCounter:players[i].SpaceCounter,
+            SpacePressed:players[i].SpacePressed
         })
     }
     return l
@@ -83,6 +86,7 @@ setInterval(heartbeat,10);
 function heartbeat() {
     for (var i = 0; i < players.length; i++ ) {
         //console.log("LOOP ENTERED")
+        players[i].updateTreasure(gamemap);
         players[i].update(players);
         //players[i].constrain();pl
         newpos = gamemap.player_move(players[i].pos, players[i].vel, players[i].hitbox_size)
@@ -167,10 +171,17 @@ function newConnection(socket) {
                 //console.log(player.xacc)
             } else if (data.pressedkeycode ===K_A){
                 player.xacc = -0.3
+                player.updateOnTreasure(false)
+                player.SpaceCounter = 0
             } else if (data.pressedkeycode ===K_S){
                 player.yacc = 0.3
+                player.updateOnTreasure(false)
+                player.SpaceCounter = 0
             } else if (data.pressedkeycode ===K_D){
                 player.xacc = 0.3
+                player.updateOnTreasure(false)
+                player.SpaceCounter = 0
+
             } else if (data.pressedkeycode ==="mouse"){
                 cannonball = player.fire(data.targetX,data.targetY)
                 //console.log("----------------genball----------------\n",cannonball)
@@ -178,6 +189,21 @@ function newConnection(socket) {
                     // use playerid+current time stamp as id, might not safe from server attack with spamming io
                     projectiles[player.id+(new Date()).getTime()] = cannonball
                 }
+                player.SpaceCounter = 0
+            } else if (data.pressedkeycode === K_Space) {
+                //Check if player is on the same location as the treasure.
+                
+                if (!player.onTreasure) {
+                    for (let i = 0; i < gamemap.treasurelist.treasure_array.length; ++i) {
+                        let encap = {x: Math.floor(player.pos.x/gamemap.tilesize), y: Math.floor(player.pos.y/gamemap.tilesize)};
+                        if (encap.x === gamemap.treasurelist.treasure_array[i].x 
+                            && encap.y === gamemap.treasurelist.treasure_array[i].y) {
+                            player.updateOnTreasure(true) 
+                            player.updateSpacePressed(true)
+                            break
+                            }
+                    } 
+                } 
             }
         }
     )
@@ -194,6 +220,9 @@ function newConnection(socket) {
                 player.yacc = 0
             } else if (data.releasedkeycode === K_A || data.releasedkeycode === K_D){
                 player.xacc = 0
+            } else if (data.releasedkeycode === K_Space) {
+                player.updateSpacePressed(false)
+                player.SpaceCounter = 0
             }
             //console.log('-----------------updatereleased-----------------------')
             //console.log(data)

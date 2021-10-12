@@ -15,6 +15,11 @@ class Player{
 
     this.cannon = new Cannon(this.size*5,PI/3,this)
     this.hitbox_size = 45
+
+    this.isBot = false;
+    this.SpaceCounter = 0
+    this.SpacePressed = false;
+    this.OnTreasure = false
   }
 
   preload() {
@@ -78,6 +83,16 @@ class Player{
     fill(0,220,0)
     rect(this.pos.x-this.size/2, this.pos.y-this.size/2-20,this.size*abs(this.health)/100,10);
     pop()
+
+    push()
+    if (this.OnTreasure) {
+      fill(100,63)
+      rect(this.pos.x-this.size/2, this.pos.y-this.size/2-30,this.size,10);
+      fill(0, 0, 255)
+      rect(this.pos.x-this.size/2, this.pos.y-this.size/2-30,this.size*abs(this.SpaceCounter)/150,10);
+    }
+    pop()
+
     this.cannon.showRange()
   };
   
@@ -88,7 +103,7 @@ class Player{
   }
 }
 
-function showship(dir,x,y,img_boat,Username,size,health,funcs,gold){
+function showship(dir,x,y,img_boat,Username,size,health,funcs,gold,OnTreasure,SpaceCounter,SpacePressed){
   push()
   rotate(dir+PI)
   var imgx = x //-40
@@ -117,6 +132,16 @@ function showship(dir,x,y,img_boat,Username,size,health,funcs,gold){
   fill(0,220,0)
   rect(x-size/2, y-size/2-20,size*abs(health)/100,10);
   pop()
+
+  push()
+  if (OnTreasure) {
+    fill(100,63)
+    rect(x-size/2, y-size/2-30,size,10);
+    fill(0, 0, 255)
+    rect(x-size/2, y-size/2-30,size*abs(SpaceCounter)/150,10);
+  }
+  pop()
+  
   for(f in funcs){
     funcs()
   }
