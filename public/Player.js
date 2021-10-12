@@ -108,6 +108,7 @@ function showship(dir,x,y,img_boat,Username,size,health,funcs,gold,OnTreasure,Sp
   rotate(dir+PI)
   var imgx = x //-40
   var imgy = y //- 24
+  imageMode(CENTER)
   image(img_boat,imgx*cos(-dir-PI)-imgy*sin(-dir-PI),imgx*sin(-dir-PI)+imgy*cos(-dir-PI));
   rotate(-dir-PI)
 
