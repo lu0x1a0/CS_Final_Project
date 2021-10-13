@@ -3,10 +3,10 @@ const addVec = require("./utils.js").addVec
 const setMag = require("./utils.js").setMag
 const Maps = require("./MapFiles.js").Maps
 
-const BASE_TREASURE_GOLD = require("./constants.js").default_gold_amount
-const TREASURE_COLLECT_TIME = require("./constants.js").treasure_collect_time
+
+
 class Player{
-    constructor(id,Username, x, y, dir, max_health, max_speed, drag, acc_mag){
+    constructor(id,Username, x, y, dir){
         this.pos = {x:x, y:y};
         this.dir = dir;
         this.size = 64
@@ -16,11 +16,10 @@ class Player{
         //this.health = health;
         this.xacc = 0
         this.yacc = 0
-        this.maxspeed = max_speed
-        this.drag = drag
-        this._acc_mag = acc_mag
+        this.maxspeed = 3
+        this.drag = 0.1
         this.cannon = new Cannon(this.size*5,Math.PI/3,this)
-        this.health = max_health//100
+        this.health = 100
         this.hitbox_size = 45 // need help from arkie with what this is // its the size of its hitbox so we know how wide around the ship we collide with land
         this.isBot = false;
         this.gold = 10;
@@ -52,16 +51,16 @@ class Player{
 
     updateTreasure(gamemap) {
         if (this.OnTreasure && this.SpacePressed) {
-            if (this.SpaceCounter == TREASURE_COLLECT_TIME) {
+            if (this.SpaceCounter == 150) {
                 //Remove Treasure coordinates 
                 //HOW TF isnt it BEING removed 
                 let encap = {x: Math.floor(this.pos.x/gamemap.tilesize), y: Math.floor(this.pos.y/gamemap.tilesize)};
                 gamemap.treasurelist.remove_treasure(encap)
-                this.gold += BASE_TREASURE_GOLD
+                this.gold += 10
                 this.SpaceCounter = 0;
                 this.OnTreasure = false;
                 this.SpacePressed = false;
-            } else if (this.SpaceCounter < TREASURE_COLLECT_TIME) {
+            } else if (this.SpaceCounter < 150) {
                 this.SpaceCounter++;
             }
         }

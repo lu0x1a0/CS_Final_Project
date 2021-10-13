@@ -3,10 +3,9 @@
 
 
 const entities = require('./entities.js')
-const constants = rquire('./entities.js')
-
 const Maps = require('./MapFiles.js').Maps
 
+stub = new entities.Player(1,2,3,4)
 console.log(stub)
 
 let K_W = 87;
@@ -103,7 +102,7 @@ function heartbeat() {
                 hit = projectiles[key].contactcheck(players)
                 if (projectiles[key].done){
                     delete projectiles[key]
-                    hit.health -= constants.base_cannonball_damage;
+                    hit.health -= 10;
                     continue;
                 }
             }
@@ -122,11 +121,7 @@ function heartbeat() {
 function InitialiseBot() {
     console.log("A New Bot is being added");
     //What sort of data do the bots have?
-    var newBot = new entities.Player(
-        "","Pirate",800,300,1.75,
-        constants.max_health, constants.max_speed,
-        constants.default_drag, constants.default_acc 
-    ); 
+    var newBot = new entities.Player("","Pirate",800,300,1.75);
     newBot.isBot = true;
     players.push(newBot);
 }
@@ -144,11 +139,7 @@ function newConnection(socket) {
             }
 
             var position = gamemap.get_spawn();
-            var player = new entities.Player(
-                socket.id, data.username, 
-                position.x, position.y, 0, 
-                constants.max_health, constants.max_speed,
-                constants.default_drag, constants.default_acc );
+            var player = new entities.Player(socket.id, data.username, position.x, position.y, 0);
             players.push(player);
             //console.log("-----------start---------------")
             //console.log(players)
@@ -210,7 +201,7 @@ function newConnection(socket) {
                             player.updateOnTreasure(true) 
                             player.updateSpacePressed(true)
                             break
-                        }
+                            }
                     } 
                 } 
             }

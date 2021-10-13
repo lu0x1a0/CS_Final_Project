@@ -1,5 +1,3 @@
-const constants = require('./constants.js')
-
 module.exports = {
     Maps : {
         MapSquare : {
@@ -40,7 +38,7 @@ module.exports = {
 
             xlen : 32,
             ylen : 32,
-            tilesize : constants.tile_size,
+            tilesize : 32,
 
             max_treasure : 8
         },
@@ -89,7 +87,7 @@ module.exports = {
 
             xlen : 24,
             ylen : 38,
-            tilesize : constants.tile_size,
+            tilesize : 64,
 
             max_treasure : 8
         },
@@ -126,7 +124,7 @@ module.exports = {
 
             xlen : 24,
             ylen : 24,
-            tilesize : constants.tile_size,
+            tilesize : 64,
 
             max_treasure : 8
         },
