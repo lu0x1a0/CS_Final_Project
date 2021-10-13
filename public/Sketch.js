@@ -30,7 +30,7 @@ function setup() {
   treasurerender.preload();
 
   // Volume sliders
-  music_slider = createSlider(0, 1, 0.5, 0.01)
+  music_slider = createSlider(0, 0.5, 0.1, 0.01)
   music_slider.position(10, 10);
 
 }
@@ -158,6 +158,7 @@ function mouseClicked() {
       targetY:mouseY - height / 2,
     }
     socket.emit('updatepressed',data)
+    player.tryfire()
   }
 }
 function keyPressed(){

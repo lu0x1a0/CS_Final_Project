@@ -9,6 +9,7 @@ class PlayerRender {
     this.img_water = loadImage('assets/img_water.png');
     // Sounds
     this.music = loadSound('assets/main_music.mp3');
+    this.sfx_cannon_fire = loadSound('assets/sfx_cannon_fire.mp3')
   }
 
   load_player(playerJSON) {
@@ -88,7 +89,8 @@ class PlayerRender {
   
   tryfire(){
     if (this.cannon.checkclickinrange()){
-      return this.cannon.fireData()
+      this.sfx_cannon_fire.play();
+      return this.cannon.fireData();
     }
   }
 }
