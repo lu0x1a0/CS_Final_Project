@@ -23,9 +23,13 @@ class Player{
   }
 
   preload() {
+    // Images
     this.img_boat = loadImage('assets/img_boat.png');
     this.img_water = loadImage('assets/img_water.png');
+    // Sounds
+    this.music = loadSound('assets/main_music.mp3');
   }
+
 
   setUsername(username) {
     this.Username = username;

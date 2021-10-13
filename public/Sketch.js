@@ -28,6 +28,11 @@ function setup() {
 
   treasurerender = new TreasureRender();
   treasurerender.preload();
+
+  // Volume sliders
+  music_slider = createSlider(0, 1, 0.5, 0.01)
+  music_slider.position(10, 10);
+
 }
 
 
@@ -51,6 +56,9 @@ function startGame(usernameInput) {
       gamemaprender.load_map(data.gamemap);
       treasurerender.first_load(data.gamemap);
       gameStarted = 1;
+
+      // Begin music
+      player.music.loop();
     }
   )
 
@@ -108,6 +116,9 @@ function draw() {
     // RENDERING
     gamemaprender.display()
     treasurerender.display()
+
+    // VOLUME UPDATING
+    player.music.setVolume(music_slider.value())
 
     //Displays every other ship other than the players boat
     for (var i = players.length - 1; i >= 0; i--) {
