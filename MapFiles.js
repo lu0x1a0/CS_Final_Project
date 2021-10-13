@@ -38,8 +38,6 @@ module.exports = {
 
             xlen : 32,
             ylen : 32,
-            tilesize : 32,
-
             max_treasure : 8
         },
 
@@ -87,8 +85,6 @@ module.exports = {
 
             xlen : 24,
             ylen : 38,
-            tilesize : 64,
-
             max_treasure : 8
         },
 
@@ -124,8 +120,6 @@ module.exports = {
 
             xlen : 24,
             ylen : 24,
-            tilesize : 64,
-
             max_treasure : 8
         },
 
