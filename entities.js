@@ -1,6 +1,7 @@
 const mag = require("./utils.js").mag
 const addVec = require("./utils.js").addVec
 const setMag = require("./utils.js").setMag
+const CONST = require('./Constants.js').CONST
 const Maps = require("./MapFiles.js").Maps
 
 
@@ -9,20 +10,20 @@ class Player{
     constructor(id,Username, x, y, dir){
         this.pos = {x:x, y:y};
         this.dir = dir;
-        this.size = 64
+        this.size = CONST.PLAYER_SIZE;
         this.vel = {x:0, y:0};
         this.id = id;
         this.username = Username;
         //this.health = health;
         this.xacc = 0
         this.yacc = 0
-        this.maxspeed = 3
-        this.drag = 0.1
+        this.maxspeed = CONST.PLAYER_MAX_SPEED
+        this.drag = CONST.PLAYER_DRAG
         this.cannon = new Cannon(this.size*5,Math.PI/3,this)
-        this.health = 100
-        this.hitbox_size = 45 // need help from arkie with what this is // its the size of its hitbox so we know how wide around the ship we collide with land
+        this.health = CONST.PLAYER_HEALTH
+        this.hitbox_size = CONST.PLAYER_HITBOX_SIZE
         this.isBot = false;
-        this.gold = 10;
+        this.gold = CONST.PLAYER_START_GOLD;
 
         this.SpaceCounter = 0
         this.SpacePressed = false
@@ -51,7 +52,7 @@ class Player{
 
     updateTreasure(gamemap) {
         if (this.OnTreasure && this.SpacePressed) {
-            if (this.SpaceCounter == 150) {
+            if (this.SpaceCounter == CONST.TREASURE_FISH_TIME) {
                 //Remove Treasure coordinates 
                 //HOW TF isnt it BEING removed 
                 let encap = {x: Math.floor(this.pos.x/gamemap.tilesize), y: Math.floor(this.pos.y/gamemap.tilesize)};
@@ -60,7 +61,7 @@ class Player{
                 this.SpaceCounter = 0;
                 this.OnTreasure = false;
                 this.SpacePressed = false;
-            } else if (this.SpaceCounter < 150) {
+            } else if (this.SpaceCounter < CONST.TREASURE_FISH_TIME) {
                 this.SpaceCounter++;
             }
         }
@@ -82,7 +83,7 @@ class Player{
         var playerSet = new Set();
 
         let decision = 0; 
-        if (this.health <= 50) {
+        if (this.health <= CONST.BOT_LOW_HEALTH) {
             decision = 1;
         }
 
@@ -195,17 +196,17 @@ class Player{
         let i = Start[0] - DecisionIndex[0]
         let j = Start[1] - DecisionIndex[1]
         if (i == -1) {
-            this.xacc = 0.3
+            this.xacc = CONST.PLAYER_ACCELERATION
         }
         else if (i == 1) {
-            this.xacc = -0.3
+            this.xacc = -CONST.PLAYER_ACCELERATION
         }
         if (j == 1) {
-            this.yacc = -0.3
+            this.yacc = -CONST.PLAYER_ACCELERATION
         }
         else if (j == -1) {
 
-            this.yacc = 0.3
+            this.yacc = CONST.PLAYER_ACCELERATION
         }
 
         this.vel = {x:this.vel.x+this.xacc,y:this.vel.y+this.yacc}
@@ -275,9 +276,7 @@ class Player{
     fire(targetX,targetY){
         return this.cannon.fire(targetX, targetY)
     }
-    convert2treasure(){
 
-    }
 }
 function Cannon(range,visionfield,player){
     this.pos = player.pos
@@ -285,7 +284,7 @@ function Cannon(range,visionfield,player){
     this.visionfield = visionfield
     this.angle = 0
     this.player = player
-    this.speed = player.maxspeed*1.5
+    this.speed = player.maxspeed*CONST.CANNON_SPEED_FACTOR
     this.update = function(){//x,y){
       this.pos = this.player.pos
       //this.angle = Math.atan2(mouseY - height / 2, mouseX - width / 2);
@@ -334,7 +333,7 @@ class Cannonball{
         this.speed = speed;
         this.delta = this.calcDelta()
         this.done = false;
-        this.diameter = 8
+        this.diameter = CONST.CANNONBALL_DIAMETER
     }
     //checks whether the ball's euclidian distance from a player is less than the two radius combined.
     contactcheck(players){
@@ -369,12 +368,6 @@ class Cannonball{
             }
         }
     }
-    //this.show = function(){
-    //    if (this.done === false){
-    //        fill(255);
-    //        circle(this.pos.x,this.pos.y,this.diameter)
-    //    }
-    //}
 }
 
 module.exports = {

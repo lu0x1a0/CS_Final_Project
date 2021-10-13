@@ -3,6 +3,7 @@
 
 
 const entities = require('./entities.js')
+const CONST = require('./Constants.js').CONST
 const Maps = require('./MapFiles.js').Maps
 
 stub = new entities.Player(1,2,3,4)
@@ -102,13 +103,16 @@ function heartbeat() {
                 hit = projectiles[key].contactcheck(players)
                 if (projectiles[key].done){
                     delete projectiles[key]
-                    hit.health -= 10;
+                    hit.health -= CONST.CANNONBALL_DAMAGE;
                     continue;
                 }
             }
 
         }
     }
+
+    // Refresh treasure
+    gamemap.try_add_treasure()
     
     // Data we send to front end
     io.sockets.emit('heartbeat', {
@@ -167,18 +171,18 @@ function newConnection(socket) {
                 }
             }
             if (data.pressedkeycode ===K_W){
-                player.yacc = -0.3
+                player.yacc = -CONST.PLAYER_ACCELERATION
                 //console.log(player.xacc)
             } else if (data.pressedkeycode ===K_A){
-                player.xacc = -0.3
+                player.xacc = -CONST.PLAYER_ACCELERATION
                 player.updateOnTreasure(false)
                 player.SpaceCounter = 0
             } else if (data.pressedkeycode ===K_S){
-                player.yacc = 0.3
+                player.yacc = CONST.PLAYER_ACCELERATION
                 player.updateOnTreasure(false)
                 player.SpaceCounter = 0
             } else if (data.pressedkeycode ===K_D){
-                player.xacc = 0.3
+                player.xacc = CONST.PLAYER_ACCELERATION
                 player.updateOnTreasure(false)
                 player.SpaceCounter = 0
 

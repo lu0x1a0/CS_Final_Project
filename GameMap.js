@@ -1,3 +1,4 @@
+const CONST = require('./Constants.js').CONST
 const addVec = require("./utils.js").addVec
 const TreasureList = require("./TreasureList.js").TreasureList
 
@@ -11,7 +12,7 @@ class GameMap {
         // Map parameters
         this.xlen = map.xlen;
         this.ylen = map.ylen;
-        this.tilesize = map.tilesize;
+        this.tilesize = CONST.TILESIZE;
         this.max_treasure = map.max_treasure;
 
         // Initialize treasure
@@ -53,6 +54,13 @@ class GameMap {
         return {x:randx, y:randy};
     }
 
+    try_add_treasure() {
+        
+        if (this.treasurelist.treasure_array.length < this.max_treasure) {
+            this.treasurelist.add_treasure(this)
+        }
+
+    }
 
     player_move(pos, vel, hitbox_size) {
 
