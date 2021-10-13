@@ -20,7 +20,7 @@ function setup() {
 
 
   // changed start angle to 0
-  player = new Player();
+  player = new PlayerRender();
   player.preload()
 
   gamemaprender = new GameMapRender();
@@ -52,7 +52,7 @@ function startGame(usernameInput) {
   // Must receive map before beginning game
   socket.once('client_start',
     function(data) {
-      player.setPos(data.position, data.dir);
+      player.load_player(data.player);
       gamemaprender.load_map(data.gamemap);
       treasurerender.first_load(data.gamemap);
       gameStarted = 1;
@@ -124,10 +124,10 @@ function draw() {
     for (var i = players.length - 1; i >= 0; i--) {
       var id = players[i].id;
       if (id !== socket.id) {
-        //console.log(players[i].gold)
         showship(
           players[i].dir,
-          players[i].x,players[i].y,
+          players[i].x,
+          players[i].y,
           player.img_boat,
           players[i].username,
           players[i].size,

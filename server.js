@@ -150,8 +150,7 @@ function newConnection(socket) {
 
             // Send gamemap and player spawn on start
             io.sockets.emit('client_start', {
-                position:position,
-                dir:player.dir,
+                player:player.toJSON(),
                 gamemap:gamemap,
             });
         }
