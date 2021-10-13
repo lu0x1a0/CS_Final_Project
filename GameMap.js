@@ -53,6 +53,13 @@ class GameMap {
         return {x:randx, y:randy};
     }
 
+    try_add_treasure() {
+        
+        if (this.treasurelist.treasure_array.length < this.max_treasure) {
+            this.treasurelist.add_treasure(this)
+        }
+
+    }
 
     player_move(pos, vel, hitbox_size) {
 
