@@ -13,6 +13,8 @@ module.exports = {
         PLAYER_START_GOLD : 10,
 
         CANNON_SPEED_FACTOR : 1.5,
+        CANNON_VISION_FACTOR : 5,
+        CANNON_START_ANGLE : Math.PI/3,
         CANNONBALL_DIAMETER : 8,
         CANNONBALL_DAMAGE : 10,
 

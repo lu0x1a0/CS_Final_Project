@@ -7,19 +7,19 @@ const Maps = require("./MapFiles.js").Maps
 
 
 class Player{
-    constructor(id,Username, x, y, dir){
+    constructor(id,username, x, y, dir){
         this.pos = {x:x, y:y};
         this.dir = dir;
         this.size = CONST.PLAYER_SIZE;
         this.vel = {x:0, y:0};
         this.id = id;
-        this.username = Username;
+        this.username = username;
         //this.health = health;
         this.xacc = 0
         this.yacc = 0
         this.maxspeed = CONST.PLAYER_MAX_SPEED
         this.drag = CONST.PLAYER_DRAG
-        this.cannon = new Cannon(this.size*5,Math.PI/3,this)
+        this.cannon = new Cannon(this.size*CONST.CANNON_VISION_FACTOR, CONST.CANNON_START_ANGLE, this)
         this.health = CONST.PLAYER_HEALTH
         this.hitbox_size = CONST.PLAYER_HITBOX_SIZE
         this.isBot = false;
@@ -29,6 +29,20 @@ class Player{
         this.SpacePressed = false
         this.OnTreasure = false
     }
+
+    toJSON() {
+        return {
+            pos : this.pos,
+            dir : this.dir,
+            size : this.size,
+            username : this.username,
+            health : this.health,
+            hitbox_size : this.hitbox_size,
+            gold : this.gold,
+            cannonJSON : this.cannon.toJSON(),
+        }
+    }
+
     // change the velocity according to current drag and acceleration..
     update(players) {
         //var newvel = createVector(mouseX - width / 2, mouseY - height / 2);
@@ -322,7 +336,13 @@ function Cannon(range,visionfield,player){
             }
             return new Cannonball(data.start,data.end,data.speed)
         }
+    }
 
+    this.toJSON = function() {
+        return {
+            range : this.range,
+            visionfield : this.visionfield,
+        }
     }
 }
 class Cannonball{
