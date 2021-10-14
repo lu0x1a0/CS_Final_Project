@@ -30,8 +30,11 @@ function setup() {
   treasurerender.preload();
 
   // Volume sliders
-  music_slider = createSlider(0, 1, 0.5, 0.01)
+  music_slider = createSlider(0, 0.5, 0.1, 0.01)
   music_slider.position(10, 10);
+
+  sfx_slider = createSlider(0, 0.5, 0.1, 0.01)
+  sfx_slider.position(10, 30);
 
 }
 
@@ -118,7 +121,8 @@ function draw() {
     treasurerender.display()
 
     // VOLUME UPDATING
-    player.music.setVolume(music_slider.value())
+    player.music_vol(music_slider.value())
+    player.sfx_vol(sfx_slider.value())
 
     //Displays every other ship other than the players boat
     for (var i = players.length - 1; i >= 0; i--) {
@@ -158,6 +162,7 @@ function mouseClicked() {
       targetY:mouseY - height / 2,
     }
     socket.emit('updatepressed',data)
+    player.tryfire()
   }
 }
 function keyPressed(){

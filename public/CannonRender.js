@@ -1,12 +1,15 @@
-function CannonRender(cannon, player){
+class CannonRender {
 
-    this.pos = player.pos
-    this.range = cannon.range    // max distance you can shoot out from ship
-    this.visionfield = cannon.visionfield
-    this.angle = 0
-    this.player = player
+    constructor(cannon, player) {
+        this.pos = player.pos
+        this.range = cannon.range    // max distance you can shoot out from ship
+        this.visionfield = cannon.visionfield
+        this.angle = 0
+        this.player = player
+    }
 
-    this.showRange = function (){
+    showRange() {
+
         this.pos = this.player.pos
         this.angle = atan2(mouseY - height / 2, mouseX - width / 2);
         // angle goes from -pi to pi
@@ -24,10 +27,9 @@ function CannonRender(cannon, player){
                 this.angle-this.visionfield/2,this.angle+this.visionfield/2)
             pop()
         }
-
     }
 
-    this.convertraddomain = function (angle){
+    convertraddomain(angle) {
         if (angle>PI){
             remain = angle%(2*PI)
             if (remain>PI){
@@ -41,9 +43,9 @@ function CannonRender(cannon, player){
         }else{
             return angle
         }
-
     }
-    this.checkclickinrange = function(){
+
+    checkclickinrange() {
         // checks 
         // 1. whether the mouse is within this.range pixels of the ship,
         // 2. the difference between the mouse angle and the ship's steering angle (where the front points to) 
@@ -63,7 +65,6 @@ function CannonRender(cannon, player){
             return false
         }
     }
-
 }
 
 function cannonballshow(pos,size){

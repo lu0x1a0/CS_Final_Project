@@ -204,7 +204,7 @@ function newConnection(socket) {
                             player.updateOnTreasure(true) 
                             player.updateSpacePressed(true)
                             break
-                            }
+                        }
                     } 
                 } 
             }

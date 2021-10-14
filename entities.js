@@ -39,6 +39,7 @@ class Player{
             health : this.health,
             hitbox_size : this.hitbox_size,
             gold : this.gold,
+            treasure_fish_time : CONST.TREASURE_FISH_TIME,
             cannonJSON : this.cannon.toJSON(),
         }
     }
@@ -68,10 +69,9 @@ class Player{
         if (this.OnTreasure && this.SpacePressed) {
             if (this.SpaceCounter == CONST.TREASURE_FISH_TIME) {
                 //Remove Treasure coordinates 
-                //HOW TF isnt it BEING removed 
                 let encap = {x: Math.floor(this.pos.x/gamemap.tilesize), y: Math.floor(this.pos.y/gamemap.tilesize)};
                 gamemap.treasurelist.remove_treasure(encap)
-                this.gold += 10
+                this.gold += CONST.GOLD_AMT;
                 this.SpaceCounter = 0;
                 this.OnTreasure = false;
                 this.SpacePressed = false;
