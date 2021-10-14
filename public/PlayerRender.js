@@ -13,6 +13,15 @@ class PlayerRender {
     this.sfx_get_treasure = loadSound('assets/sfx_get_treasure.mp3')
   }
 
+  music_vol(val) {
+    this.music.setVolume(val)
+  }
+
+  sfx_vol(val) {
+    this.sfx_cannon_fire.setVolume(val)
+    this.sfx_get_treasure.setVolume(val)
+  }
+
   load_player(playerJSON) {
     this.pos = playerJSON.pos;
     this.dir = playerJSON.dir;
