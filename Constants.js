@@ -23,5 +23,6 @@ module.exports = {
 
         // Mechanics constants
         TREASURE_FISH_TIME : 150,
+        GOLD_AMT : 10,
     }
 }

@@ -10,17 +10,19 @@ class PlayerRender {
     // Sounds
     this.music = loadSound('assets/main_music.mp3');
     this.sfx_cannon_fire = loadSound('assets/sfx_cannon_fire.mp3')
+    this.sfx_get_treasure = loadSound('assets/sfx_get_treasure.mp3')
   }
 
   load_player(playerJSON) {
     this.pos = playerJSON.pos;
     this.dir = playerJSON.dir;
     this.size = playerJSON.size;
+    this.hitbox_size = player.hitbox_size
     this.health = playerJSON.health
     this.gold = playerJSON.gold
+    this.treasure_fish_time = playerJSON.treasure_fish_time
 
     this.cannon = new CannonRender(playerJSON.cannonJSON, this)
-    this.hitbox_size = player.hitbox_size
   }
 
 
@@ -77,10 +79,15 @@ class PlayerRender {
 
     push()
     if (this.OnTreasure) {
+      // Treasure get SFX
+      if (this.SpaceCounter == this.treasure_fish_time) {
+        this.sfx_get_treasure.play()
+      }
+
       fill(100,63)
       rect(this.pos.x-this.size/2, this.pos.y-this.size/2-30,this.size,10);
       fill(0, 0, 255)
-      rect(this.pos.x-this.size/2, this.pos.y-this.size/2-30,this.size*abs(this.SpaceCounter)/150,10);
+      rect(this.pos.x-this.size/2, this.pos.y-this.size/2-30, this.size*abs(this.SpaceCounter)/this.treasure_fish_time, 10);
     }
     pop()
 
@@ -89,8 +96,8 @@ class PlayerRender {
   
   tryfire(){
     if (this.cannon.checkclickinrange()){
+      // Fire SFX
       this.sfx_cannon_fire.play();
-      return this.cannon.fireData();
     }
   }
 }
@@ -131,7 +138,7 @@ function showship(dir,x,y,img_boat,username,size,health,funcs,gold,OnTreasure,Sp
     fill(100,63)
     rect(x-size/2, y-size/2-30,size,10);
     fill(0, 0, 255)
-    rect(x-size/2, y-size/2-30,size*abs(SpaceCounter)/150,10);
+    rect(x-size/2, y-size/2-30,size*abs(SpaceCounter)/this.treasure_fish_time,10);
   }
   pop()
   
