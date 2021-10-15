@@ -219,9 +219,11 @@ function newConnection(socket) {
                     player = players[i]
                 }
             }
-            if (data.releasedkeycode === K_W || data.releasedkeycode === K_S){
+            if ((data.releasedkeycode === K_W && player.yacc<0) || 
+                (data.releasedkeycode === K_S && player.yacc>0)) {
                 player.yacc = 0
-            } else if (data.releasedkeycode === K_A || data.releasedkeycode === K_D){
+            } else if ( (data.releasedkeycode === K_A && player.xacc<0) || 
+                        (data.releasedkeycode === K_D && player.xacc>0)){
                 player.xacc = 0
             } else if (data.releasedkeycode === K_Space) {
                 player.updateSpacePressed(false)
