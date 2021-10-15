@@ -55,8 +55,8 @@ class Player{
         this.pos.y += Math.ceil(shared_dist)*Math.sin(collided_angle+Math.PI)
 
         ////pass forward momentum 
-        collided.vel.x += this.vel.x*0.9 //xacc*10
-        collided.vel.y += this.vel.y*0.9 //yacc*10
+        collided.vel.x += this.vel.x*1.5 //0.9 //xacc*10
+        collided.vel.y += this.vel.y*1.5 //0.9 //yacc*10
         //collided.pos.x += this.vel.x*5//xacc*10
         //collided.pos.y += this.vel.y*5//yacc*10
         //
@@ -75,11 +75,11 @@ class Player{
             // side damage
         if ( (absdiff> Math.PI/6 && absdiff < 5*Math.PI/6) || (absdiff2> Math.PI/6 && absdiff2 < 5*Math.PI/6) ) {
             //((absdiff>field && absdiff<(Math.PI-field)) || (absdiff2> field && absdiff2<(Math.PI-field)))
-            this.health -= 10
+            this.health -= 5
         } 
             // front or back damage
         else {
-            this.health -= 5 
+            this.health -= 2 
         } 
         // collided takes damage
         var absdiff = Math.abs(angle-collided.dir)
