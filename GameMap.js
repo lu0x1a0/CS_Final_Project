@@ -1,6 +1,7 @@
 const CONST = require('./Constants.js').CONST
 const addVec = require("./utils.js").addVec
 const TreasureList = require("./TreasureList.js").TreasureList
+const TurretList = require("./TownTurrets.js").TurretList
 
 class GameMap {
     constructor(map) {
@@ -15,8 +16,9 @@ class GameMap {
         this.tilesize = CONST.TILESIZE;
         this.max_treasure = map.max_treasure;
 
-        // Initialize treasure
+        // Initialize
         this.treasurelist = new TreasureList(this)
+        this.turretlist = new TurretList(this)
 
         // Initialize spawn positions
         this.spawns = []
@@ -64,6 +66,9 @@ class GameMap {
 
     player_move(pos, vel, hitbox_size) {
 
+        // Impassible tiles
+        var impassible = ['L', 'T']
+
         var new_pos = addVec(pos,vel)//p5.Vector.add(pos, vel)
 
         // Currently just check centre point
@@ -71,13 +76,13 @@ class GameMap {
         var py = Math.floor((pos.y)/this.tilesize)
 
         // Wall left
-        if (this.map[px-1][py] === 'L') { new_pos.x = Math.max(new_pos.x, (px)*this.tilesize + 0.5*hitbox_size) }
+        if (impassible.includes(this.map[px-1][py])) { new_pos.x = Math.max(new_pos.x, (px)*this.tilesize + 0.5*hitbox_size) }
         // Wall right
-        if (this.map[px+1][py] === 'L') { new_pos.x = Math.min(new_pos.x, (px+1)*this.tilesize - 0.5*hitbox_size) }
+        if (impassible.includes(this.map[px+1][py])) { new_pos.x = Math.min(new_pos.x, (px+1)*this.tilesize - 0.5*hitbox_size) }
         // Wall above
-        if (this.map[px][py-1] === 'L') { new_pos.y = Math.max(new_pos.y, (py)*this.tilesize + 0.5*hitbox_size) }
+        if (impassible.includes(this.map[px][py-1])) { new_pos.y = Math.max(new_pos.y, (py)*this.tilesize + 0.5*hitbox_size) }
         // Wall below
-        if (this.map[px][py+1] === 'L') { new_pos.y = Math.min(new_pos.y, (py+1)*this.tilesize - 0.5*hitbox_size) }
+        if (impassible.includes(this.map[px][py+1])) { new_pos.y = Math.min(new_pos.y, (py+1)*this.tilesize - 0.5*hitbox_size) }
 
         return new_pos;
     }

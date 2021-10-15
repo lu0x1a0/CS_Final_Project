@@ -113,6 +113,12 @@ function heartbeat() {
 
     // Refresh treasure
     gamemap.try_add_treasure()
+
+    // Turrets fire
+    var turret_cannonballs = gamemap.turretlist.fire_all(players)
+    for (var tID in turret_cannonballs) {
+        projectiles[tID+(new Date()).getTime()] =  turret_cannonballs[tID]
+    }
     
     // Data we send to front end
     io.sockets.emit('heartbeat', {

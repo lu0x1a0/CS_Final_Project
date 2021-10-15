@@ -4,7 +4,9 @@ class GameMapRender {
 
     preload() {
         this.img_land = loadImage('assets/img_land.png');
+        this.img_missing = loadImage('assets/img_missing.png');
         this.img_treasure_water = loadImage('assets/img_treasure_water.png');
+        this.img_turret = loadImage('assets/img_turret.png');
         this.img_water = loadImage('assets/img_water.png');
     }
 
@@ -28,11 +30,14 @@ class GameMapRender {
                     case 'L':
                         image(this.img_land, x*this.tilesize, y*this.tilesize, this.tilesize, this.tilesize);
                         break;
+                    case 'T':
+                        image(this.img_turret, x*this.tilesize, y*this.tilesize, this.tilesize, this.tilesize);
+                        break;
                     case 'W':
                         image(this.img_water, x*this.tilesize, y*this.tilesize, this.tilesize, this.tilesize);
                         break;
                     default:
-                        image(this.img_water, x*this.tilesize, y*this.tilesize, this.tilesize, this.tilesize);
+                        image(this.img_missing, x*this.tilesize, y*this.tilesize, this.tilesize, this.tilesize);
                     
                 }
             }
