@@ -18,6 +18,9 @@ module.exports = {
         CANNONBALL_DIAMETER : 8,
         CANNONBALL_DAMAGE : 10,
 
+        TURRET_FIRING_RANGE : 5,
+        TURRET_FRAME_FREQ : 100,
+
         // Bot constants
         BOT_LOW_HEALTH : 50,
 
