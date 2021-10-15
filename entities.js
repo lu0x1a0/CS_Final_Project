@@ -22,6 +22,7 @@ class Player{
         this.cannon = new Cannon(this.size*CONST.CANNON_VISION_FACTOR, CONST.CANNON_START_ANGLE, this)
         this.health = CONST.PLAYER_HEALTH
         this.hitbox_size = CONST.PLAYER_HITBOX_SIZE
+        this.dim = {a:80/2,b:48/2} // to replace hitbox_size
         this.isBot = false;
         this.gold = CONST.PLAYER_START_GOLD;
 
@@ -29,6 +30,41 @@ class Player{
         this.SpacePressed = false
         this.OnTreasure = false
     }
+    collisionCheck(players){
+        // we assume a circle/elliptical collision zone that pushes the player
+        for(var i = 0; i< players.length; i++){
+            //console.log(i)
+            if (players[i].id !== this.id){
+                var posangle = Math.atan2(players[i].pos.y-this.pos.y,players[i].pos.x-this.pos.x)        
+                var center_distance = mag(players[i].pos.x-this.pos.x,players[i].pos.y-this.pos.y)
+                var dir_rad_1 = this.dim.a*this.dim.b/Math.sqrt( (this.dim.b*Math.cos(posangle-this.dir))**2+(this.dim.a*Math.sin(posangle-this.dir))**2  )
+                var dir_rad_2 = this.dim.a*this.dim.b/Math.sqrt( (this.dim.b*Math.cos(posangle-players[i].dir))**2+(this.dim.a*Math.sin(posangle-players[i].dir))**2  )
+    
+                if (center_distance <= (dir_rad_1 + dir_rad_2)){
+                    this.onCollision(players[i],dir_rad_1,dir_rad_2,center_distance,posangle)
+                }
+            }
+        }
+    }
+    onCollision(collided,this_dir_rad,collided_dir_rad,total_dist,collided_angle){
+        //first separate collided entities
+        var shared_dist = -(total_dist -  this_dir_rad - collided_dir_rad)
+        collided.pos.x += Math.ceil(shared_dist)*Math.cos(collided_angle)
+        collided.pos.y += Math.ceil(shared_dist)*Math.sin(collided_angle)
+        this.pos.x += Math.ceil(shared_dist)*Math.cos(collided_angle+Math.PI)
+        this.pos.y += Math.ceil(shared_dist)*Math.sin(collided_angle+Math.PI)
+
+        ////pass forward momentum 
+        collided.vel.x += this.vel.x*0.9 //xacc*10
+        collided.vel.y += this.vel.y*0.9 //yacc*10
+        //collided.pos.x += this.vel.x*5//xacc*10
+        //collided.pos.y += this.vel.y*5//yacc*10
+        //
+        //// receives momentum
+        this.vel.x /= 2//collided.vel.x //+= collided.xacc*10
+        this.vel.y /= 2//collided.vel.x //+= collided.yacc*10
+        //console.log(this,collided)
+    }    
 
     toJSON() {
         return {
@@ -63,6 +99,7 @@ class Player{
         } else {
             this.updateBot(players);
         }
+        this.collisionCheck(players)
     };
 
     updateTreasure(gamemap) {
