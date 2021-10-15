@@ -63,9 +63,34 @@ class Player{
         //// receives momentum
         this.vel.x /= 2//collided.vel.x //+= collided.xacc*10
         this.vel.y /= 2//collided.vel.x //+= collided.yacc*10
+        
+        this.collisionDamage(collided,collided_angle)
         //console.log(this,collided)
     }    
+    collisionDamage(collided,angle){
+        var altangle = Math.sign(angle)*(-1) *(2*Math.PI-Math.abs(angle))
+        // this takes damage
+        var absdiff = Math.abs(angle-this.dir)
+        var absdiff2 = Math.abs(altangle-this.dir)
+            // side damage
+        if ( (absdiff> Math.PI/6 && absdiff < 5*Math.PI/6) || (absdiff2> Math.PI/6 && absdiff2 < 5*Math.PI/6) ) {
+            //((absdiff>field && absdiff<(Math.PI-field)) || (absdiff2> field && absdiff2<(Math.PI-field)))
+            this.health -= 10
+        } 
+            // front or back damage
+        else {
+            this.health -= 5 
+        } 
+        // collided takes damage
+        var absdiff = Math.abs(angle-collided.dir)
+        var absdiff2 = Math.abs(altangle-collided.dir)
+        if ( (absdiff> Math.PI/6 && absdiff < 5*Math.PI/6) || (absdiff2> Math.PI/6 && absdiff2 < 5*Math.PI/6) ) {
+            collided.health -=10
+        } else {
+            collided.health -=5
+        }
 
+    }
     toJSON() {
         return {
             pos : this.pos,

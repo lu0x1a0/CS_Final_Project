@@ -139,7 +139,7 @@ function newConnection(socket) {
     socket.on('start',
         function(data) {
             if (players.length == 0) {
-                InitialiseBot();
+                //InitialiseBot();
             }
 
             var position = gamemap.get_spawn();
