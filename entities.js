@@ -69,25 +69,26 @@ class Player{
     }    
     collisionDamage(collided,angle){
         var altangle = Math.sign(angle)*(-1) *(2*Math.PI-Math.abs(angle))
+        var speed = mag(this.vel.x-collided.vel.x,this.vel.y-collided.vel.y)
         // this takes damage
         var absdiff = Math.abs(angle-this.dir)
         var absdiff2 = Math.abs(altangle-this.dir)
             // side damage
         if ( (absdiff> Math.PI/6 && absdiff < 5*Math.PI/6) || (absdiff2> Math.PI/6 && absdiff2 < 5*Math.PI/6) ) {
             //((absdiff>field && absdiff<(Math.PI-field)) || (absdiff2> field && absdiff2<(Math.PI-field)))
-            this.health -= 5
+            this.health -= 3*speed
         } 
             // front or back damage
         else {
-            this.health -= 2 
+            this.health -= 1*speed
         } 
         // collided takes damage
         var absdiff = Math.abs(angle-collided.dir)
         var absdiff2 = Math.abs(altangle-collided.dir)
         if ( (absdiff> Math.PI/6 && absdiff < 5*Math.PI/6) || (absdiff2> Math.PI/6 && absdiff2 < 5*Math.PI/6) ) {
-            collided.health -= 5
+            collided.health -= 3*speed
         } else {
-            collided.health -= 2
+            collided.health -= 1*speed
         }
 
     }
