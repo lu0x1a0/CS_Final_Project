@@ -137,8 +137,8 @@ function draw() {
           players[i].size,
           players[i].health,[],
           players[i].gold,
-          players[i].OnTreasure, 
-          players[i].SpaceCounter, 
+          players[i].OnTreasure,
+          players[i].SpaceCounter,
           players[i].SpacePressed
         )
       }

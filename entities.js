@@ -454,5 +454,6 @@ class Cannonball{
 }
 
 module.exports = {
-    Player: Player
+    Player: Player,
+    Cannonball:Cannonball
 }

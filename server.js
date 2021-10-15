@@ -5,6 +5,7 @@
 const entities = require('./entities.js')
 const CONST = require('./Constants.js').CONST
 const Maps = require('./MapFiles.js').Maps
+const nameGenerator = require('./nameGenerator');
 
 stub = new entities.Player(1,2,3,4)
 console.log(stub)
@@ -113,7 +114,14 @@ function heartbeat() {
 
     // Refresh treasure
     gamemap.try_add_treasure()
+
+    // Turrets fire
+    var turret_cannonballs = gamemap.turretlist.fire_all(players)
+    for (var tID in turret_cannonballs) {
+        projectiles[tID+(new Date()).getTime()] =  turret_cannonballs[tID]
+    }
     
+
     // Data we send to front end
     io.sockets.emit('heartbeat', {
         players:playerslocjson(),
@@ -125,7 +133,8 @@ function heartbeat() {
 function InitialiseBot() {
     console.log("A New Bot is being added");
     //What sort of data do the bots have?
-    var newBot = new entities.Player("","Pirate",800,300,1.75);
+
+    var newBot = new entities.Player("",nameGenerator.name(),800,300,1.75);
     newBot.isBot = true;
     players.push(newBot);
 }
@@ -142,8 +151,13 @@ function newConnection(socket) {
                 //InitialiseBot();
             }
 
+            if (data.username == '') {
+              data.username = nameGenerator.name()
+            }
+
             var position = gamemap.get_spawn();
             var player = new entities.Player(socket.id, data.username, position.x, position.y, 0);
+
             players.push(player);
             //console.log("-----------start---------------")
             //console.log(players)
@@ -195,18 +209,18 @@ function newConnection(socket) {
                 player.SpaceCounter = 0
             } else if (data.pressedkeycode === K_Space) {
                 //Check if player is on the same location as the treasure.
-                
+
                 if (!player.onTreasure) {
                     for (let i = 0; i < gamemap.treasurelist.treasure_array.length; ++i) {
                         let encap = {x: Math.floor(player.pos.x/gamemap.tilesize), y: Math.floor(player.pos.y/gamemap.tilesize)};
-                        if (encap.x === gamemap.treasurelist.treasure_array[i].x 
+                        if (encap.x === gamemap.treasurelist.treasure_array[i].x
                             && encap.y === gamemap.treasurelist.treasure_array[i].y) {
-                            player.updateOnTreasure(true) 
+                            player.updateOnTreasure(true)
                             player.updateSpacePressed(true)
                             break
                         }
-                    } 
-                } 
+                    }
+                }
             }
         }
     )
