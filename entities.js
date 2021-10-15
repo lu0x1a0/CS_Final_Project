@@ -85,9 +85,9 @@ class Player{
         var absdiff = Math.abs(angle-collided.dir)
         var absdiff2 = Math.abs(altangle-collided.dir)
         if ( (absdiff> Math.PI/6 && absdiff < 5*Math.PI/6) || (absdiff2> Math.PI/6 && absdiff2 < 5*Math.PI/6) ) {
-            collided.health -=10
+            collided.health -= 5
         } else {
-            collided.health -=5
+            collided.health -= 2
         }
 
     }
