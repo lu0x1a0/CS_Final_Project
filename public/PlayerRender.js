@@ -1,6 +1,7 @@
 class PlayerRender {
   constructor(){
     this.username = ""
+    this.flash = true
   }
 
   preload() {
@@ -23,14 +24,16 @@ class PlayerRender {
   }
 
   load_player(playerJSON) {
-    this.pos = playerJSON.pos;
-    this.dir = playerJSON.dir;
-    this.size = playerJSON.size;
-    this.username = playerJSON.username;
+    this.pos = playerJSON.pos
+    this.dir = playerJSON.dir
+    this.size = playerJSON.size
+    this.username = playerJSON.username
     this.hitbox_size = player.hitbox_size
     this.health = playerJSON.health
     this.gold = playerJSON.gold
     this.treasure_fish_time = playerJSON.treasure_fish_time
+    this.invincible = playerJSON.invincible
+    this.flashing = playerJSON.flashing
 
     this.cannon = new CannonRender(playerJSON.cannonJSON, this)
   }
@@ -52,7 +55,14 @@ class PlayerRender {
     var imgx = this.pos.x //-40
     var imgy = this.pos.y //- 24
     imageMode(CENTER);
+
+    // Tint if invincible and on a true flash frame
+    if (this.invincible) {
+      tint(255, 90)
+    }
+
     image(this.img_boat,imgx*cos(-this.dir-PI)-imgy*sin(-this.dir-PI),imgx*sin(-this.dir-PI)+imgy*cos(-this.dir-PI));
+    noTint()
     rotate(-this.dir-PI)
     //fill(255);
     //ellipse(this.pos.x, this.pos.y, this.size, this.size);

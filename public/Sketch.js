@@ -33,7 +33,7 @@ function setup() {
   music_slider = createSlider(0, 0.5, 0.1, 0.01)
   music_slider.position(10, 10);
 
-  sfx_slider = createSlider(0, 0.5, 0.1, 0.01)
+  sfx_slider = createSlider(0, 1.0, 0.4, 0.01)
   sfx_slider.position(10, 30);
 
 }
@@ -109,6 +109,7 @@ function draw() {
         player.OnTreasure = players[i].OnTreasure
         player.SpaceCounter = players[i].SpaceCounter
         player.SpacePressed = players[i].SpacePressed
+        player.invincible = players[i].invincible
         break;
       }
     }

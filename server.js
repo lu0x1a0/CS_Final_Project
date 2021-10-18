@@ -60,7 +60,8 @@ playerslocjson = function(){
             gold:players[i].gold,
             OnTreasure:players[i].OnTreasure,
             SpaceCounter:players[i].SpaceCounter,
-            SpacePressed:players[i].SpacePressed
+            SpacePressed:players[i].SpacePressed,
+            invincible:players[i].invincible,
         })
     }
     return l
@@ -82,7 +83,7 @@ projectileslocjson = function(){
 //------------------------------ SERVER EVENTS -------------------------------//
 
 // Update every 50 ms
-setInterval(heartbeat,10);
+setInterval(heartbeat, CONST.HEARTBEAT_INTERVAL);
 
 // RUNS EVERY SERVER-WIDE UPDATE
 function heartbeat() {
@@ -104,7 +105,7 @@ function heartbeat() {
                 hit = projectiles[key].contactcheck(players)
                 if (projectiles[key].done){
                     delete projectiles[key]
-                    hit.health -= CONST.CANNONBALL_DAMAGE;
+                    hit.takeDamage(CONST.CANNONBALL_DAMAGE);
                     continue;
                 }
             }
