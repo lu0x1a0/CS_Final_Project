@@ -16,7 +16,6 @@ var treasurerender;
 
 var div;
 function setup() {
-  socket = io.connect('http://localhost:5000'  );// Change to if pushing to heroku 'https://hidden-reef-26635.herokuapp.com/' http://localhost:5000
   createCanvas(windowWidth, windowHeight);
   imageMode(CENTER)
 
@@ -35,7 +34,7 @@ function setup() {
   music_slider = createSlider(0, 0.5, 0.1, 0.01)
   music_slider.position(10, 10);
 
-  sfx_slider = createSlider(0, 0.5, 0.1, 0.01)
+  sfx_slider = createSlider(0, 1.0, 0.4, 0.01)
   sfx_slider.position(10, 30);
 
 }
@@ -55,6 +54,9 @@ function startGame(usernameInput) {
   div.style('opacity',' 0.5')
   div.style('background-color','powderblue');
   div.position(10, 500);
+
+
+  socket = io.connect('http://localhost:5000',{reconnection: false} );// Change to if pushing to heroku 'https://hidden-reef-26635.herokuapp.com/' http://localhost:5000
 
   player.setUsername(usernameInput);
 
@@ -94,7 +96,11 @@ function startGame(usernameInput) {
     // else the socket will automatically try to reconnect
   });
 
-
+  socket.on("dead",
+    function(){
+      console.log("dead")
+    }
+  )
 
 }
 
@@ -123,6 +129,7 @@ function draw() {
         player.OnTreasure = players[i].OnTreasure
         player.SpaceCounter = players[i].SpaceCounter
         player.SpacePressed = players[i].SpacePressed
+        player.invincible = players[i].invincible
         break;
       }
     }

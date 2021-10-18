@@ -5,10 +5,9 @@
 const entities = require('./entities.js')
 const CONST = require('./Constants.js').CONST
 const Maps = require('./MapFiles.js').Maps
+const HealthObserver = require('./HealthObserver.js').HealthObserver
 const nameGenerator = require('./nameGenerator');
 
-stub = new entities.Player(1,2,3,4)
-console.log(stub)
 
 let K_W = 87;
 let K_A = 65;
@@ -39,15 +38,21 @@ const GameMap = require("./GameMap.js").GameMap
 var gamemap = new GameMap(Maps.MapSquare)
 
 //List of all players and bots connected to the server
-var players = [];
+var players = {};
+var monitorstatistics = {'numships' : 0}
 var projectiles = {};
-
+var healthobserver = new HealthObserver(players, io, monitorstatistics)//io.sockets)
 
 //------------------------------ JSON HELPER FUNCTIONS -------------------------------//
 
 playerslocjson = function(){
     var l = []
-    for(var i = 0; i<players.length;i++){
+    //for(var i = 0; i<players.length;i++){
+    
+    for (var i in players){ 
+        //console.log(players[i])
+        //console.log("----------------------------")
+        //console.log(players[i].pos.x)
         l.push({
             username:players[i].username,
             id:players[i].id,
@@ -60,7 +65,8 @@ playerslocjson = function(){
             gold:players[i].gold,
             OnTreasure:players[i].OnTreasure,
             SpaceCounter:players[i].SpaceCounter,
-            SpacePressed:players[i].SpacePressed
+            SpacePressed:players[i].SpacePressed,
+            invincible:players[i].invincible,
         })
     }
     return l
@@ -82,29 +88,38 @@ projectileslocjson = function(){
 //------------------------------ SERVER EVENTS -------------------------------//
 
 // Update every 50 ms
-setInterval(heartbeat,10);
+setInterval(heartbeat, CONST.HEARTBEAT_INTERVAL);
 
 // RUNS EVERY SERVER-WIDE UPDATE
 function heartbeat() {
-    for (var i = 0; i < players.length; i++ ) {
-        //console.log("LOOP ENTERED")
-        players[i].updateTreasure(gamemap);
-        players[i].update(players);
-        //players[i].constrain();pl
-        newpos = gamemap.player_move(players[i].pos, players[i].vel, players[i].hitbox_size)
-        players[i].pos = newpos
+    //for (var i = 0; i < players.length; i++ ) {
+    for (var i in players){
+        // checks that players[i] is not removed from the object by previous damages
+        if (players[i]){
+            var player = players[i]
+            players[i].updateTreasure(gamemap);
+            players[i].update(players);
+            //players[i].constrain();pl
+            if (player.health > 0){
+                newpos = gamemap.player_move(player.pos, players[i].vel, players[i].hitbox_size)
+                player.pos = newpos
+            }
+
+        }
     }
     for (var key in projectiles) {
         if (projectiles.hasOwnProperty(key)) {
             projectiles[key].update()
             if (projectiles[key].done){
+                //projectiles.splice(key,1)
                 delete projectiles[key]
                 continue;
             }else{
                 hit = projectiles[key].contactcheck(players)
                 if (projectiles[key].done){
+                    //projectiles.splice(key,1)
                     delete projectiles[key]
-                    hit.health -= CONST.CANNONBALL_DAMAGE;
+                    hit.takeDamage(CONST.CANNONBALL_DAMAGE);
                     continue;
                 }
             }
@@ -123,20 +138,26 @@ function heartbeat() {
     
 
     // Data we send to front end
+    //console.log(players)
+    //console.log("-----------------------------------------------")
+    //console.log("-----------------------------------------------")
     io.sockets.emit('heartbeat', {
         players:playerslocjson(),
         projectiles:projectileslocjson(),
         treasurelist:gamemap.treasurelist,
     });
 }
-
+botIdx = 0
 function InitialiseBot() {
     console.log("A New Bot is being added");
     //What sort of data do the bots have?
 
-    var newBot = new entities.Player("",nameGenerator.name(),800,300,1.75);
+    var newBot = new entities.Player(botIdx,nameGenerator.name(),800,300,1.75,healthobserver);
     newBot.isBot = true;
-    players.push(newBot);
+    //players.push(newBot);
+    players[botIdx] = newBot
+    botIdx += 1
+    monitorstatistics['numships'] += 1
 }
 
 // RUNS WHEN A NEW CONNECTION JOINS
@@ -147,8 +168,8 @@ function newConnection(socket) {
     // Also send gamemap
     socket.on('start',
         function(data) {
-            if (players.length == 0) {
-                //InitialiseBot();
+            if (monitorstatistics['numships'] == 0) {
+                InitialiseBot();
             }
 
             if (data.username == '') {
@@ -156,9 +177,10 @@ function newConnection(socket) {
             }
 
             var position = gamemap.get_spawn();
-            var player = new entities.Player(socket.id, data.username, position.x, position.y, 0);
-
-            players.push(player);
+            var player = new entities.Player(socket.id, data.username, position.x, position.y, 0, healthobserver);
+            //players.push(player);
+            players[player.id] = player
+            monitorstatistics['numships'] += 1
             //console.log("-----------start---------------")
             //console.log(players)
 
@@ -178,11 +200,12 @@ function newConnection(socket) {
             //console.log(data)
             //console.log(player)
             //console.log(players)
-            for (var i = 0; i < players.length; i++ ) {
-                if (socket.id == players[i].id) {
-                    player = players[i];
-                }
-            }
+            //for (var i = 0; i < players.length; i++ ) {
+            //    if (socket.id == players[i].id) {
+            //        player = players[i];
+            //    }
+            //}
+            player = players[socket.id]
             if (data.pressedkeycode ===K_W){
                 player.yacc = -CONST.PLAYER_ACCELERATION
                 //console.log(player.xacc)
@@ -228,11 +251,12 @@ function newConnection(socket) {
     socket.on('updatereleased',
         function(data){
             var player;
-            for (var i = 0; i < players.length; i++ ) {
-                if (socket.id == players[i].id) {
-                    player = players[i]
-                }
-            }
+            //for (var i = 0; i < players.length; i++ ) {
+            //    if (socket.id == players[i].id) {
+            //        player = players[i]
+            //    }
+            //}
+            player = players[socket.id]
             if ((data.releasedkeycode === K_W && player.yacc<0) || 
                 (data.releasedkeycode === K_S && player.yacc>0)) {
                 player.yacc = 0
@@ -257,12 +281,13 @@ function newConnection(socket) {
         //console.log("--------------------reason-------------------")
         //console.log(reason)
         var id = socket.id;
-        for (var i = 0; i < players.length; i++ ) {
-          if (id == players[i].id) {
-            players.splice(i,1)
-            break
-          }
-        }
+        delete players[id]
+        //for (var i = 0; i < players.length; i++ ) {
+        //  if (id == players[i].id) {
+        //    players.splice(i,1)
+        //    break
+        //  }
+        //}
 
       }
     );

@@ -12,7 +12,7 @@ module.exports = {
         PLAYER_HITBOX_SIZE : 45,
         PLAYER_START_GOLD : 10,
 
-        CANNON_SPEED_FACTOR : 1.5,
+        CANNON_SPEED_FACTOR : 3,
         CANNON_VISION_FACTOR : 5,
         CANNON_START_ANGLE : Math.PI/3,
         CANNONBALL_DIAMETER : 8,
@@ -25,7 +25,12 @@ module.exports = {
         BOT_LOW_HEALTH : 50,
 
         // Mechanics constants
+        HEARTBEAT_INTERVAL : 10,
+        INVINCIBILITY_FRAMES : 200,
         TREASURE_FISH_TIME : 150,
         GOLD_AMT : 10,
+
+        SIDE_DAMAGE_MULTIPLIER : 3,
+        FRONT_BACK_DAMAGE_MULTIPLIER : 1,
     }
 }

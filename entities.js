@@ -7,7 +7,7 @@ const Maps = require("./MapFiles.js").Maps
 
 
 class Player{
-    constructor(id,username, x, y, dir){
+    constructor(id,username, x, y, dir, healthobserver){
         this.pos = {x:x, y:y};
         this.dir = dir;
         this.size = CONST.PLAYER_SIZE;
@@ -26,13 +26,33 @@ class Player{
         this.isBot = false;
         this.gold = CONST.PLAYER_START_GOLD;
 
+        this.invincible = true;
+        this.invinc_time = 0;
+
         this.SpaceCounter = 0
         this.SpacePressed = false
         this.OnTreasure = false
+        this.healthobserver = healthobserver
     }
+
+    invincTick() {
+        this.invinc_time++;
+        if (this.invinc_time >= CONST.INVINCIBILITY_FRAMES) {
+            this.invincible = false;
+        }
+    }
+
+    takeDamage(amt) {
+        if (!this.invincible) {
+            this.health -= amt
+        }
+    }
+
+
     collisionCheck(players){
         // we assume a circle/elliptical collision zone that pushes the player
-        for(var i = 0; i< players.length; i++){
+        //for(var i = 0; i< players.length; i++){
+        for(var i in players){
             //console.log(i)
             if (players[i].id !== this.id){
                 var posangle = Math.atan2(players[i].pos.y-this.pos.y,players[i].pos.x-this.pos.x)        
@@ -76,20 +96,33 @@ class Player{
             // side damage
         if ( (absdiff> Math.PI/6 && absdiff < 5*Math.PI/6) || (absdiff2> Math.PI/6 && absdiff2 < 5*Math.PI/6) ) {
             //((absdiff>field && absdiff<(Math.PI-field)) || (absdiff2> field && absdiff2<(Math.PI-field)))
-            this.health -= 3*speed
+            this.takeDamage(CONST.SIDE_DAMAGE_MULTIPLIER*speed)
         } 
             // front or back damage
         else {
-            this.health -= 1*speed
+            this.takeDamage(CONST.FRONT_BACK_DAMAGE_MULTIPLIER*speed)
         } 
         // collided takes damage
         var absdiff = Math.abs(angle-collided.dir)
         var absdiff2 = Math.abs(altangle-collided.dir)
         if ( (absdiff> Math.PI/6 && absdiff < 5*Math.PI/6) || (absdiff2> Math.PI/6 && absdiff2 < 5*Math.PI/6) ) {
-            collided.health -= 3*speed
+            collided.takeDamage(CONST.SIDE_DAMAGE_MULTIPLIER*speed)
         } else {
-            collided.health -= 1*speed
+            collided.takeDamage(CONST.FRONT_BACK_DAMAGE_MULTIPLIER*speed)
         }
+
+    }
+    takeDamage(damage){
+        this.health -=damage
+        if (this.health <= 0){
+            this.endGame()
+            return "dead"
+        }
+    }
+    endGame(){
+        this.healthobserver.playerDied(this.id)
+    }
+    dropTreasure(){
 
     }
     toJSON() {
@@ -103,16 +136,17 @@ class Player{
             gold : this.gold,
             treasure_fish_time : CONST.TREASURE_FISH_TIME,
             cannonJSON : this.cannon.toJSON(),
+            invincible : this.invincible,
         }
     }
 
-    // change the velocity according to current drag and acceleration..
-    update(players) {
-        //var newvel = createVector(mouseX - width / 2, mouseY - height / 2);
-        //newvel.setMag(3);
-        //this.vel.lerp(newvel, 0.2);
-        //this.pos.add(this.vel);
 
+    update(players) {
+        // Called on every heartbeat
+        
+        this.invincTick()
+
+        // change the velocity according to current drag and acceleration..
         // wasd acc movement version
         if (!this.isBot) {
             this.vel = {x:this.vel.x+this.xacc,y:this.vel.y+this.yacc}
@@ -164,7 +198,8 @@ class Player{
             decision = 1;
         }
 
-        for(let i = 0; i<players.length;i++) {
+        //for(let i = 0; i<players.length;i++) {
+        for (var i in players){
             let pixelX = players[i].pos.x
             let pixelY = players[i].pos.y
             let factor = Gmap.tilesize
@@ -212,8 +247,9 @@ class Player{
                 break;
             }
         }
-
-        for(let i = 0; i<players.length;i++) {
+        
+        //for(let i = 0; i<players.length;i++) {
+        for (var i in players){
             let pixelX = players[i].pos.x
             let pixelY = players[i].pos.y
             let factor = Gmap.tilesize
@@ -384,18 +420,24 @@ function Cannon(range,visionfield,player){
         // 2. the difference between the mouse angle and the ship's steering angle (where the front points to)
         //    is between the field size and PI-field. i.e. valid firing angle is from either side of the ship
         //    with allowed variability to left or right of (PI-2*field)/2 radian.
-        if (    (dist <= this.range) &&
+        //console.log(this.range,this.player.dim.a+2,dist)
+        if (    ((dist <= this.range) && (dist >= (this.player.dim.a+20)) ) //&&
                 //((absdiff>field && absdiff<(Math.PI-field)) || (absdiff2> field && absdiff2<(Math.PI-field)))
-                ((absdiff<(Math.PI-field)) || (absdiff2<(Math.PI-field)))
+                //((absdiff<(Math.PI-field)) || (absdiff2<(Math.PI-field)))
             ){
             startpos = {x:this.pos.x,y:this.pos.y}
             // move slightly off player's collision zone so the ball doesn't hit the player
-            shift = setMag({x:targetX,y:targetY},this.player.size/2+5)
+            shift = setMag({x:targetX,y:targetY},this.player.size/2+20)
             shiftstart = addVec(startpos,shift)
+
+            // adj speed according to player velocity
+            x = this.speed*Math.cos(this.angle)
+            y = this.speed*Math.sin(this.angle)
+            adjspeed = mag(x+this.player.vel.x,y+this.player.vel.y)
             var data = {
                 start:shiftstart,
                 end:{x:startpos.x+targetX, y:startpos.y+targetY},
-                speed: this.speed
+                speed: adjspeed//this.speed
             }
             return new Cannonball(data.start,data.end,data.speed)
         }
@@ -420,7 +462,8 @@ class Cannonball{
     }
     //checks whether the ball's euclidian distance from a player is less than the two radius combined.
     contactcheck(players){
-        for(var i = 0; i < players.length;i++){
+        //for(var i = 0; i < players.length;i++){
+        for (var i in players){
             //if the distance between two points are less than two collision circle - contact.
             if (mag(players[i].pos.x-this.pos.x,players[i].pos.y-this.pos.y)<(players[i].size/2+this.diameter) ){
                 this.done = true
