@@ -1,6 +1,7 @@
 class PlayerRender {
   constructor(){
     this.username = ""
+    this.flash = true
   }
 
   preload() {
@@ -23,13 +24,16 @@ class PlayerRender {
   }
 
   load_player(playerJSON) {
-    this.pos = playerJSON.pos;
-    this.dir = playerJSON.dir;
-    this.size = playerJSON.size;
+    this.pos = playerJSON.pos
+    this.dir = playerJSON.dir
+    this.size = playerJSON.size
+    this.username = playerJSON.username
     this.hitbox_size = player.hitbox_size
     this.health = playerJSON.health
     this.gold = playerJSON.gold
     this.treasure_fish_time = playerJSON.treasure_fish_time
+    this.invincible = playerJSON.invincible
+    this.flashing = playerJSON.flashing
 
     this.cannon = new CannonRender(playerJSON.cannonJSON, this)
   }
@@ -51,7 +55,14 @@ class PlayerRender {
     var imgx = this.pos.x //-40
     var imgy = this.pos.y //- 24
     imageMode(CENTER);
+
+    // Tint if invincible and on a true flash frame
+    if (this.invincible) {
+      tint(255, 90)
+    }
+
     image(this.img_boat,imgx*cos(-this.dir-PI)-imgy*sin(-this.dir-PI),imgx*sin(-this.dir-PI)+imgy*cos(-this.dir-PI));
+    noTint()
     rotate(-this.dir-PI)
     //fill(255);
     //ellipse(this.pos.x, this.pos.y, this.size, this.size);
@@ -102,7 +113,7 @@ class PlayerRender {
 
     this.cannon.showRange()
   };
-  
+
   tryfire(){
     if (this.cannon.checkclickinrange()){
       // Fire SFX
@@ -111,12 +122,15 @@ class PlayerRender {
   }
 }
 
-function showship(dir,x,y,img_boat,username,size,health,funcs,gold,OnTreasure,SpaceCounter,SpacePressed){
+function showship(dir,x,y,img_boat,username,size,health,funcs,gold,OnTreasure,SpaceCounter,SpacePressed, invincible){
   push()
   rotate(dir+PI)
   var imgx = x //-40
   var imgy = y //- 24
   imageMode(CENTER)
+  if (invincible) {
+    tint(255, 90)
+  }
   image(img_boat,imgx*cos(-dir-PI)-imgy*sin(-dir-PI),imgx*sin(-dir-PI)+imgy*cos(-dir-PI));
   rotate(-dir-PI)
 
@@ -150,7 +164,7 @@ function showship(dir,x,y,img_boat,username,size,health,funcs,gold,OnTreasure,Sp
     rect(x-size/2, y-size/2-30,size*abs(SpaceCounter)/this.treasure_fish_time,10);
   }
   pop()
-  
+
   for(f in funcs){
     funcs()
   }

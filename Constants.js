@@ -18,11 +18,19 @@ module.exports = {
         CANNONBALL_DIAMETER : 8,
         CANNONBALL_DAMAGE : 10,
 
+        TURRET_FIRING_RANGE : 5,
+        TURRET_FRAME_FREQ : 100,
+
         // Bot constants
         BOT_LOW_HEALTH : 50,
 
         // Mechanics constants
+        HEARTBEAT_INTERVAL : 10,
+        INVINCIBILITY_FRAMES : 200,
         TREASURE_FISH_TIME : 150,
         GOLD_AMT : 10,
+
+        SIDE_DAMAGE_MULTIPLIER : 3,
+        FRONT_BACK_DAMAGE_MULTIPLIER : 1,
     }
 }

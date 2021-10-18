@@ -6,6 +6,7 @@ const entities = require('./entities.js')
 const CONST = require('./Constants.js').CONST
 const Maps = require('./MapFiles.js').Maps
 const HealthObserver = require('./HealthObserver.js').HealthObserver
+const nameGenerator = require('./nameGenerator');
 
 
 let K_W = 87;
@@ -64,7 +65,8 @@ playerslocjson = function(){
             gold:players[i].gold,
             OnTreasure:players[i].OnTreasure,
             SpaceCounter:players[i].SpaceCounter,
-            SpacePressed:players[i].SpacePressed
+            SpacePressed:players[i].SpacePressed,
+            invincible:players[i].invincible,
         })
     }
     return l
@@ -86,7 +88,7 @@ projectileslocjson = function(){
 //------------------------------ SERVER EVENTS -------------------------------//
 
 // Update every 50 ms
-setInterval(heartbeat,10);
+setInterval(heartbeat, CONST.HEARTBEAT_INTERVAL);
 
 // RUNS EVERY SERVER-WIDE UPDATE
 function heartbeat() {
@@ -127,7 +129,14 @@ function heartbeat() {
 
     // Refresh treasure
     gamemap.try_add_treasure()
+
+    // Turrets fire
+    var turret_cannonballs = gamemap.turretlist.fire_all(players)
+    for (var tID in turret_cannonballs) {
+        projectiles[tID+(new Date()).getTime()] =  turret_cannonballs[tID]
+    }
     
+
     // Data we send to front end
     //console.log(players)
     //console.log("-----------------------------------------------")
@@ -142,7 +151,8 @@ botIdx = 0
 function InitialiseBot() {
     console.log("A New Bot is being added");
     //What sort of data do the bots have?
-    var newBot = new entities.Player(botIdx,"Pirate",800,300,1.75, healthobserver);
+
+    var newBot = new entities.Player(botIdx,nameGenerator.name(),800,300,1.75,healthobserver);
     newBot.isBot = true;
     //players.push(newBot);
     players[botIdx] = newBot
@@ -160,6 +170,10 @@ function newConnection(socket) {
         function(data) {
             if (monitorstatistics['numships'] == 0) {
                 InitialiseBot();
+            }
+
+            if (data.username == '') {
+              data.username = nameGenerator.name()
             }
 
             var position = gamemap.get_spawn();
@@ -218,18 +232,18 @@ function newConnection(socket) {
                 player.SpaceCounter = 0
             } else if (data.pressedkeycode === K_Space) {
                 //Check if player is on the same location as the treasure.
-                
+
                 if (!player.onTreasure) {
                     for (let i = 0; i < gamemap.treasurelist.treasure_array.length; ++i) {
                         let encap = {x: Math.floor(player.pos.x/gamemap.tilesize), y: Math.floor(player.pos.y/gamemap.tilesize)};
-                        if (encap.x === gamemap.treasurelist.treasure_array[i].x 
+                        if (encap.x === gamemap.treasurelist.treasure_array[i].x
                             && encap.y === gamemap.treasurelist.treasure_array[i].y) {
-                            player.updateOnTreasure(true) 
+                            player.updateOnTreasure(true)
                             player.updateSpacePressed(true)
                             break
                         }
-                    } 
-                } 
+                    }
+                }
             }
         }
     )
