@@ -7,7 +7,7 @@ const Maps = require("./MapFiles.js").Maps
 
 
 class Player{
-    constructor(id,username, x, y, dir){
+    constructor(id,username, x, y, dir, healthobserver){
         this.pos = {x:x, y:y};
         this.dir = dir;
         this.size = CONST.PLAYER_SIZE;
@@ -29,10 +29,12 @@ class Player{
         this.SpaceCounter = 0
         this.SpacePressed = false
         this.OnTreasure = false
+        this.healthobserver = healthobserver
     }
     collisionCheck(players){
         // we assume a circle/elliptical collision zone that pushes the player
-        for(var i = 0; i< players.length; i++){
+        //for(var i = 0; i< players.length; i++){
+        for(var i in players){
             //console.log(i)
             if (players[i].id !== this.id){
                 var posangle = Math.atan2(players[i].pos.y-this.pos.y,players[i].pos.x-this.pos.x)        
@@ -76,20 +78,33 @@ class Player{
             // side damage
         if ( (absdiff> Math.PI/6 && absdiff < 5*Math.PI/6) || (absdiff2> Math.PI/6 && absdiff2 < 5*Math.PI/6) ) {
             //((absdiff>field && absdiff<(Math.PI-field)) || (absdiff2> field && absdiff2<(Math.PI-field)))
-            this.health -= 3*speed
+            this.takeDamage(3*speed)
         } 
             // front or back damage
         else {
-            this.health -= 1*speed
+            this.takeDamage(1*speed)
         } 
         // collided takes damage
         var absdiff = Math.abs(angle-collided.dir)
         var absdiff2 = Math.abs(altangle-collided.dir)
         if ( (absdiff> Math.PI/6 && absdiff < 5*Math.PI/6) || (absdiff2> Math.PI/6 && absdiff2 < 5*Math.PI/6) ) {
-            collided.health -= 3*speed
+            collided.takeDamage(3*speed)
         } else {
-            collided.health -= 1*speed
+            collided.takeDamage(1*speed)
         }
+
+    }
+    takeDamage(damage){
+        this.health -=damage
+        if (this.health <= 0){
+            this.endGame()
+            return "dead"
+        }
+    }
+    endGame(){
+        this.healthobserver.playerDied(this.id)
+    }
+    dropTreasure(){
 
     }
     toJSON() {
@@ -164,7 +179,8 @@ class Player{
             decision = 1;
         }
 
-        for(let i = 0; i<players.length;i++) {
+        //for(let i = 0; i<players.length;i++) {
+        for (var i in players){
             let pixelX = players[i].pos.x
             let pixelY = players[i].pos.y
             let factor = Gmap.tilesize
@@ -212,8 +228,9 @@ class Player{
                 break;
             }
         }
-
-        for(let i = 0; i<players.length;i++) {
+        
+        //for(let i = 0; i<players.length;i++) {
+        for (var i in players){
             let pixelX = players[i].pos.x
             let pixelY = players[i].pos.y
             let factor = Gmap.tilesize
@@ -420,7 +437,8 @@ class Cannonball{
     }
     //checks whether the ball's euclidian distance from a player is less than the two radius combined.
     contactcheck(players){
-        for(var i = 0; i < players.length;i++){
+        //for(var i = 0; i < players.length;i++){
+        for (var i in players){
             //if the distance between two points are less than two collision circle - contact.
             if (mag(players[i].pos.x-this.pos.x,players[i].pos.y-this.pos.y)<(players[i].size/2+this.diameter) ){
                 this.done = true

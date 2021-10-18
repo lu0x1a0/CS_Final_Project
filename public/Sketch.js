@@ -14,7 +14,6 @@ var treasurerender;
 
 //Runs when first connected to the webpage
 function setup() {
-  socket = io.connect('http://localhost:5000'  );// Change to if pushing to heroku 'https://hidden-reef-26635.herokuapp.com/' http://localhost:5000
   createCanvas(windowWidth, windowHeight);
   imageMode(CENTER)
 
@@ -44,7 +43,7 @@ function setup() {
 //Creates a variable containing the player data and sends it to the server
 function startGame(usernameInput) {
   console.log(usernameInput);
-
+  socket = io.connect('http://localhost:5000'  );// Change to if pushing to heroku 'https://hidden-reef-26635.herokuapp.com/' http://localhost:5000
   player.setUsername(usernameInput);
 
   console.log('--------------------------startgame ran')
@@ -82,6 +81,11 @@ function startGame(usernameInput) {
     console.log(reason)
     // else the socket will automatically try to reconnect
   });
+  socket.on("dead",
+    function(){
+      console.log("dead")
+    }
+  )
 }
 
 
