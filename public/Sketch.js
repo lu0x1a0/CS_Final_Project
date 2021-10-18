@@ -43,7 +43,7 @@ function setup() {
 //Creates a variable containing the player data and sends it to the server
 function startGame(usernameInput) {
   console.log(usernameInput);
-  socket = io.connect('http://localhost:5000'  );// Change to if pushing to heroku 'https://hidden-reef-26635.herokuapp.com/' http://localhost:5000
+  socket = io.connect('http://localhost:5000',{reconnection: false} );// Change to if pushing to heroku 'https://hidden-reef-26635.herokuapp.com/' http://localhost:5000
   player.setUsername(usernameInput);
 
   console.log('--------------------------startgame ran')
