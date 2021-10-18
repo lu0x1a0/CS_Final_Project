@@ -420,18 +420,24 @@ function Cannon(range,visionfield,player){
         // 2. the difference between the mouse angle and the ship's steering angle (where the front points to)
         //    is between the field size and PI-field. i.e. valid firing angle is from either side of the ship
         //    with allowed variability to left or right of (PI-2*field)/2 radian.
-        if (    (dist <= this.range) &&
+        console.log(this.range,this.player.dim.a+2,dist)
+        if (    ((dist <= this.range) && (dist >= (this.player.dim.a+20)) ) //&&
                 //((absdiff>field && absdiff<(Math.PI-field)) || (absdiff2> field && absdiff2<(Math.PI-field)))
-                ((absdiff<(Math.PI-field)) || (absdiff2<(Math.PI-field)))
+                //((absdiff<(Math.PI-field)) || (absdiff2<(Math.PI-field)))
             ){
             startpos = {x:this.pos.x,y:this.pos.y}
             // move slightly off player's collision zone so the ball doesn't hit the player
-            shift = setMag({x:targetX,y:targetY},this.player.size/2+5)
+            shift = setMag({x:targetX,y:targetY},this.player.size/2+20)
             shiftstart = addVec(startpos,shift)
+
+            // adj speed according to player velocity
+            x = this.speed*Math.cos(this.angle)
+            y = this.speed*Math.sin(this.angle)
+            adjspeed = mag(x+this.player.vel.x,y+this.player.vel.y)
             var data = {
                 start:shiftstart,
                 end:{x:startpos.x+targetX, y:startpos.y+targetY},
-                speed: this.speed
+                speed: adjspeed//this.speed
             }
             return new Cannonball(data.start,data.end,data.speed)
         }
