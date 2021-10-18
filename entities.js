@@ -420,7 +420,7 @@ function Cannon(range,visionfield,player){
         // 2. the difference between the mouse angle and the ship's steering angle (where the front points to)
         //    is between the field size and PI-field. i.e. valid firing angle is from either side of the ship
         //    with allowed variability to left or right of (PI-2*field)/2 radian.
-        console.log(this.range,this.player.dim.a+2,dist)
+        //console.log(this.range,this.player.dim.a+2,dist)
         if (    ((dist <= this.range) && (dist >= (this.player.dim.a+20)) ) //&&
                 //((absdiff>field && absdiff<(Math.PI-field)) || (absdiff2> field && absdiff2<(Math.PI-field)))
                 //((absdiff<(Math.PI-field)) || (absdiff2<(Math.PI-field)))
