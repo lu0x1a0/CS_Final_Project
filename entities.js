@@ -398,48 +398,30 @@ function Cannon(range,visionfield,player){
     this.angle = 0
     this.player = player
     this.speed = player.maxspeed*CONST.CANNON_SPEED_FACTOR
-    this.update = function(){//x,y){
+    this.update = function(){
       this.pos = this.player.pos
-      //this.angle = Math.atan2(mouseY - height / 2, mouseX - width / 2);
-      //this.angle = Math.atan2(x,y);
-      //console.log("------------cannon-update---------\n",x,y,this.angle)
     }
 
     this.fire = function (targetX,targetY){
-        //input validity checking
-        var dist = mag(targetX,targetY)
-        // this.angle in [-pi,pi]
-        this.angle = Math.atan2(targetY,targetX)
-        // altangle expresses this angle in the alternative domain that goes either +- [0,2*PI]
-        var altangle = Math.sign(this.angle)*(-1) *(2*Math.PI-Math.abs(this.angle))
-        var absdiff = Math.abs(this.angle-this.player.dir)
-        var absdiff2 = Math.abs(altangle-this.player.dir)
-        var field = Math.PI/4 //this.visionfield // PI/3
-        // checks
-        // 1. whether the mouse is within this.range pixels of the ship,
-        // 2. the difference between the mouse angle and the ship's steering angle (where the front points to)
-        //    is between the field size and PI-field. i.e. valid firing angle is from either side of the ship
-        //    with allowed variability to left or right of (PI-2*field)/2 radian.
-        //console.log(this.range,this.player.dim.a+2,dist)
-        if (    ((dist <= this.range) && (dist >= (this.player.dim.a+20)) ) //&&
-                //((absdiff>field && absdiff<(Math.PI-field)) || (absdiff2> field && absdiff2<(Math.PI-field)))
-                //((absdiff<(Math.PI-field)) || (absdiff2<(Math.PI-field)))
-            ){
+        var move = {x:targetX,y:targetY}
+        if (mag(move)!==0){
+            this.angle = Math.atan2(targetY,targetX)
             startpos = {x:this.pos.x,y:this.pos.y}
             // move slightly off player's collision zone so the ball doesn't hit the player
             shift = setMag({x:targetX,y:targetY},this.player.size/2+20)
             shiftstart = addVec(startpos,shift)
-
+    
             // adj speed according to player velocity
             x = this.speed*Math.cos(this.angle)
             y = this.speed*Math.sin(this.angle)
             adjspeed = mag(x+this.player.vel.x,y+this.player.vel.y)
+            move = setMag(move,this.range)
             var data = {
                 start:shiftstart,
-                end:{x:startpos.x+targetX, y:startpos.y+targetY},
+                end:{x:startpos.x+move.x, y:startpos.y+move.y},
                 speed: adjspeed//this.speed
             }
-            return new Cannonball(data.start,data.end,data.speed)
+            return new Cannonball(data.start,data.end,data.speed)    
         }
     }
 
