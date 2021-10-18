@@ -23,11 +23,11 @@ html, body {
     border-radius: 5px;
     text-align: center;
   }
-  
+
   #home-page p {
     margin-bottom: 0;
   }
-  
+
   #home-page input {
     font-size: 18px;
     outline: none;
@@ -37,8 +37,7 @@ html, body {
     padding: 3px;
     text-align: center;
   }
-  
+
   #home-page input:hover {
     outline: none;
   }
-

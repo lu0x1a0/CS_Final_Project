@@ -13,6 +13,8 @@ var gamemaprender;
 var treasurerender;
 
 //Runs when first connected to the webpage
+
+var div;
 function setup() {
   createCanvas(windowWidth, windowHeight);
   imageMode(CENTER)
@@ -43,7 +45,19 @@ function setup() {
 //Creates a variable containing the player data and sends it to the server
 function startGame(usernameInput) {
   console.log(usernameInput);
+
+  div = createDiv('Leaderboard');
+  div.style('font-size', '25px');
+  div.style('color','green');
+  div.style('height',' 25%');
+  div.style('width','15%');
+  div.style('opacity',' 0.5')
+  div.style('background-color','powderblue');
+  div.position(10, 500);
+
+
   socket = io.connect('http://localhost:5000',{reconnection: false} );// Change to if pushing to heroku 'https://hidden-reef-26635.herokuapp.com/' http://localhost:5000
+
   player.setUsername(usernameInput);
 
   console.log('--------------------------startgame ran')
@@ -81,11 +95,13 @@ function startGame(usernameInput) {
     console.log(reason)
     // else the socket will automatically try to reconnect
   });
+
   socket.on("dead",
     function(){
       console.log("dead")
     }
   )
+
 }
 
 
@@ -152,6 +168,11 @@ function draw() {
       }
     }
 
+
+
+    div.style('color','black');
+
+    div.html("<style>th, td {padding: 10px;text-align: left;}</style><h1>Gold pirated</h1><body><table><tr><td>100</td><td>grapeBeard</td></tr><tr><td>80</td><td>redoldog</td></tr><tr><td>80</td><td>captain fish</td></tr></table></body>");
 
     for (var i = 0;i<projectiles.length;i++){
       cannonballshow(projectiles[i].pos,projectiles[i].diameter)
