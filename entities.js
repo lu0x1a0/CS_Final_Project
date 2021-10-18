@@ -26,10 +26,28 @@ class Player{
         this.isBot = false;
         this.gold = CONST.PLAYER_START_GOLD;
 
+        this.invincible = true;
+        this.invinc_time = 0;
+
         this.SpaceCounter = 0
         this.SpacePressed = false
         this.OnTreasure = false
     }
+
+    invincTick() {
+        this.invinc_time++;
+        if (this.invinc_time >= CONST.INVINCIBILITY_FRAMES) {
+            this.invincible = false;
+        }
+    }
+
+    takeDamage(amt) {
+        if (!this.invincible) {
+            this.health -= amt
+        }
+    }
+
+
     collisionCheck(players){
         // we assume a circle/elliptical collision zone that pushes the player
         for(var i = 0; i< players.length; i++){
@@ -76,19 +94,19 @@ class Player{
             // side damage
         if ( (absdiff> Math.PI/6 && absdiff < 5*Math.PI/6) || (absdiff2> Math.PI/6 && absdiff2 < 5*Math.PI/6) ) {
             //((absdiff>field && absdiff<(Math.PI-field)) || (absdiff2> field && absdiff2<(Math.PI-field)))
-            this.health -= 3*speed
+            this.takeDamage(CONST.SIDE_DAMAGE_MULTIPLIER*speed)
         } 
             // front or back damage
         else {
-            this.health -= 1*speed
+            this.takeDamage(CONST.FRONT_BACK_DAMAGE_MULTIPLIER*speed)
         } 
         // collided takes damage
         var absdiff = Math.abs(angle-collided.dir)
         var absdiff2 = Math.abs(altangle-collided.dir)
         if ( (absdiff> Math.PI/6 && absdiff < 5*Math.PI/6) || (absdiff2> Math.PI/6 && absdiff2 < 5*Math.PI/6) ) {
-            collided.health -= 3*speed
+            collided.takeDamage(CONST.SIDE_DAMAGE_MULTIPLIER*speed)
         } else {
-            collided.health -= 1*speed
+            collided.takeDamage(CONST.FRONT_BACK_DAMAGE_MULTIPLIER*speed)
         }
 
     }
@@ -103,16 +121,17 @@ class Player{
             gold : this.gold,
             treasure_fish_time : CONST.TREASURE_FISH_TIME,
             cannonJSON : this.cannon.toJSON(),
+            invincible : this.invincible,
         }
     }
 
-    // change the velocity according to current drag and acceleration..
-    update(players) {
-        //var newvel = createVector(mouseX - width / 2, mouseY - height / 2);
-        //newvel.setMag(3);
-        //this.vel.lerp(newvel, 0.2);
-        //this.pos.add(this.vel);
 
+    update(players) {
+        // Called on every heartbeat
+        
+        this.invincTick()
+
+        // change the velocity according to current drag and acceleration..
         // wasd acc movement version
         if (!this.isBot) {
             this.vel = {x:this.vel.x+this.xacc,y:this.vel.y+this.yacc}
