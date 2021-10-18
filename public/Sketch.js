@@ -46,16 +46,6 @@ function setup() {
 function startGame(usernameInput) {
   console.log(usernameInput);
 
-  div = createDiv('Leaderboard');
-  div.style('font-size', '25px');
-  div.style('color','green');
-  div.style('height',' 25%');
-  div.style('width','15%');
-  div.style('opacity',' 0.5')
-  div.style('background-color','powderblue');
-  div.position(10, 500);
-
-
   socket = io.connect('http://localhost:5000',{reconnection: false} );// Change to if pushing to heroku 'https://hidden-reef-26635.herokuapp.com/' http://localhost:5000
 
   player.setUsername(usernameInput);
@@ -72,7 +62,14 @@ function startGame(usernameInput) {
       gamemaprender.load_map(data.gamemap);
       treasurerender.first_load(data.gamemap);
       gameStarted = 1;
-
+      div = createDiv('Leaderboard');
+      div.style('font-size', '25px');
+      div.style('color','green');
+      div.style('height',' 25%');
+      div.style('width','15%');
+      div.style('opacity',' 0.5')
+      div.style('background-color','powderblue');
+      div.position(10, 500);
       // Begin music
       player.music.loop();
     }
@@ -92,6 +89,10 @@ function startGame(usernameInput) {
       // the disconnection was initiated by the server, you need to reconnect manually
       //socket.connect();
     }
+    gameStarted = 0
+    div.remove()
+    showMenu()
+  
     console.log(reason)
     // else the socket will automatically try to reconnect
   });
@@ -113,10 +114,26 @@ let K_S = 83;
 let K_D = 68;
 let K_Space = 32;
 
+// micro version of homepage because of loop referencing
+function showMenu(){
+  //import the values from the home page
+  var Username = document.getElementById('username-input');
+  var button = document.getElementById('play-button');
+  const playMenu = document.getElementById('home-page');
+  playMenu.classList.remove('hidden');
+
+  //When the play button is clicked hide the homepage and generate the player with the given username
+  button.onclick = function(){
+
+      playMenu.classList.add('hidden');
+      startGame(Username.value)
+  }
+}
 
 function draw() {
   if (gameStarted == 1) {
-
+    //defined in homepage.js
+    //playerMenu.classList.add('hidden')
     //Adjust the backgroun based on the players inputs
     background(0);
     for (var i = players.length - 1; i >= 0; i--) {
@@ -177,6 +194,9 @@ function draw() {
     for (var i = 0;i<projectiles.length;i++){
       cannonballshow(projectiles[i].pos,projectiles[i].diameter)
     }
+  }
+  else if (gameStarted == 0){
+    background(255)
   }
 }
 
