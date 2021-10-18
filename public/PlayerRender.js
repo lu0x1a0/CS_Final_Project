@@ -122,12 +122,15 @@ class PlayerRender {
   }
 }
 
-function showship(dir,x,y,img_boat,username,size,health,funcs,gold,OnTreasure,SpaceCounter,SpacePressed){
+function showship(dir,x,y,img_boat,username,size,health,funcs,gold,OnTreasure,SpaceCounter,SpacePressed, invincible){
   push()
   rotate(dir+PI)
   var imgx = x //-40
   var imgy = y //- 24
   imageMode(CENTER)
+  if (invincible) {
+    tint(255, 90)
+  }
   image(img_boat,imgx*cos(-dir-PI)-imgy*sin(-dir-PI),imgx*sin(-dir-PI)+imgy*cos(-dir-PI));
   rotate(-dir-PI)
 
