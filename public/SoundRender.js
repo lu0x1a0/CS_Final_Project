@@ -10,6 +10,7 @@ class SoundRender {
 
         // SFX
         this.sfx_cannon_fire = loadSound('assets/sfx_cannon_fire.mp3')
+        this.sfx_cannon_fire.playMode('restart')
         this.sfx_get_treasure = loadSound('assets/sfx_get_treasure.mp3')
 
     }
@@ -36,12 +37,12 @@ class SoundRender {
 
                 switch (eventlist[i].type) {
                     case 'cannon_fire':
-                        this.sfx_cannon_fire.setVolume(this.sfx_vol*vol_factor)
-                        this.sfx_cannon_fire.play();
+                        //this.sfx_cannon_fire.setVolume(this.sfx_vol*vol_factor)
+                        this.sfx_cannon_fire.play(0,1,this.sfx_vol*vol_factor);
                         break;
                     case 'get_treasure':
-                        this.sfx_get_treasure.setVolume(this.sfx_vol*vol_factor)
-                        this.sfx_get_treasure.play();
+                        //this.sfx_get_treasure.setVolume(this.sfx_vol*vol_factor)
+                        this.sfx_get_treasure.play(0,1,this.sfx_vol*vol_factor);
                         break;
                     default:
                         break;
