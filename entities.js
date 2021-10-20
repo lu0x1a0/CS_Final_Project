@@ -42,11 +42,11 @@ class Player{
         }
     }
 
-    takeDamage(amt) {
-        if (!this.invincible) {
-            this.health -= amt
-        }
-    }
+    //takeDamage(amt) {
+    //    if (!this.invincible) {
+    //        this.health -= amt
+    //    }
+    //}
 
 
     collisionCheck(players){
@@ -113,10 +113,12 @@ class Player{
 
     }
     takeDamage(damage){
-        this.health -=damage
-        if (this.health <= 0){
-            this.endGame()
-            return "dead"
+        if (!this.invincible) {
+            this.health -=damage
+            if (this.health <= 0){
+                this.endGame()
+                return "dead"
+            }
         }
     }
     endGame(){
