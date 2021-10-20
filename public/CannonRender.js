@@ -6,6 +6,7 @@ class CannonRender {
         this.visionfield = cannon.visionfield
         this.angle = 0
         this.player = player
+        this.ellipserange = cannon.ellipsestat//{a:100,b:70}
     }
 
     showRange() {
@@ -21,6 +22,18 @@ class CannonRender {
         //console.log(this.player)
         circle(this.pos.x,this.pos.y,this.range)
         
+        translate(this.player.vel.x,this.player.vel.y)
+        rotate(this.player.dir)
+        ellipse(
+            //this.pos.x+this.ellipserange.x0,
+            //this.pos.y+this.ellipserange.y0,
+            this.ellipserange.x0+this.pos.x*cos(-this.player.dir)-this.pos.y*sin(-this.player.dir),
+            this.ellipserange.y0+this.pos.x*sin(-this.player.dir)+this.pos.y*cos(-this.player.dir),
+            this.ellipserange.a,
+            this.ellipserange.b
+        )
+        
+        rotate(-this.player.dir)
         //circle(this.player.vel.x+this.pos.x,this.player.vel.y+this.pos.y,this.range)
         pop()
         
