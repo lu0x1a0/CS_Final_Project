@@ -147,6 +147,7 @@ function draw() {
         player.SpaceCounter = players[i].SpaceCounter
         player.SpacePressed = players[i].SpacePressed
         player.invincible = players[i].invincible
+        player.vel = players[i].vel
         break;
       }
     }

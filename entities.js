@@ -398,6 +398,7 @@ function Cannon(range,visionfield,player){
     this.angle = 0
     this.player = player
     this.speed = player.maxspeed*CONST.CANNON_SPEED_FACTOR
+    this.heartbeats = 100 // 100*10 = 1000 ms =  1 seconds
     this.update = function(){
       this.pos = this.player.pos
     }
