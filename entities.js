@@ -162,12 +162,13 @@ class Player{
         this.collisionCheck(players)
     };
 
-    updateTreasure(gamemap) {
+    updateTreasure(gamemap, soundmanager) {
         if (this.OnTreasure && this.SpacePressed) {
             if (this.SpaceCounter == CONST.TREASURE_FISH_TIME) {
                 //Remove Treasure coordinates 
                 let encap = {x: Math.floor(this.pos.x/gamemap.tilesize), y: Math.floor(this.pos.y/gamemap.tilesize)};
                 gamemap.treasurelist.remove_treasure(encap)
+                soundmanager.add_sound("get_treasure", this.pos)
                 this.gold += CONST.GOLD_AMT;
                 this.SpaceCounter = 0;
                 this.OnTreasure = false;
