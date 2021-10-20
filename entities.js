@@ -17,13 +17,11 @@ class Player{
         this.vel = {x:0, y:0};
         this.id = id;
         this.username = username;
-        //this.health = health;
         this.xacc = 0
         this.yacc = 0
         this.maxspeed = CONST.PLAYER_MAX_SPEED
         this.drag = CONST.PLAYER_DRAG
         //this.cannon = new Cannon(this.size*CONST.CANNON_VISION_FACTOR, CONST.CANNON_START_ANGLE, this)
-
         this.cannon = new Cannon(CONST.RANGESTAT,CONST.CANNON_START_ANGLE,this)
         this.health = CONST.PLAYER_HEALTH
         this.hitbox_size = CONST.PLAYER_HITBOX_SIZE
@@ -46,13 +44,6 @@ class Player{
             this.invincible = false;
         }
     }
-
-    //takeDamage(amt) {
-    //    if (!this.invincible) {
-    //        this.health -= amt
-    //    }
-    //}
-
 
     collisionCheck(players){
         // we assume a circle/elliptical collision zone that pushes the player
@@ -404,9 +395,7 @@ function Cannon(rangestat,visionfield,player){
     this.angle = 0
     this.player = player
     this.speed = player.maxspeed*CONST.CANNON_SPEED_FACTOR
-    //this.range = rangestat.range//rangestat.framelife*this.speed
     this.range = rangestat.b*rangestat.framelife*this.speed // b is redundant because its set to 1
-    this.heartbeats = 100 // 100*10 = 1000 ms =  1 seconds
     
     this.ellipsestat = {
         a :rangestat.a*rangestat.framelife*this.speed,
@@ -445,8 +434,6 @@ function Cannon(rangestat,visionfield,player){
             x = this.speed*Math.cos(this.angle)
             y = this.speed*Math.sin(this.angle)
             adjspeed = mag(x+this.player.vel.x,y+this.player.vel.y)
-            //move = setMag(move,this.ellipserange(this.angle-this.player.dir))//,this.range)
-            //console.log(this.angle,this.player.dir)
             move = setMag(move,this.ellipserange(this.angle-this.player.dir))//,this.range)
             
             var data = {

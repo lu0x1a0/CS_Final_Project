@@ -16,43 +16,23 @@ class CannonRender {
         push()
         fill(100,63);
         //*2 because it is the diameter of full circle
+
         //arc(this.pos.x,this.pos.y,this.range*2,this.range*2,
         //    this.angle-this.visionfield/2,this.angle+this.visionfield/2)
         ellipseMode(RADIUS)
-        //console.log(this.player)
         circle(this.pos.x,this.pos.y,this.range)
         
         translate(this.player.vel.x,this.player.vel.y)
         rotate(this.player.dir)
+        // might replace the full ellipse below with an above arc of same size
         ellipse(
-            //this.pos.x+this.ellipserange.x0,
-            //this.pos.y+this.ellipserange.y0,
             this.ellipserange.x0+this.pos.x*cos(-this.player.dir)-this.pos.y*sin(-this.player.dir),
             this.ellipserange.y0+this.pos.x*sin(-this.player.dir)+this.pos.y*cos(-this.player.dir),
             this.ellipserange.a,
             this.ellipserange.b
         )
-        
         rotate(-this.player.dir)
-        //circle(this.player.vel.x+this.pos.x,this.player.vel.y+this.pos.y,this.range)
-        pop()
-        
-        // debug moving range: bust, range move is too small because velocity too small.
-
-        //push()
-        //strokeWeight(10)
-        //fill(255)
-        //circle(this.player.vel.x+this.pos.x,this.player.vel.y+this.pos.y,50)
-        //pop()
-
-        //this.angle = this.player.dir
-        //push()
-        //fill(100,63);
-        ////*2 because it is the diameter of full circle
-        //arc(this.pos.x,this.pos.y,this.range*2,this.range*2,
-        //    this.angle-this.visionfield/2,this.angle+this.visionfield/2)
-        //pop()
-        
+        pop()        
     }
 
     convertraddomain(angle) {
