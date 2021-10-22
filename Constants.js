@@ -18,7 +18,7 @@ module.exports = {
         CANNONBALL_DIAMETER : 8,
         CANNONBALL_DAMAGE : 10,
 
-        TURRET_FIRING_RANGE : 5,
+        TURRET_FIRING_RANGE : 7,
         TURRET_FRAME_FREQ : 100,
 
         // Bot constants
@@ -30,7 +30,7 @@ module.exports = {
         TREASURE_FISH_TIME : 150,
         GOLD_AMT : 10,
 
-        SIDE_DAMAGE_MULTIPLIER : 3,
-        FRONT_BACK_DAMAGE_MULTIPLIER : 1,
+        SIDE_DAMAGE_MULTIPLIER : 1,
+        FRONT_BACK_DAMAGE_MULTIPLIER : 0.2,
     }
 }

@@ -10,7 +10,8 @@ class SoundRender {
 
         // SFX
         this.sfx_cannon_fire = loadSound('assets/sfx_cannon_fire.mp3')
-        this.sfx_cannon_fire.playMode('restart')
+        this.sfx_damage = loadSound('assets/sfx_damage.mp3')
+        this.sfx_death = loadSound('assets/sfx_death.mp3')
         this.sfx_get_treasure = loadSound('assets/sfx_get_treasure.mp3')
 
     }
@@ -44,6 +45,12 @@ class SoundRender {
                         //this.sfx_get_treasure.setVolume(this.sfx_vol*vol_factor)
                         this.sfx_get_treasure.play(0,1,this.sfx_vol*vol_factor);
                         break;
+                    case 'damage':
+                        this.sfx_damage.play(0,1,this.sfx_vol*vol_factor);
+                        break;
+                    case 'death':
+                        this.sfx_death.play(0,1,this.sfx_vol*vol_factor);
+                        break;
                     default:
                         break;
                 }
@@ -53,12 +60,18 @@ class SoundRender {
 
     vol_factor(coords1, coords2) {
 
-        var dist = Math.sqrt(Math.pow(coords1.x-coords2.x, 2) + Math.pow(coords1.y-coords2.y, 2))
+        var tile_dist = (Math.sqrt(Math.pow(coords1.x-coords2.x, 2) + Math.pow(coords1.y-coords2.y, 2)))/this.tilesize
 
-        if (dist > this.tilesize*10) {
-            return 0
+        // Linear interpolation in this range
+        var min = 2
+        var max = 10
+
+        if (tile_dist < min) {
+            return 1
+        } else if (tile_dist < max) {
+            return (tile_dist - max) / (min - max)
         } else {
-            return Math.tanh((this.tilesize/dist)/2)
+            return 0
         }
     }
 

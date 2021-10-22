@@ -103,7 +103,7 @@ function heartbeat() {
         if (players[i]){
             var player = players[i]
             players[i].updateTreasure(gamemap, soundmanager);
-            players[i].update(players);
+            players[i].update(players, soundmanager);
             //players[i].constrain();pl
             if (player.health > 0){
                 newpos = gamemap.player_move(player.pos, players[i].vel, players[i].hitbox_size)
@@ -124,7 +124,7 @@ function heartbeat() {
                 if (projectiles[key].done){
                     //projectiles.splice(key,1)
                     delete projectiles[key]
-                    hit.takeDamage(CONST.CANNONBALL_DAMAGE);
+                    hit.takeDamage(CONST.CANNONBALL_DAMAGE, soundmanager);
                     continue;
                 }
             }
