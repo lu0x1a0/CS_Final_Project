@@ -3,6 +3,9 @@ const addVec = require("./utils.js").addVec
 const setMag = require("./utils.js").setMag
 const CONST = require('./Constants.js').CONST
 const Maps = require("./MapFiles.js").Maps
+const sin = Math.sin
+const cos = Math.cos
+const sqrt = Math.sqrt
 
 
 
@@ -14,12 +17,12 @@ class Player{
         this.vel = {x:0, y:0};
         this.id = id;
         this.username = username;
-        //this.health = health;
         this.xacc = 0
         this.yacc = 0
         this.maxspeed = CONST.PLAYER_MAX_SPEED
         this.drag = CONST.PLAYER_DRAG
-        this.cannon = new Cannon(this.size*CONST.CANNON_VISION_FACTOR, CONST.CANNON_START_ANGLE, this)
+        //this.cannon = new Cannon(this.size*CONST.CANNON_VISION_FACTOR, CONST.CANNON_START_ANGLE, this)
+        this.cannon = new Cannon(CONST.RANGESTAT,CONST.CANNON_START_ANGLE,this)
         this.health = CONST.PLAYER_HEALTH
         this.hitbox_size = CONST.PLAYER_HITBOX_SIZE
         this.dim = {a:80/2,b:48/2} // to replace hitbox_size
@@ -44,6 +47,7 @@ class Player{
 
 
     collisionCheck(players,soundmanager){
+
         // we assume a circle/elliptical collision zone that pushes the player
         //for(var i = 0; i< players.length; i++){
         for(var i in players){
@@ -106,7 +110,8 @@ class Player{
         }
 
     }
-    takeDamage(damage, soundmanager){
+
+  takeDamage(damage, soundmanager){
         if (!this.invincible) {
             this.health -=damage
             if (this.health <= 0){
@@ -115,9 +120,11 @@ class Player{
                 return "dead"
             } else {
                 soundmanager.add_sound("damage", this.pos)
+
             }
         }
     }
+  
     endGame(){
         this.healthobserver.playerDied(this.id)
     }
@@ -391,13 +398,34 @@ class Player{
     }
 
 }
-function Cannon(range,visionfield,player){
+function Cannon(rangestat,visionfield,player){
     this.pos = player.pos
-    this.range = range
     this.visionfield = visionfield
     this.angle = 0
     this.player = player
     this.speed = player.maxspeed*CONST.CANNON_SPEED_FACTOR
+    this.range = rangestat.b*rangestat.framelife*this.speed // b is redundant because its set to 1
+    
+    this.ellipsestat = {
+        a :rangestat.a*rangestat.framelife*this.speed,
+        b :rangestat.b*rangestat.framelife*this.speed
+    }
+    this.ellipsestat['x0'] = this.ellipsestat.a-this.ellipsestat.b 
+    this.ellipsestat['y0'] = 0
+    this.ellipserange = function(theta) {
+        //theta is wrt the bow/front of the ship
+        var a  = this.ellipsestat.a
+        var b  = this.ellipsestat.b
+        var x0 = this.ellipsestat.x0
+        var y0 = this.ellipsestat.y0
+        // solve quadratic
+        var aa = (b*cos(theta))**2+(a*sin(theta))**2
+        var bb = -2* ( b**2*x0*cos(theta)+a**2*y0*sin(theta)  )
+        var cc = (b*x0)**2+(a*y0)**2-(a*b)**2
+        var r1 = (-bb + sqrt(bb**2-4*aa*cc) )/(2*aa)
+        //r2 = (-bb - sqrt(bb**2-4*aa*cc) )/(2*aa)
+        return r1
+    }
     this.update = function(){
       this.pos = this.player.pos
     }
@@ -415,7 +443,8 @@ function Cannon(range,visionfield,player){
             x = this.speed*Math.cos(this.angle)
             y = this.speed*Math.sin(this.angle)
             adjspeed = mag(x+this.player.vel.x,y+this.player.vel.y)
-            move = setMag(move,this.range)
+            move = setMag(move,this.ellipserange(this.angle-this.player.dir))//,this.range)
+            
             var data = {
                 start:shiftstart,
                 end:{x:startpos.x+move.x, y:startpos.y+move.y},
@@ -429,6 +458,7 @@ function Cannon(range,visionfield,player){
         return {
             range : this.range,
             visionfield : this.visionfield,
+            ellipsestat : this.ellipsestat
         }
     }
 }
@@ -437,7 +467,7 @@ class Cannonball{
         this.pos = {x:start.x,y:start.y};
         this.start = start;
         this.end = end;
-        this.speed = speed;
+        this.speed = speed; // dist per heartbeat
         this.delta = this.calcDelta()
         this.done = false;
         this.diameter = CONST.CANNONBALL_DIAMETER
@@ -464,16 +494,10 @@ class Cannonball{
     update(){
         //delta = end.sub(this.start).setMag(this.speed);
         this.pos = addVec(this.pos,this.delta);
-        if (mag(this.pos.x-this.start.x,this.pos.y-this.start.y)>=mag(this.end.x-this.start.x,this.end.y-this.start.y)){
+        if ( (mag(this.pos.x-this.start.x,this.pos.y-this.start.y)>=mag(this.end.x-this.start.x,this.end.y-this.start.y))  
+            ){
             this.done = true;
             //console.log("done");
-        }
-        else {
-            var touched = 0 //this.contactcheck(Players)
-            if (touched){
-                //touched.takedamage()
-                this.done = true
-            }
         }
     }
 }

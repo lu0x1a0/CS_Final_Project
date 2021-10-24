@@ -6,6 +6,7 @@ class CannonRender {
         this.visionfield = cannon.visionfield
         this.angle = 0
         this.player = player
+        this.ellipserange = cannon.ellipsestat//{a:100,b:70}
     }
 
     showRange() {
@@ -15,9 +16,23 @@ class CannonRender {
         push()
         fill(100,63);
         //*2 because it is the diameter of full circle
-        arc(this.pos.x,this.pos.y,this.range*2,this.range*2,
-            this.angle-this.visionfield/2,this.angle+this.visionfield/2)
-        pop()
+
+        //arc(this.pos.x,this.pos.y,this.range*2,this.range*2,
+        //    this.angle-this.visionfield/2,this.angle+this.visionfield/2)
+        ellipseMode(RADIUS)
+        circle(this.pos.x,this.pos.y,this.range)
+        
+        translate(this.player.vel.x,this.player.vel.y)
+        rotate(this.player.dir)
+        // might replace the full ellipse below with an above arc of same size
+        ellipse(
+            this.ellipserange.x0+this.pos.x*cos(-this.player.dir)-this.pos.y*sin(-this.player.dir),
+            this.ellipserange.y0+this.pos.x*sin(-this.player.dir)+this.pos.y*cos(-this.player.dir),
+            this.ellipserange.a,
+            this.ellipserange.b
+        )
+        rotate(-this.player.dir)
+        pop()        
     }
 
     convertraddomain(angle) {

@@ -66,7 +66,7 @@ playerslocjson = function(){
             dir:players[i].dir,
             health:players[i].health,
             size:players[i].size,
-            vel:players[i].vel,//for debugging
+            vel:players[i].vel,//for movable range purpose, need to be direct to each player id separately to avoid hack bots
             gold:players[i].gold,
             OnTreasure:players[i].OnTreasure,
             SpaceCounter:players[i].SpaceCounter,

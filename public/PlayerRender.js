@@ -21,6 +21,7 @@ class PlayerRender {
     this.treasure_fish_time = playerJSON.treasure_fish_time
     this.invincible = playerJSON.invincible
     this.flashing = playerJSON.flashing
+    this.vel = playerJSON.vel
 
     this.cannon = new CannonRender(playerJSON.cannonJSON, this)
   }
