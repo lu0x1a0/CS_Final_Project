@@ -30,6 +30,10 @@ function setup() {
   treasurerender = new TreasureRender();
   treasurerender.preload();
 
+  // Sounds
+  soundrender = new SoundRender();
+  soundrender.preload();
+
   // Volume sliders
   music_slider = createSlider(0, 0.5, 0.1, 0.01)
   music_slider.position(10, 10);
@@ -61,6 +65,7 @@ function startGame(usernameInput) {
       player.load_player(data.player);
       gamemaprender.load_map(data.gamemap);
       treasurerender.first_load(data.gamemap);
+      soundrender.set_tilesize(data.gamemap.tilesize)
       gameStarted = 1;
       div = createDiv('Leaderboard');
       div.style('font-size', '25px');
@@ -70,8 +75,9 @@ function startGame(usernameInput) {
       div.style('opacity',' 0.5')
       div.style('background-color','powderblue');
       div.position(10, 500);
+
       // Begin music
-      player.music.loop();
+      soundrender.music_main.loop();
     }
   )
 
@@ -82,6 +88,7 @@ function startGame(usernameInput) {
       players = data.players;
       projectiles = data.projectiles;
       treasurerender.load_treasure(data.treasurelist);
+      soundrender.play_sounds(player.pos, data.eventlist);
     }
   )
   socket.on("disconnect", (reason) => {
@@ -160,8 +167,8 @@ function draw() {
     treasurerender.display()
 
     // VOLUME UPDATING
-    player.music_vol(music_slider.value())
-    player.sfx_vol(sfx_slider.value())
+    soundrender.set_music_vol(music_slider.value())
+    soundrender.set_sfx_vol(sfx_slider.value())
 
     //Displays every other ship other than the players boat
     for (var i = players.length - 1; i >= 0; i--) {
@@ -209,7 +216,7 @@ function mouseClicked() {
       targetY:mouseY - height / 2,
     }
     socket.emit('updatepressed',data)
-    player.tryfire()
+    //player.tryfire()
   }
 }
 function keyPressed(){

@@ -8,19 +8,6 @@ class PlayerRender {
     // Images
     this.img_boat = loadImage('assets/img_boat.png');
     this.img_water = loadImage('assets/img_water.png');
-    // Sounds
-    this.music = loadSound('assets/main_music.mp3');
-    this.sfx_cannon_fire = loadSound('assets/sfx_cannon_fire.mp3')
-    this.sfx_get_treasure = loadSound('assets/sfx_get_treasure.mp3')
-  }
-
-  music_vol(val) {
-    this.music.setVolume(val)
-  }
-
-  sfx_vol(val) {
-    this.sfx_cannon_fire.setVolume(val)
-    this.sfx_get_treasure.setVolume(val)
   }
 
   load_player(playerJSON) {
@@ -100,10 +87,10 @@ class PlayerRender {
 
     push()
     if (this.OnTreasure) {
-      // Treasure get SFX
-      if (this.SpaceCounter == this.treasure_fish_time) {
-        this.sfx_get_treasure.play()
-      }
+      // // Treasure get SFX
+      // if (this.SpaceCounter == this.treasure_fish_time) {
+      //   this.sfx_get_treasure.play()
+      // }
 
       fill(100,63)
       rect(this.pos.x-this.size/2, this.pos.y-this.size/2-30,this.size,10);
@@ -115,12 +102,12 @@ class PlayerRender {
     this.cannon.showRange()
   };
 
-  tryfire(){
-    if (this.cannon.checkclickinrange()){
-      // Fire SFX
-      this.sfx_cannon_fire.play();
-    }
-  }
+  // tryfire(){
+  //   if (this.cannon.checkclickinrange()){
+  //     // Fire SFX
+  //     this.sfx_cannon_fire.play();
+  //   }
+  // }
 }
 
 function showship(dir,x,y,img_boat,username,size,health,funcs,gold,OnTreasure,SpaceCounter,SpacePressed, invincible){

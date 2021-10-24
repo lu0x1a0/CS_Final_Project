@@ -45,7 +45,9 @@ class Player{
         }
     }
 
-    collisionCheck(players){
+
+    collisionCheck(players,soundmanager){
+
         // we assume a circle/elliptical collision zone that pushes the player
         //for(var i = 0; i< players.length; i++){
         for(var i in players){
@@ -57,12 +59,12 @@ class Player{
                 var dir_rad_2 = this.dim.a*this.dim.b/Math.sqrt( (this.dim.b*Math.cos(posangle-players[i].dir))**2+(this.dim.a*Math.sin(posangle-players[i].dir))**2  )
     
                 if (center_distance <= (dir_rad_1 + dir_rad_2)){
-                    this.onCollision(players[i],dir_rad_1,dir_rad_2,center_distance,posangle)
+                    this.onCollision(players[i],dir_rad_1,dir_rad_2,center_distance,posangle,soundmanager)
                 }
             }
         }
     }
-    onCollision(collided,this_dir_rad,collided_dir_rad,total_dist,collided_angle){
+    onCollision(collided,this_dir_rad,collided_dir_rad,total_dist,collided_angle,soundmanager){
         //first separate collided entities
         var shared_dist = -(total_dist -  this_dir_rad - collided_dir_rad)
         collided.pos.x += Math.ceil(shared_dist)*Math.cos(collided_angle)
@@ -80,10 +82,10 @@ class Player{
         this.vel.x /= 2//collided.vel.x //+= collided.xacc*10
         this.vel.y /= 2//collided.vel.x //+= collided.yacc*10
         
-        this.collisionDamage(collided,collided_angle)
+        this.collisionDamage(collided,collided_angle,soundmanager)
         //console.log(this,collided)
     }    
-    collisionDamage(collided,angle){
+    collisionDamage(collided,angle,soundmanager){
         var altangle = Math.sign(angle)*(-1) *(2*Math.PI-Math.abs(angle))
         var speed = mag(this.vel.x-collided.vel.x,this.vel.y-collided.vel.y)
         // this takes damage
@@ -92,31 +94,37 @@ class Player{
             // side damage
         if ( (absdiff> Math.PI/6 && absdiff < 5*Math.PI/6) || (absdiff2> Math.PI/6 && absdiff2 < 5*Math.PI/6) ) {
             //((absdiff>field && absdiff<(Math.PI-field)) || (absdiff2> field && absdiff2<(Math.PI-field)))
-            this.takeDamage(CONST.SIDE_DAMAGE_MULTIPLIER*speed)
+            this.takeDamage(CONST.SIDE_DAMAGE_MULTIPLIER*speed, soundmanager)
         } 
             // front or back damage
         else {
-            this.takeDamage(CONST.FRONT_BACK_DAMAGE_MULTIPLIER*speed)
+            this.takeDamage(CONST.FRONT_BACK_DAMAGE_MULTIPLIER*speed, soundmanager)
         } 
         // collided takes damage
         var absdiff = Math.abs(angle-collided.dir)
         var absdiff2 = Math.abs(altangle-collided.dir)
         if ( (absdiff> Math.PI/6 && absdiff < 5*Math.PI/6) || (absdiff2> Math.PI/6 && absdiff2 < 5*Math.PI/6) ) {
-            collided.takeDamage(CONST.SIDE_DAMAGE_MULTIPLIER*speed)
+            collided.takeDamage(CONST.SIDE_DAMAGE_MULTIPLIER*speed, soundmanager)
         } else {
-            collided.takeDamage(CONST.FRONT_BACK_DAMAGE_MULTIPLIER*speed)
+            collided.takeDamage(CONST.FRONT_BACK_DAMAGE_MULTIPLIER*speed, soundmanager)
         }
 
     }
-    takeDamage(damage){
+
+  takeDamage(damage, soundmanager){
         if (!this.invincible) {
             this.health -=damage
             if (this.health <= 0){
+                soundmanager.add_sound("death", this.pos)
                 this.endGame()
                 return "dead"
+            } else {
+                soundmanager.add_sound("damage", this.pos)
+
             }
         }
     }
+  
     endGame(){
         this.healthobserver.playerDied(this.id)
     }
@@ -139,7 +147,7 @@ class Player{
     }
 
 
-    update(players) {
+    update(players,soundmanager) {
         // Called on every heartbeat
         
         this.invincTick()
@@ -157,15 +165,16 @@ class Player{
         } else {
             this.updateBot(players);
         }
-        this.collisionCheck(players)
+        this.collisionCheck(players,soundmanager)
     };
 
-    updateTreasure(gamemap) {
+    updateTreasure(gamemap, soundmanager) {
         if (this.OnTreasure && this.SpacePressed) {
             if (this.SpaceCounter == CONST.TREASURE_FISH_TIME) {
                 //Remove Treasure coordinates 
                 let encap = {x: Math.floor(this.pos.x/gamemap.tilesize), y: Math.floor(this.pos.y/gamemap.tilesize)};
                 gamemap.treasurelist.remove_treasure(encap)
+                soundmanager.add_sound("get_treasure", this.pos)
                 this.gold += CONST.GOLD_AMT;
                 this.SpaceCounter = 0;
                 this.OnTreasure = false;

@@ -17,7 +17,9 @@ CONST = {
     CANNONBALL_DIAMETER : 8,
     CANNONBALL_DAMAGE : 10,
 
-    TURRET_FIRING_RANGE : 5,
+
+
+    TURRET_FIRING_RANGE : 7,
     TURRET_FRAME_FREQ : 100,
 
     // Bot constants
@@ -29,8 +31,8 @@ CONST = {
     TREASURE_FISH_TIME : 150,
     GOLD_AMT : 10,
 
-    SIDE_DAMAGE_MULTIPLIER : 3,
-    FRONT_BACK_DAMAGE_MULTIPLIER : 1,
+    SIDE_DAMAGE_MULTIPLIER : 1,
+    FRONT_BACK_DAMAGE_MULTIPLIER : 0.25,
 }
 rangestat = {
     a        :1/0.7,
@@ -39,6 +41,7 @@ rangestat = {
     range    :CONST.PLAYER_SIZE*CONST.CANNON_VISION_FACTOR
 }
 CONST['RANGESTAT'] = rangestat
+
 
 module.exports = {
     CONST: CONST    

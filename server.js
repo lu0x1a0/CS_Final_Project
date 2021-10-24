@@ -33,11 +33,16 @@ io.sockets.on('connection',newConnection);
 
 //------------------------------ BACKEND SETUP -------------------------------//
 
-// initialize gamemap -- MAP SELECTION NOT IMPLEMENTED
+// Initialize GameMap -- MAP SELECTION NOT IMPLEMENTED
 const GameMap = require("./GameMap.js").GameMap
 var gamemap = new GameMap(Maps.MapSquare)
 
-//List of all players and bots connected to the server
+
+// Initialize SoundManager
+const SoundManager = require("./SoundManager.js").SoundManager
+var soundmanager = new SoundManager()
+
+// List of all players and bots connected to the server
 var players = {};
 var monitorstatistics = {'numships' : 0}
 var projectiles = {};
@@ -97,8 +102,8 @@ function heartbeat() {
         // checks that players[i] is not removed from the object by previous damages
         if (players[i]){
             var player = players[i]
-            players[i].updateTreasure(gamemap);
-            players[i].update(players);
+            players[i].updateTreasure(gamemap, soundmanager);
+            players[i].update(players, soundmanager);
             //players[i].constrain();pl
             if (player.health > 0){
                 newpos = gamemap.player_move(player.pos, players[i].vel, players[i].hitbox_size)
@@ -119,7 +124,7 @@ function heartbeat() {
                 if (projectiles[key].done){
                     //projectiles.splice(key,1)
                     delete projectiles[key]
-                    hit.takeDamage(CONST.CANNONBALL_DAMAGE);
+                    hit.takeDamage(CONST.CANNONBALL_DAMAGE, soundmanager);
                     continue;
                 }
             }
@@ -134,19 +139,22 @@ function heartbeat() {
     var turret_cannonballs = gamemap.turretlist.fire_all(players)
     for (var tID in turret_cannonballs) {
         projectiles[tID+(new Date()).getTime()] =  turret_cannonballs[tID]
+        soundmanager.add_sound("cannon_fire", turret_cannonballs[tID].pos)
     }
     
 
     // Data we send to front end
-    //console.log(players)
-    //console.log("-----------------------------------------------")
-    //console.log("-----------------------------------------------")
     io.sockets.emit('heartbeat', {
         players:playerslocjson(),
         projectiles:projectileslocjson(),
         treasurelist:gamemap.treasurelist,
+        eventlist:soundmanager.give_events(),
     });
+
+    // Reset accumulated sounds
+    soundmanager.reset_events()
 }
+
 botIdx = 0
 function InitialiseBot() {
     console.log("A New Bot is being added");
@@ -224,6 +232,7 @@ function newConnection(socket) {
 
             } else if (data.pressedkeycode ==="mouse"){
                 cannonball = player.fire(data.targetX,data.targetY)
+                soundmanager.add_sound("cannon_fire", player.pos)
                 //console.log("----------------genball----------------\n",cannonball)
                 if (cannonball){
                     // use playerid+current time stamp as id, might not safe from server attack with spamming io

@@ -37,7 +37,6 @@ class TurretList {
                 var closest_coords = this.turret_array[i].nearest_player(players)
                 // Fire if they are in range
                 if (distance(this.turret_array[i].coords, closest_coords) < CONST.TILESIZE*CONST.TURRET_FIRING_RANGE) {
-                    console.log("IN RANGE")
                     new_cannonballs[this.turret_array[i].tID] = new Cannonball(this.turret_array[i].coords, closest_coords, CONST.PLAYER_MAX_SPEED*CONST.CANNON_SPEED_FACTOR)
                 }
             }
