@@ -120,7 +120,7 @@ function heartbeat() {
                 delete projectiles[key]
                 continue;
             }else{
-                hit = projectiles[key].contactcheck(players)
+                hit = projectiles[key].contactcheck(players, gamemap.turretlist.turret_array)
                 if (projectiles[key].done){
                     //projectiles.splice(key,1)
                     delete projectiles[key]
@@ -135,12 +135,13 @@ function heartbeat() {
     // Refresh treasure
     gamemap.try_add_treasure()
 
-    // Turrets fire
+    // Turrets fire/repair
     var turret_cannonballs = gamemap.turretlist.fire_all(players)
     for (var tID in turret_cannonballs) {
         projectiles[tID+(new Date()).getTime()] =  turret_cannonballs[tID]
         soundmanager.add_sound("cannon_fire", turret_cannonballs[tID].pos)
     }
+    gamemap.turretlist.repair()
     
 
     // Data we send to front end
@@ -148,6 +149,7 @@ function heartbeat() {
         players:playerslocjson(),
         projectiles:projectileslocjson(),
         treasurelist:gamemap.treasurelist,
+        turretlist:gamemap.turretlist,
         eventlist:soundmanager.give_events(),
     });
 
