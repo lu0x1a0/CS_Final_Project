@@ -4,6 +4,8 @@ module.exports = {
       "",
       "Pirate",
       "Captain",
+      "Cap'n",
+      "Admiral",
       "First Mate",
       "Gunner",
       "Powder Monkey",
@@ -15,6 +17,8 @@ module.exports = {
       "Little",
       "Big",
       "Jolly",
+      "Great",
+      "Crewmate",
     ];
 
     const firstName = [
@@ -24,10 +28,20 @@ module.exports = {
       "Red",
       "o'",
       "Wet",
+      "Sea",
       "Mitchell",
       "Arkie",
       "Sean",
       "Prem",
+      "Davey",
+      "Peeko",
+      "Grim",
+      "Skull",
+      "Scurvy",
+      "Roger",
+      "Crab",
+      "Spike",
+      "Dagger",
     ]
     const lastName = [
       "",
@@ -37,7 +51,11 @@ module.exports = {
       "-Leg",
       "-Foot",
       "-Eye",
+      "-Face",
       " the Great",
+      " of the sea",
+      " McPirate",
+      " Knives",
     ]
 
     var selectedRank = rank[Math.floor(Math.random() * rank.length)]
