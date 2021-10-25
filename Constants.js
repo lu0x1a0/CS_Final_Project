@@ -18,9 +18,11 @@ CONST = {
     CANNONBALL_DAMAGE : 10,
 
 
-
     TURRET_FIRING_RANGE : 7,
     TURRET_FRAME_FREQ : 100,
+    TURRET_HEALTH : 50,
+    TURRET_SIZE : 16,
+    TURRET_REPAIR_TIME : 300,
 
     // Bot constants
     BOT_LOW_HEALTH : 50,

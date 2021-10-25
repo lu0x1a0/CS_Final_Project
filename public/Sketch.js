@@ -6,11 +6,11 @@ var gameStarted = 0;
 // DATA VARIABLES
 var players = [];
 var projectiles = [];
-var treasures = [];
 
 // RENDER OBJECT VARIABLES
 var gamemaprender;
 var treasurerender;
+var turretrender;
 
 //Runs when first connected to the webpage
 
@@ -29,6 +29,9 @@ function setup() {
 
   treasurerender = new TreasureRender();
   treasurerender.preload();
+
+  turretrender = new TurretRender();
+  turretrender.preload();
 
   // Sounds
   soundrender = new SoundRender();
@@ -65,6 +68,7 @@ function startGame(usernameInput) {
       player.load_player(data.player);
       gamemaprender.load_map(data.gamemap);
       treasurerender.first_load(data.gamemap);
+      turretrender.first_load(data.gamemap);
       soundrender.set_tilesize(data.gamemap.tilesize)
       gameStarted = 1;
       div = createDiv('Leaderboard');
@@ -88,6 +92,7 @@ function startGame(usernameInput) {
       players = data.players;
       projectiles = data.projectiles;
       treasurerender.load_treasure(data.treasurelist);
+      turretrender.load_turrets(data.turretlist);
       soundrender.play_sounds(player.pos, data.eventlist);
     }
   )
@@ -165,6 +170,7 @@ function draw() {
     // RENDERING
     gamemaprender.display()
     treasurerender.display()
+    turretrender.display()
 
     // VOLUME UPDATING
     soundrender.set_music_vol(music_slider.value())

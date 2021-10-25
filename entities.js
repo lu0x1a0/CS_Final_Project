@@ -463,17 +463,18 @@ function Cannon(rangestat,visionfield,player){
     }
 }
 class Cannonball{
-    constructor(start,end,speed){
+    constructor(start,end,speed, shotByPlayer=true){
         this.pos = {x:start.x,y:start.y};
         this.start = start;
         this.end = end;
         this.speed = speed; // dist per heartbeat
         this.delta = this.calcDelta()
         this.done = false;
-        this.diameter = CONST.CANNONBALL_DIAMETER
+        this.diameter = CONST.CANNONBALL_DIAMETER;
+        this.shotByPlayer = shotByPlayer
     }
     //checks whether the ball's euclidian distance from a player is less than the two radius combined.
-    contactcheck(players){
+    contactcheck(players, turret_array){
         //for(var i = 0; i < players.length;i++){
         for (var i in players){
             //if the distance between two points are less than two collision circle - contact.
@@ -482,7 +483,20 @@ class Cannonball{
                 return players[i]
             }
         }
+
+        // Also check for turret hits
+        if (this.shotByPlayer) {
+            for (var i in turret_array){
+                var turret_coords = turret_array[i].coords
+                //if the distance between two points are less than two collision circle - contact.
+                if (mag(turret_coords.x-this.pos.x,turret_coords.y-this.pos.y)<(CONST.TURRET_SIZE/2+this.diameter) ){
+                    this.done = true
+                    return turret_array[i]
+                }
+            }
+        }
     }
+
     //calculates the distace the ball travels per heartbeat
     calcDelta(){
         var d = {x:(this.end.x-this.start.x),y:(this.end.y-this.start.y) }
