@@ -21,6 +21,7 @@ class GameMap {
         this.turretlist = new TurretList(this)
 
         // Initialize spawn positions
+        this.whichSpawn = 0
         this.spawns = []
         for (let x = 0; x < this.xlen; x++) {
             for (let y = 0; y < this.ylen; y++) {
@@ -33,10 +34,13 @@ class GameMap {
     }
 
     get_spawn() {
-        // TODO: implement multiple spawn points
+        // Rotate which spawn we use
+        this.whichSpawn ++
+        if (this.whichSpawn >= this.spawns.length) { this.whichSpawn = 0 }
+        // Return spawn coordinates
         return {
-            x:(this.spawns[0].x + 0.5)*this.tilesize,
-            y:(this.spawns[0].y + 0.5)*this.tilesize,
+            x:(this.spawns[this.whichSpawn].x + 0.5)*this.tilesize,
+            y:(this.spawns[this.whichSpawn].y + 0.5)*this.tilesize,
         }
     }
 
