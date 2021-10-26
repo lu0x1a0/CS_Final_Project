@@ -123,7 +123,6 @@ function showship(dir,x,y,img_boat,username,size,health,funcs,gold,OnTreasure,Sp
   rotate(-dir-PI)
 
   pop()
-  console.log(gold)
   fill(255);
   textAlign(CENTER);
   textSize(12);
