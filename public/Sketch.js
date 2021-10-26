@@ -12,6 +12,8 @@ var gamemaprender;
 var treasurerender;
 var turretrender;
 
+var leaderBoard_update_counter = 1000;
+
 //Runs when first connected to the webpage
 
 var div;
@@ -71,9 +73,10 @@ function startGame(usernameInput) {
       turretrender.first_load(data.gamemap);
       soundrender.set_tilesize(data.gamemap.tilesize)
       gameStarted = 1;
+
       div = createDiv('Leaderboard');
       div.style('font-size', '25px');
-      div.style('color','green');
+      div.style('color','black');
       div.style('height',' 25%');
       div.style('width','15%');
       div.style('opacity',' 0.5')
@@ -104,7 +107,7 @@ function startGame(usernameInput) {
     gameStarted = 0
     div.remove()
     showMenu()
-  
+
     console.log(reason)
     // else the socket will automatically try to reconnect
   });
@@ -200,10 +203,22 @@ function draw() {
     }
 
 
+    leaderBoard_update_counter = leaderBoard_update_counter + 1;
+    if (leaderBoard_update_counter >= 40){
+      players.sort(function (x, y) {
+          return y.gold - x.gold;
+      });
+      leaderBoard_update_counter = 0;
+      var table = "";
+      for (var i = 0; i < players.length; i++ ) {
+        if (i >= 3 ) {break};
+        table = table + "<tr><td>" + players[i].gold + "</td><td>" + players[i].username + "</td></tr>"
+      }
+      div.html("<style>th, td {padding: 10px;text-align: left;}</style><h1>Gold pirated</h1><body><table>" + table + "</table></body>");
 
-    div.style('color','black');
+    }
 
-    div.html("<style>th, td {padding: 10px;text-align: left;}</style><h1>Gold pirated</h1><body><table><tr><td>100</td><td>grapeBeard</td></tr><tr><td>80</td><td>redoldog</td></tr><tr><td>80</td><td>captain fish</td></tr></table></body>");
+
 
     for (var i = 0;i<projectiles.length;i++){
       cannonballshow(projectiles[i].pos,projectiles[i].diameter)
