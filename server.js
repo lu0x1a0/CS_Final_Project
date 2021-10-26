@@ -178,9 +178,7 @@ function newConnection(socket) {
     socket.on('start',
         function(data) {
             if (monitorstatistics['numships'] == 0) {
-                InitialiseBot();
-                // InitialiseBot();
-
+                //InitialiseBot();
             }
 
             if (data.username == '') {
