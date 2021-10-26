@@ -3,10 +3,12 @@
 
 
 const entities = require('./entities.js')
+const BotEntity = require('./Bot.js')
 const CONST = require('./Constants.js').CONST
 const Maps = require('./MapFiles.js').Maps
 const HealthObserver = require('./HealthObserver.js').HealthObserver
 const nameGenerator = require('./nameGenerator');
+const Path = require('./ShortestPath.js');
 
 
 let K_W = 87;
@@ -35,7 +37,14 @@ io.sockets.on('connection',newConnection);
 
 // Initialize GameMap -- MAP SELECTION NOT IMPLEMENTED
 const GameMap = require("./GameMap.js").GameMap
-var gamemap = new GameMap(Maps.MapSquare)
+var gamemap = new GameMap(Maps.MapRocky)
+
+let obj = Path.Generation(gamemap.map)
+
+let paths = obj[0]
+let costs = obj[1]
+let tupleval = obj[2]
+let index = obj[3]
 
 
 // Initialize SoundManager
@@ -103,7 +112,7 @@ function heartbeat() {
         if (players[i]){
             var player = players[i]
             players[i].updateTreasure(gamemap, soundmanager);
-            players[i].update(players, soundmanager);
+            players[i].update(players, soundmanager,paths,costs,tupleval,index,gamemap);
             //players[i].constrain();pl
             if (player.health > 0){
                 gamemap.player_move(player, soundmanager)
@@ -157,12 +166,12 @@ function heartbeat() {
 }
 
 botIdx = 0
-function InitialiseBot() {
+function InitialiseBot(x,y) {
     console.log("A New Bot is being added");
     //What sort of data do the bots have?
 
-    var newBot = new entities.Player(botIdx,nameGenerator.name(),800,300,1.75,healthobserver);
-    newBot.isBot = true;
+    var newBot = new BotEntity.Bot(botIdx,nameGenerator.name(),x,y,1.75,healthobserver);
+    
     //players.push(newBot);
     players[botIdx] = newBot
     botIdx += 1
@@ -178,9 +187,7 @@ function newConnection(socket) {
     socket.on('start',
         function(data) {
             if (monitorstatistics['numships'] == 0) {
-                //InitialiseBot();
-                //InitialiseBot();
-                //InitialiseBot();
+                InitialiseBot(800,300);
             }
 
             if (data.username == '') {
