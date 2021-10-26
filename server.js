@@ -106,8 +106,7 @@ function heartbeat() {
             players[i].update(players, soundmanager);
             //players[i].constrain();pl
             if (player.health > 0){
-                newpos = gamemap.player_move(player.pos, players[i].vel, players[i].hitbox_size)
-                player.pos = newpos
+                gamemap.player_move(player, soundmanager)
             }
 
         }
