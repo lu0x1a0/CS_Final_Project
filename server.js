@@ -37,7 +37,7 @@ io.sockets.on('connection',newConnection);
 
 // Initialize GameMap -- MAP SELECTION NOT IMPLEMENTED
 const GameMap = require("./GameMap.js").GameMap
-var gamemap = new GameMap(Maps.MapRocky)
+var gamemap = new GameMap(Maps.MapSquare)
 
 let obj = Path.Generation(gamemap.map)
 

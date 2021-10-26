@@ -194,7 +194,8 @@ function draw() {
           players[i].gold,
           players[i].OnTreasure,
           players[i].SpaceCounter,
-          players[i].SpacePressed
+          players[i].SpacePressed,
+          players[i].invincible,
         )
       }
       else{

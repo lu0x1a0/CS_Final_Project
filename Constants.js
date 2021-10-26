@@ -5,9 +5,9 @@ CONST = {
     
     // Entity constants
     PLAYER_SIZE : 64,
-    PLAYER_MAX_SPEED : 3,
-    PLAYER_ACCELERATION : 0.3,
-    PLAYER_DRAG : 0.1,
+    PLAYER_MAX_SPEED : 8,
+    PLAYER_ACCELERATION : 1,
+    PLAYER_DRAG : 0.5,
     PLAYER_HEALTH : 100,
     PLAYER_HITBOX_SIZE : 45,
     PLAYER_START_GOLD : 10,
@@ -20,18 +20,19 @@ CONST = {
 
 
     TURRET_FIRING_RANGE : 7,
-    TURRET_FRAME_FREQ : 100,
     TURRET_HEALTH : 50,
     TURRET_SIZE : 16,
-    TURRET_REPAIR_TIME : 500,
 
     // Bot constants
     BOT_LOW_HEALTH : 50,
 
-    // Mechanics constants
-    HEARTBEAT_INTERVAL : 50,
-    INVINCIBILITY_FRAMES : 200,
-    TREASURE_FISH_TIME : 125,
+    // Timing constants
+    HEARTBEAT_INTERVAL : 1000/20,
+    INVINCIBILITY_FRAMES : 20*5,
+    TREASURE_FISH_TIME : 20*2,
+    TURRET_FRAME_FREQ : 20*2,
+    TURRET_REPAIR_TIME : 20*5,
+
     GOLD_AMT : 10,
 
     SIDE_DAMAGE_MULTIPLIER : 1,
@@ -41,8 +42,8 @@ CONST = {
 }
 
 CONST['RANGESTAT'] = {
-    a        :1.2/0.7,
-    b        :0.9/0.7,
+    a        :0.75,
+    b        :0.5,
     framelife:18, // 
     range    :CONST.PLAYER_SIZE*CONST.CANNON_VISION_FACTOR
 }
