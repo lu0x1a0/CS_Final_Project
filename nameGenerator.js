@@ -34,6 +34,7 @@ module.exports = {
       "Sean",
       "Prem",
       "Davey",
+      "Jack",
       "Peeko",
       "Grim",
       "Skull",
@@ -53,9 +54,11 @@ module.exports = {
       "-Eye",
       "-Face",
       " the Great",
-      " of the sea",
+      " of the Sea",
       " McPirate",
       " Knives",
+      " Sparrow",
+
     ]
 
     var selectedRank = rank[Math.floor(Math.random() * rank.length)]

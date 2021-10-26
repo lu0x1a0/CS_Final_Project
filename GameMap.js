@@ -68,27 +68,39 @@ class GameMap {
 
     }
 
-    player_move(pos, vel, hitbox_size) {
+    player_move(player, soundmanager) {
 
         // Impassible tiles
         var impassible = ['L', 'T']
 
-        var new_pos = addVec(pos,vel)//p5.Vector.add(pos, vel)
+        var new_pos = addVec(player.pos, player.vel)//p5.Vector.add(pos, vel)
 
         // Currently just check centre point
-        var px = Math.floor((pos.x)/this.tilesize)
-        var py = Math.floor((pos.y)/this.tilesize)
+        var px = Math.floor((player.pos.x)/this.tilesize)
+        var py = Math.floor((player.pos.y)/this.tilesize)
 
         // Wall left
-        if (impassible.includes(this.map[px-1][py])) { new_pos.x = Math.max(new_pos.x, (px)*this.tilesize + 0.5*hitbox_size) }
+        if (impassible.includes(this.map[px-1][py])) {
+            if (new_pos.x < (px)*this.tilesize + 0.5*player.hitbox_size) {player.takeDamage(CONST.WALL_DAMAGE, soundmanager)}
+            new_pos.x = Math.max(new_pos.x, (px)*this.tilesize + 0.5*player.hitbox_size)
+        }
         // Wall right
-        if (impassible.includes(this.map[px+1][py])) { new_pos.x = Math.min(new_pos.x, (px+1)*this.tilesize - 0.5*hitbox_size) }
+        if (impassible.includes(this.map[px+1][py])) {
+            if (new_pos.x > (px+1)*this.tilesize - 0.5*player.hitbox_size) {player.takeDamage(CONST.WALL_DAMAGE, soundmanager)}
+            new_pos.x = Math.min(new_pos.x, (px+1)*this.tilesize - 0.5*player.hitbox_size)
+        }
         // Wall above
-        if (impassible.includes(this.map[px][py-1])) { new_pos.y = Math.max(new_pos.y, (py)*this.tilesize + 0.5*hitbox_size) }
+        if (impassible.includes(this.map[px][py-1])) {
+            if (new_pos.y < (py)*this.tilesize + 0.5*player.hitbox_size) {player.takeDamage(CONST.WALL_DAMAGE, soundmanager)}
+            new_pos.y = Math.max(new_pos.y, (py)*this.tilesize + 0.5*player.hitbox_size)
+        }
         // Wall below
-        if (impassible.includes(this.map[px][py+1])) { new_pos.y = Math.min(new_pos.y, (py+1)*this.tilesize - 0.5*hitbox_size) }
+        if (impassible.includes(this.map[px][py+1])) {
+            if (new_pos.y > (py+1)*this.tilesize - 0.5*player.hitbox_size) {player.takeDamage(CONST.WALL_DAMAGE, soundmanager)}
+            new_pos.y = Math.min(new_pos.y, (py+1)*this.tilesize - 0.5*player.hitbox_size)
+        }
 
-        return new_pos;
+        player.pos = new_pos;
     }
 
 }
