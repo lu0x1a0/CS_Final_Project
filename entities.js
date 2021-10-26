@@ -92,7 +92,7 @@ class Player{
         var absdiff = Math.abs(angle-this.dir)
         var absdiff2 = Math.abs(altangle-this.dir)
             // side damage
-        if ( (absdiff> Math.PI/6 && absdiff < 5*Math.PI/6) || (absdiff2> Math.PI/6 && absdiff2 < 5*Math.PI/6) ) {
+        if ((absdiff> Math.PI/6 && absdiff < 5*Math.PI/6) || (absdiff2> Math.PI/6 && absdiff2 < 5*Math.PI/6) ) {
             //((absdiff>field && absdiff<(Math.PI-field)) || (absdiff2> field && absdiff2<(Math.PI-field)))
             this.takeDamage(CONST.SIDE_DAMAGE_MULTIPLIER*speed, soundmanager)
         } 
@@ -148,25 +148,19 @@ class Player{
         }
     }
 
-
-    update(players,soundmanager) {
+    update(players, soundmanager,paths,costs,tupleval,index,Gmap) {
         // Called on every heartbeat
-        
         this.invincTick()
-
         // change the velocity according to current drag and acceleration..
         // wasd acc movement version
-        if (!this.isBot) {
-            this.vel = {x:this.vel.x+this.xacc,y:this.vel.y+this.yacc}
-            this.vel = setMag(this.vel, Math.min (Math.max(mag(this.vel.x,this.vel.y)-this.drag,0),this.maxspeed ) )
-            this.pos = addVec(this.pos,this.vel)
-            if (mag(this.vel.x,this.vel.y)>0.0001){
-                this.dir = Math.atan2(this.vel.y,this.vel.x)
-            }
-            this.cannon.update()
-        } else {
-            this.updateBot(players);
+        this.vel = {x:this.vel.x+this.xacc,y:this.vel.y+this.yacc}
+        this.vel = setMag(this.vel, Math.min (Math.max(mag(this.vel.x,this.vel.y)-this.drag,0),this.maxspeed ) )
+        this.pos = addVec(this.pos,this.vel)
+        if (mag(this.vel.x,this.vel.y)>0.0001){
+            this.dir = Math.atan2(this.vel.y,this.vel.x)
         }
+        this.cannon.update()
+
         this.collisionCheck(players,soundmanager)
     };
 
@@ -195,197 +189,6 @@ class Player{
         this.SpacePressed = x
     }
 
-    updateBot(players) {
-        const GameMap = require("./GameMap.js").GameMap
-        var Gmap = new GameMap(Maps.MapSquare)
-        var map = Gmap.map;
-
-        var playerSet = new Set();
-
-        let decision = 0; 
-        if (this.health <= CONST.BOT_LOW_HEALTH) {
-            decision = 1;
-        }
-
-        //for(let i = 0; i<players.length;i++) {
-        for (var i in players){
-            let pixelX = players[i].pos.x
-            let pixelY = players[i].pos.y
-            let factor = Gmap.tilesize
-            let x = Math.floor(pixelX/factor)
-            let y = Math.floor(pixelY/factor)
-            let tmp = [x,y]
-            playerSet.add(tmp)
-            map[x][y] = 'P'
-        }
-
-        let Visited = Array(Gmap.xlen).fill().map(() => Array(Gmap.ylen).fill(0));
-        var parents = {}
-        let BotX = Math.floor(this.pos.x/Gmap.tilesize)
-        let BotY = Math.floor(this.pos.y/Gmap.tilesize)
-        var start = [BotX,BotY]
-        //console.log(Visited)
-        //console.log(Visited.length)
-
-        Visited[BotX][BotY] = 1;
-        var end = []
-        var Q = []
-        Q.push(start)
-        let j = 20;
-
-        while (Q.length != 0) {
-        let V = Q.shift()
-        let AV = this.ComputeAdjacentVertex(V,map);
-        let k = 0;
-        for (let i = 0; i < AV.length; ++i) {
-            if (!Visited[AV[i][0]][AV[i][1]]) {
-                Visited[AV[i][0]][AV[i][1]] = 1;
-                if (map[AV[i][0]][AV[i][1]] == 'W') {
-                    parents[AV[i]] = V;
-                    Q.push(AV[i])
-                }
-                else if (map[AV[i][0]][AV[i][1]] == 'P') {
-                    end = AV[i];
-                    parents[AV[i]] = V;
-                    k = 1;
-                    break;
-                }
-            }
-        }
-            if (k) {
-                break;
-            }
-        }
-        
-        //for(let i = 0; i<players.length;i++) {
-        for (var i in players){
-            let pixelX = players[i].pos.x
-            let pixelY = players[i].pos.y
-            let factor = Gmap.tilesize
-            let x = Math.floor(pixelX/factor)
-            let y = Math.floor(pixelY/factor)
-            map[x][y] = 'W'
-        }
-
-        let IndexDirection;
-        if (decision) {
-            if (end.length != 0) {
-                IndexDirection = this.RunAwayIndex(start,end,map)
-                this.DecisionHandler(start, IndexDirection)
-            } 
-        } 
-        else if (end.length != 0) {
-            IndexDirection = this.Decision(parents,start,end)  
-            this.DecisionHandler(start, IndexDirection)
-        } else {
-            IndexDirection = this.RandomIndex(start,map)
-            this.DecisionHandler(start, IndexDirection)
-        }
-    }
-
-    RandomIndex(Start, map) {
-        let Adjacents = this.ComputeAdjacentVertex(Start,map);
-        return Adjacents[Math.floor(Math.random()*Adjacents.length)]
-    }
-
-    RunAwayIndex(Start, end, map) {
-        let Adjacents = this.ComputeAdjacentVertex(Start,map);
-        //Gets all the possible adjacent index
-        let MagAdjacents = []
-        for (let i = 0; i < Adjacents.length; ++i) {
-            MagAdjacents.push(mag(Adjacents[i][0] - end[0], Adjacents[i][1] - end[1]))
-        }
-        //Find the largest element. //We can just use brute force
-        let maxLists = []
-        let max = MagAdjacents[0];
-        let maxIndex = 0;
-        for (let i = 1; i < MagAdjacents.length; ++i) {
-            if (max < MagAdjacents[i]) {
-                max = MagAdjacents[i];
-                maxIndex = i;
-            }
-        }
-        for (let i = 0; i < MagAdjacents.length; ++i) {
-            if (max == MagAdjacents[i]) {
-                maxLists.push(MagAdjacents)
-            }
-        }
-
-        return maxLists[Math.floor(Math.random()*maxLists.length)]
-    } 
-
-    DecisionHandler(Start,DecisionIndex) {
-        let i = Start[0] - DecisionIndex[0]
-        let j = Start[1] - DecisionIndex[1]
-        if (i == -1) {
-            this.xacc = CONST.PLAYER_ACCELERATION
-        }
-        else if (i == 1) {
-            this.xacc = -CONST.PLAYER_ACCELERATION
-        }
-        if (j == 1) {
-            this.yacc = -CONST.PLAYER_ACCELERATION
-        }
-        else if (j == -1) {
-
-            this.yacc = CONST.PLAYER_ACCELERATION
-        }
-
-        this.vel = {x:this.vel.x+this.xacc,y:this.vel.y+this.yacc}
-        this.vel = setMag(this.vel, Math.min (Math.max(mag(this.vel.x,this.vel.y)-this.drag,0),this.maxspeed ) )
-        this.pos = addVec(this.pos,this.vel)
-        if (mag(this.vel.x,this.vel.y)>0.0001){
-            this.dir = Math.atan2(this.vel.y,this.vel.x)
-        }
-    }
-
-    Decision(parent, start, end) {
-        //Start index
-        var path = []
-        path.push(end);
-        let size = 1;
-        while (path[size-1] != start) {
-          path.push(parent[path[size-1]])
-          size++;
-        }
-        return path[size-2];
-      }
-
-    ComputeAdjacentVertex(V,map) {
-        var AV = [];
-        if (map[V[0]-1][V[1]] != 'L') {
-          AV.push([V[0]-1,V[1]])
-        }
-
-        if (map[V[0]-1][V[1]+1] != 'L') {
-          AV.push([V[0]-1,V[1]+1])
-        }
-
-        if (map[V[0]-1][V[1]-1] != 'L') {
-          AV.push([V[0]-1,V[1]-1])
-        }
-
-        if (map[V[0]+1][V[1]] != 'L') {
-          AV.push([V[0]+1,V[1]])
-        }
-
-        if (map[V[0]+1][V[1]+1] != 'L') {
-          AV.push([V[0]+1,V[1]+1])
-        }
-
-        if (map[V[0]+1][V[1]-1] != 'L') {
-          AV.push([V[0]+1,V[1]-1])
-        }
-
-        if (map[V[0]][V[1]-1] != 'L') {
-          AV.push([V[0],V[1]-1])
-        }
-
-        if (map[V[0]][V[1]+1] != 'L') {
-          AV.push([V[0],V[1]+1])
-        }
-        return AV;
-    }
 
     //ensures the player doesn't go beyond the map
     constrain() {

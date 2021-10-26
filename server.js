@@ -3,10 +3,12 @@
 
 
 const entities = require('./entities.js')
+const BotEntity = require('./Bot.js')
 const CONST = require('./Constants.js').CONST
 const Maps = require('./MapFiles.js').Maps
 const HealthObserver = require('./HealthObserver.js').HealthObserver
 const nameGenerator = require('./nameGenerator');
+const Path = require('./ShortestPath.js');
 
 
 let K_W = 87;
@@ -35,7 +37,14 @@ io.sockets.on('connection',newConnection);
 
 // Initialize GameMap -- MAP SELECTION NOT IMPLEMENTED
 const GameMap = require("./GameMap.js").GameMap
-var gamemap = new GameMap(Maps.MapSquare)
+var gamemap = new GameMap(Maps.MapRocky)
+
+let obj = Path.Generation(gamemap.map)
+
+let paths = obj[0]
+let costs = obj[1]
+let tupleval = obj[2]
+let index = obj[3]
 
 
 // Initialize SoundManager
@@ -53,8 +62,8 @@ var healthobserver = new HealthObserver(players, io, monitorstatistics)//io.sock
 playerslocjson = function(){
     var l = []
     //for(var i = 0; i<players.length;i++){
-    
-    for (var i in players){ 
+
+    for (var i in players){
         //console.log(players[i])
         //console.log("----------------------------")
         //console.log(players[i].pos.x)
@@ -103,7 +112,7 @@ function heartbeat() {
         if (players[i]){
             var player = players[i]
             players[i].updateTreasure(gamemap, soundmanager);
-            players[i].update(players, soundmanager);
+            players[i].update(players, soundmanager,paths,costs,tupleval,index,gamemap);
             //players[i].constrain();pl
             if (player.health > 0){
                 gamemap.player_move(player, soundmanager)
@@ -141,7 +150,7 @@ function heartbeat() {
         soundmanager.add_sound("cannon_fire", turret_cannonballs[tID].pos)
     }
     gamemap.turretlist.repair()
-    
+
 
     // Data we send to front end
     io.sockets.emit('heartbeat', {
@@ -157,12 +166,12 @@ function heartbeat() {
 }
 
 botIdx = 0
-function InitialiseBot() {
+function InitialiseBot(x,y) {
     console.log("A New Bot is being added");
     //What sort of data do the bots have?
 
-    var newBot = new entities.Player(botIdx,nameGenerator.name(),800,300,1.75,healthobserver);
-    newBot.isBot = true;
+    var newBot = new BotEntity.Bot(botIdx,nameGenerator.name(),x,y,1.75,healthobserver);
+    
     //players.push(newBot);
     players[botIdx] = newBot
     botIdx += 1
@@ -178,7 +187,7 @@ function newConnection(socket) {
     socket.on('start',
         function(data) {
             if (monitorstatistics['numships'] == 0) {
-                //InitialiseBot();
+                InitialiseBot(800,300);
             }
 
             if (data.username == '') {
@@ -267,10 +276,10 @@ function newConnection(socket) {
             //    }
             //}
             player = players[socket.id]
-            if ((data.releasedkeycode === K_W && player.yacc<0) || 
+            if ((data.releasedkeycode === K_W && player.yacc<0) ||
                 (data.releasedkeycode === K_S && player.yacc>0)) {
                 player.yacc = 0
-            } else if ( (data.releasedkeycode === K_A && player.xacc<0) || 
+            } else if ( (data.releasedkeycode === K_A && player.xacc<0) ||
                         (data.releasedkeycode === K_D && player.xacc>0)){
                 player.xacc = 0
             } else if (data.releasedkeycode === K_Space) {
