@@ -113,14 +113,16 @@ class Player{
 
   takeDamage(damage, soundmanager){
         if (!this.invincible) {
-            this.health -=damage
-            if (this.health <= 0){
-                soundmanager.add_sound("death", this.pos)
-                this.endGame()
-                return "dead"
-            } else {
-                soundmanager.add_sound("damage", this.pos)
-
+            if (this.health > 0){
+                this.health -=damage                
+                if (this.health <= 0){
+                    soundmanager.add_sound("death", this.pos)
+                    this.endGame()
+                    return "dead"
+                } else {
+                    soundmanager.add_sound("damage", this.pos)
+    
+                }
             }
         }
     }
