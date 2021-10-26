@@ -53,8 +53,8 @@ var healthobserver = new HealthObserver(players, io, monitorstatistics)//io.sock
 playerslocjson = function(){
     var l = []
     //for(var i = 0; i<players.length;i++){
-    
-    for (var i in players){ 
+
+    for (var i in players){
         //console.log(players[i])
         //console.log("----------------------------")
         //console.log(players[i].pos.x)
@@ -141,7 +141,7 @@ function heartbeat() {
         soundmanager.add_sound("cannon_fire", turret_cannonballs[tID].pos)
     }
     gamemap.turretlist.repair()
-    
+
 
     // Data we send to front end
     io.sockets.emit('heartbeat', {
@@ -178,6 +178,8 @@ function newConnection(socket) {
     socket.on('start',
         function(data) {
             if (monitorstatistics['numships'] == 0) {
+                //InitialiseBot();
+                //InitialiseBot();
                 //InitialiseBot();
             }
 
@@ -267,10 +269,10 @@ function newConnection(socket) {
             //    }
             //}
             player = players[socket.id]
-            if ((data.releasedkeycode === K_W && player.yacc<0) || 
+            if ((data.releasedkeycode === K_W && player.yacc<0) ||
                 (data.releasedkeycode === K_S && player.yacc>0)) {
                 player.yacc = 0
-            } else if ( (data.releasedkeycode === K_A && player.xacc<0) || 
+            } else if ( (data.releasedkeycode === K_A && player.xacc<0) ||
                         (data.releasedkeycode === K_D && player.xacc>0)){
                 player.xacc = 0
             } else if (data.releasedkeycode === K_Space) {
