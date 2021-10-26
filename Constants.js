@@ -29,7 +29,7 @@ CONST = {
     BOT_LOW_HEALTH : 50,
 
     // Mechanics constants
-    HEARTBEAT_INTERVAL : 10,
+    HEARTBEAT_INTERVAL : 50,
     INVINCIBILITY_FRAMES : 200,
     TREASURE_FISH_TIME : 125,
     GOLD_AMT : 10,
