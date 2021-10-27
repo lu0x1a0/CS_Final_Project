@@ -34,7 +34,7 @@ function setup() {
   sfx_slider = createSlider(0, 1.0, 0.4, 0.01)
   sfx_slider.position(10, 30)
 
-  socket = io.connect('http://localhost:5000',{reconnection: false} )// Change to if pushing to heroku 'https://hidden-reef-26635.herokuapp.com/' http://localhost:5000
+  socket = io.connect('https://pirategametestthingy.herokuapp.com/',{reconnection: false} )// Change to if pushing to heroku 'https://hidden-reef-26635.herokuapp.com/' http://localhost:5000
 
 
 }
@@ -58,15 +58,12 @@ function startGame(usernameInput) {
   // Must receive map before beginning game
   socket.once('client_start',
     function(newstatedata) {
-      console.log("HOW MANY TIMES DO YOU RUN???????")
 
       state.clear_state_list()
       render.set_id(socket.id)
       render.load_gamemap(newstatedata.gamemap)
       state.load_gamemap(newstatedata.gamemap)
 
-      console.log("######################################")
-      console.log(newstatedata)
       state.load(newstatedata)
 
 

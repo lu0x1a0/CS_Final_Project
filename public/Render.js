@@ -37,13 +37,9 @@ class Render {
 
         // Background and camera
         background(0)
-        console.log("list length: " , state.playerlist.length)
         for (var i in state.playerlist) {
-            console.log("player id: " ,  state.playerlist[i].id)
-            console.log("our id: " , this.id)
             if (state.playerlist[i].id == this.id) {
                 var player = state.playerlist[i]
-                console.log("equal")
             }
         }
 
