@@ -7,13 +7,15 @@ class HealthObserver{
         this.monitorstatistics = monstat
     }
     playerDied(playerid){
+
+        //this.server.playerDeath(playerid)
         //for(var i = 0; i< this.playerlist.length; i++){
-        
+
             // need to support bot id
             //if (this.playerlist[i].id === playerid){
         console.log('playerdied: ',playerid)
-        var treasure = this.playerlist[playerid].dropTreasure()
-        
+        //var treasure = this.playerlist[playerid].dropTreasure()
+
         // this.treasurehandler.addtreasure(treasure)
         delete this.playerlist[playerid]
         //this.playerlist.splice(i,1)
@@ -21,8 +23,8 @@ class HealthObserver{
             //    break;
             //}
         //}
-        //this.server.to(playerid).emit('dead')
-        this.server.to(playerid).disconnectSockets(true);
+        this.server.to(playerid).emit('dead')
+        //this.server.to(playerid).disconnectSockets(true);
         this.monitorstatistics['numships'] -= 1
     }
 

@@ -21,13 +21,17 @@ class State {
         this.gamemap = gamemap
     }
 
+    clear_state_list() {
+      this.state_list = []
+    }
+
     current_server_time() {
         return this.first_server_timestamp + (Date.now() - this.game_start) - RENDER_DELAY
     }
 
     get_base_update() {
         const server_time = this.current_server_time()
-        
+
         // Make sure we only keep one state before current server time
         for (let i = this.state_list.length-1; i >=0; i--) {
             if (this.state_list[i].t <= server_time) { return i }
@@ -46,6 +50,10 @@ class State {
             treasurelist : newstatedata.treasurelist,
             turretlist : newstatedata.turretlist,
         })
+
+        console.log("?????????????????????????????????????")
+        console.log(state.get_state())
+        console.log(state.state_list)
 
         this.eventlist = this.eventlist.concat(newstatedata.eventlist)
 
@@ -66,12 +74,12 @@ class State {
             this.state_list[this.state_list.length - 1].eventlist = this.pop_sounds()
             return this.state_list[this.state_list.length - 1]
         }
-        
+
         else if (base === this.state_list.length - 1) {
             this.state_list[base].eventlist = this.pop_sounds()
             return this.state_list[base]
         }
-        
+
         else {
             const base_update = this.state_list[base]
             const next = this.state_list[base+1]
@@ -180,7 +188,7 @@ function interpolateObject(object1, object2, ratio) {
     });
     return interpolated;
 }
-  
+
 function interpolateObjectArray(objects1, objects2, ratio) {
     return objects1.map(o => interpolateObject(o, objects2.find(o2 => o.id === o2.id), ratio));
 }

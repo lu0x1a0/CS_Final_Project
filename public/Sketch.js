@@ -9,6 +9,8 @@ var render
 
 var leaderBoard_update_counter = 1000
 
+var socket
+
 //Runs when first connected to the webpage
 
 var div
@@ -32,6 +34,9 @@ function setup() {
   sfx_slider = createSlider(0, 1.0, 0.4, 0.01)
   sfx_slider.position(10, 30)
 
+  socket = io.connect('http://localhost:5000',{reconnection: false} )// Change to if pushing to heroku 'https://hidden-reef-26635.herokuapp.com/' http://localhost:5000
+
+
 }
 
 
@@ -41,11 +46,10 @@ function setup() {
 function startGame(usernameInput) {
   console.log(usernameInput)
 
-  socket = io.connect('https://pirategametestthingy.herokuapp.com/',{reconnection: false} )// Change to if pushing to heroku 'https://hidden-reef-26635.herokuapp.com/' http://localhost:5000
 
   // https://pirategametestthingy.herokuapp.com/
   // http://localhost:5000
-  
+
 
   socket.emit('start', {
     username:usernameInput,
@@ -54,13 +58,20 @@ function startGame(usernameInput) {
   // Must receive map before beginning game
   socket.once('client_start',
     function(newstatedata) {
+      console.log("HOW MANY TIMES DO YOU RUN???????")
 
+      state.clear_state_list()
       render.set_id(socket.id)
       render.load_gamemap(newstatedata.gamemap)
       state.load_gamemap(newstatedata.gamemap)
+
+      console.log("######################################")
+      console.log(newstatedata)
       state.load(newstatedata)
+
+
       state.set_first_timestamp(newstatedata.t)
-      
+
       gameStarted = 1
 
       div = createDiv('Leaderboard')
@@ -80,19 +91,16 @@ function startGame(usernameInput) {
 
   //Updates player list when new information is sent to the server
   socket.on('heartbeat', function(data) {
-    
+
     // Load state
     state.load(data)
-    
+
   })
   socket.on("disconnect", (reason) => {
     if (reason === "io server disconnect") {
       // the disconnection was initiated by the server, you need to reconnect manually
       //socket.connect()
     }
-    gameStarted = 0
-    div.remove()
-    showMenu()
 
     console.log(reason)
     // else the socket will automatically try to reconnect
@@ -100,7 +108,11 @@ function startGame(usernameInput) {
 
   socket.on("dead",
     function(){
+      div.remove()
+      gameStarted = 0
       console.log("dead")
+      showMenu()
+
     }
   )
 
@@ -133,7 +145,6 @@ function showMenu(){
 
 function draw() {
   if (gameStarted == 1) {
-
     render.render(state.get_state())
 
     // Update volume
