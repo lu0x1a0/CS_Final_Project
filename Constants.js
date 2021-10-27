@@ -6,7 +6,7 @@ CONST = {
     // Entity constants
     PLAYER_SIZE : 64,
     PLAYER_MAX_SPEED : 8,
-    PLAYER_ACCELERATION : 1,
+    PLAYER_ACCELERATION : 1.2,
     PLAYER_DRAG : 0.5,
     PLAYER_HEALTH : 100,
     PLAYER_HITBOX_SIZE : 45,

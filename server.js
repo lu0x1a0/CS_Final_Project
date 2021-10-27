@@ -154,6 +154,7 @@ function heartbeat() {
 
     // Data we send to front end
     io.sockets.emit('heartbeat', {
+        t:Date.now(),
         players:playerslocjson(),
         projectiles:projectileslocjson(),
         treasurelist:gamemap.treasurelist,
@@ -204,6 +205,7 @@ function newConnection(socket) {
             io.sockets.emit('client_start', {
                 gamemap:gamemap,
 
+                t:Date.now(),
                 players:playerslocjson(),
                 projectiles:projectileslocjson(),
                 treasurelist:gamemap.treasurelist,

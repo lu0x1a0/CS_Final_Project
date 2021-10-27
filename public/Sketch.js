@@ -15,6 +15,9 @@ var div
 
 
 function setup() {
+
+  frameRate(60)
+
   createCanvas(windowWidth, windowHeight)
   imageMode(CENTER)
 
@@ -57,6 +60,7 @@ function startGame(usernameInput) {
       render.load_gamemap(newstatedata.gamemap)
       state.load_gamemap(newstatedata.gamemap)
       state.load(newstatedata)
+      state.set_first_timestamp(newstatedata.t)
       
       gameStarted = 1
 
