@@ -7,30 +7,30 @@ const BotEntity = require('./Bot.js')
 const CONST = require('./Constants.js').CONST
 const Maps = require('./MapFiles.js').Maps
 const HealthObserver = require('./HealthObserver.js').HealthObserver
-const nameGenerator = require('./nameGenerator');
-const Path = require('./ShortestPath.js');
+const nameGenerator = require('./nameGenerator')
+const Path = require('./ShortestPath.js')
 
 
-let K_W = 87;
-let K_A = 65;
-let K_S = 83;
-let K_D = 68;
-let K_Space = 32;
+let K_W = 87
+let K_A = 65
+let K_S = 83
+let K_D = 68
+let K_Space = 32
 
 //process.env.PORT is used for heroku to connect when running locally use LocalHost:5000
 var PORT = process.env.PORT || 5000
 
-var express = require("express");
+var express = require("express")
 //import express from 'express'
-var app = express();
-var server = app.listen(PORT);
-app.use(express.static('public'));
+var app = express()
+var server = app.listen(PORT)
+app.use(express.static('public'))
 
-console.log("Server is running");
-var socket = require('socket.io');
+console.log("Server is running")
+var socket = require('socket.io')
 //import socket from 'socket.io'
-var io = socket(server);
-io.sockets.on('connection',newConnection);
+var io = socket(server)
+io.sockets.on('connection',newConnection)
 
 
 //------------------------------ BACKEND SETUP -------------------------------//
@@ -52,16 +52,16 @@ const SoundManager = require("./SoundManager.js").SoundManager
 var soundmanager = new SoundManager()
 
 // List of all players and bots connected to the server
-var players = {};
+var players = {}
 var monitorstatistics = {'numships' : 0}
-var projectiles = {};
+var projectiles = {}
 var healthobserver = new HealthObserver(players, io, monitorstatistics)//io.sockets)
 
 //------------------------------ JSON HELPER FUNCTIONS -------------------------------//
 
 playerslocjson = function(){
     var l = []
-    //for(var i = 0; i<players.length;i++){
+    //for(var i = 0; i<players.length; i++){
 
     for (var i in players){
         //console.log(players[i])
@@ -70,17 +70,19 @@ playerslocjson = function(){
         l.push({
             username:players[i].username,
             id:players[i].id,
-            x:players[i].pos.x,
-            y:players[i].pos.y,
+            pos:players[i].pos,
             dir:players[i].dir,
             health:players[i].health,
+            hitbox_size:players[i].hitbox_size,
             size:players[i].size,
             vel:players[i].vel,//for movable range purpose, need to be direct to each player id separately to avoid hack bots
             gold:players[i].gold,
             OnTreasure:players[i].OnTreasure,
             SpaceCounter:players[i].SpaceCounter,
+            treasure_fish_time:players[i].treasure_fish_time,
             SpacePressed:players[i].SpacePressed,
             invincible:players[i].invincible,
+            cannon:players[i].cannon,
         })
     }
     return l
@@ -102,22 +104,20 @@ projectileslocjson = function(){
 //------------------------------ SERVER EVENTS -------------------------------//
 
 // Update every 50 ms
-setInterval(heartbeat, CONST.HEARTBEAT_INTERVAL);
+setInterval(heartbeat, CONST.HEARTBEAT_INTERVAL)
 
 // RUNS EVERY SERVER-WIDE UPDATE
 function heartbeat() {
-    //for (var i = 0; i < players.length; i++ ) {
+
     for (var i in players){
         // checks that players[i] is not removed from the object by previous damages
         if (players[i]){
             var player = players[i]
-            players[i].updateTreasure(gamemap, soundmanager);
-            players[i].update(players, soundmanager,paths,costs,tupleval,index,gamemap);
-            //players[i].constrain();pl
+            players[i].updateTreasure(gamemap, soundmanager)
+            players[i].update(players, soundmanager,paths,costs,tupleval,index,gamemap)
             if (player.health > 0){
                 gamemap.player_move(player, soundmanager)
             }
-
         }
     }
     for (var key in projectiles) {
@@ -126,14 +126,14 @@ function heartbeat() {
             if (projectiles[key].done){
                 //projectiles.splice(key,1)
                 delete projectiles[key]
-                continue;
+                continue
             }else{
                 hit = projectiles[key].contactcheck(players, gamemap.turretlist.turret_array)
                 if (projectiles[key].done){
                     //projectiles.splice(key,1)
                     delete projectiles[key]
-                    hit.takeDamage(CONST.CANNONBALL_DAMAGE, soundmanager);
-                    continue;
+                    hit.takeDamage(CONST.CANNONBALL_DAMAGE, soundmanager)
+                    continue
                 }
             }
 
@@ -158,21 +158,19 @@ function heartbeat() {
         projectiles:projectileslocjson(),
         treasurelist:gamemap.treasurelist,
         turretlist:gamemap.turretlist,
-        eventlist:soundmanager.give_events(),
-    });
+        eventlist:soundmanager.pop_events(),
+    })
 
-    // Reset accumulated sounds
-    soundmanager.reset_events()
 }
 
 botIdx = 0
 function InitialiseBot(x,y) {
-    console.log("A New Bot is being added");
+    console.log("A New Bot is being added")
     //What sort of data do the bots have?
 
-    var newBot = new BotEntity.Bot(botIdx,nameGenerator.name(),x,y,1.75,healthobserver);
+    var newBot = new BotEntity.Bot(botIdx,nameGenerator.name(),x,y,1.75,healthobserver)
     
-    //players.push(newBot);
+    //players.push(newBot)
     players[botIdx] = newBot
     botIdx += 1
     monitorstatistics['numships'] += 1
@@ -187,16 +185,16 @@ function newConnection(socket) {
     socket.on('start',
         function(data) {
             if (monitorstatistics['numships'] == 0) {
-                InitialiseBot(800,300);
+                InitialiseBot(800,300)
             }
 
             if (data.username == '') {
               data.username = nameGenerator.name()
             }
 
-            var position = gamemap.get_spawn();
-            var player = new entities.Player(socket.id, data.username, position.x, position.y, 0, healthobserver);
-            //players.push(player);
+            var position = gamemap.get_spawn()
+            var player = new entities.Player(socket.id, data.username, position.x, position.y, 0, healthobserver)
+            //players.push(player)
             players[player.id] = player
             monitorstatistics['numships'] += 1
             //console.log("-----------start---------------")
@@ -204,23 +202,28 @@ function newConnection(socket) {
 
             // Send gamemap and player spawn on start
             io.sockets.emit('client_start', {
-                player:player.toJSON(),
                 gamemap:gamemap,
-            });
+
+                players:playerslocjson(),
+                projectiles:projectileslocjson(),
+                treasurelist:gamemap.treasurelist,
+                turretlist:gamemap.turretlist,
+                eventlist:soundmanager.pop_events(),
+            })
         }
     )
 
     //finds the player in the list of players and updates them based on new information sent from the client
     socket.on('updatepressed',
         function(data) {
-            var player;
+            var player
             //console.log('-----------------updatepressed-----------------------')
             //console.log(data)
             //console.log(player)
             //console.log(players)
             //for (var i = 0; i < players.length; i++ ) {
             //    if (socket.id == players[i].id) {
-            //        player = players[i];
+            //        player = players[i]
             //    }
             //}
             player = players[socket.id]
@@ -254,7 +257,7 @@ function newConnection(socket) {
 
                 if (!player.onTreasure) {
                     for (let i = 0; i < gamemap.treasurelist.treasure_array.length; ++i) {
-                        let encap = {x: Math.floor(player.pos.x/gamemap.tilesize), y: Math.floor(player.pos.y/gamemap.tilesize)};
+                        let encap = {x: Math.floor(player.pos.x/gamemap.tilesize), y: Math.floor(player.pos.y/gamemap.tilesize)}
                         if (encap.x === gamemap.treasurelist.treasure_array[i].x
                             && encap.y === gamemap.treasurelist.treasure_array[i].y) {
                             player.updateOnTreasure(true)
@@ -269,7 +272,7 @@ function newConnection(socket) {
 
     socket.on('updatereleased',
         function(data){
-            var player;
+            var player
             //for (var i = 0; i < players.length; i++ ) {
             //    if (socket.id == players[i].id) {
             //        player = players[i]
@@ -299,7 +302,7 @@ function newConnection(socket) {
     socket.on("disconnect", (reason) => {
         //console.log("--------------------reason-------------------")
         //console.log(reason)
-        var id = socket.id;
+        var id = socket.id
         delete players[id]
         //for (var i = 0; i < players.length; i++ ) {
         //  if (id == players[i].id) {
@@ -309,5 +312,5 @@ function newConnection(socket) {
         //}
 
       }
-    );
+    )
 }

@@ -9,12 +9,10 @@ class SoundManager {
         this.eventList.push({type:type, pos:pos})
     }
 
-    give_events() {
-        return this.eventList
-    }
-
-    reset_events() {
+    pop_events() {
+        var popped = this.eventList
         this.eventList = []
+        return popped
     }
 
 }
