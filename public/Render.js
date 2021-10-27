@@ -38,15 +38,17 @@ class Render {
         // Background and camera
         background(0)
         for (var i in state.playerlist) {
-            if (state.playerlist[i].id === this.id) {
+            if (state.playerlist[i].id == this.id) {
                 var player = state.playerlist[i]
             }
         }
+
+
         translate(width / 2, height / 2)
         translate(-player.pos.x, -player.pos.y)
 
 
-    
+
         // Loading map-based render
         this.treasurerender.load_treasure(state.treasurelist)
         this.turretrender.load_turrets(state.turretlist)
@@ -91,6 +93,6 @@ class Render {
         for (var i in state.projectilelist){
             var projectile = state.projectilelist[i]
             cannonballshow(projectile.pos, projectile.diameter)
-        }      
+        }
     }
 }

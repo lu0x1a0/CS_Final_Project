@@ -62,7 +62,6 @@ var healthobserver = new HealthObserver(players, io, monitorstatistics)//io.sock
 playerslocjson = function(){
     var l = []
     //for(var i = 0; i<players.length; i++){
-
     for (var i in players){
         //console.log(players[i])
         //console.log("----------------------------")
@@ -85,6 +84,7 @@ playerslocjson = function(){
             cannon:players[i].cannon,
         })
     }
+
     return l
 }
 projectileslocjson = function(){
@@ -98,6 +98,7 @@ projectileslocjson = function(){
             })
         }
     }
+    console.log(l)
     return l
 }
 
@@ -132,7 +133,7 @@ function heartbeat() {
                 if (projectiles[key].done){
                     //projectiles.splice(key,1)
                     delete projectiles[key]
-                    hit.takeDamage(CONST.CANNONBALL_DAMAGE, soundmanager)
+                    console.log(hit.takeDamage(CONST.CANNONBALL_DAMAGE, soundmanager))
                     continue
                 }
             }
@@ -170,12 +171,21 @@ function InitialiseBot(x,y) {
     //What sort of data do the bots have?
 
     var newBot = new BotEntity.Bot(botIdx,nameGenerator.name(),x,y,1.75,healthobserver)
-    
+
     //players.push(newBot)
     players[botIdx] = newBot
     botIdx += 1
     monitorstatistics['numships'] += 1
 }
+
+
+
+function playerDeath(id){
+  io.sockets.emit('dead', {})
+  console.log("dead and emit")
+
+}
+
 
 // RUNS WHEN A NEW CONNECTION JOINS
 function newConnection(socket) {
@@ -185,6 +195,9 @@ function newConnection(socket) {
     // Also send gamemap
     socket.on('start',
         function(data) {
+
+            console.log("start called")
+            console.log(data)
             if (monitorstatistics['numships'] == 0) {
                 InitialiseBot(800,300)
             }
@@ -197,6 +210,7 @@ function newConnection(socket) {
             var player = new entities.Player(socket.id, data.username, position.x, position.y, 0, healthobserver)
             //players.push(player)
             players[player.id] = player
+
             monitorstatistics['numships'] += 1
             //console.log("-----------start---------------")
             //console.log(players)
@@ -204,7 +218,6 @@ function newConnection(socket) {
             // Send gamemap and player spawn on start
             io.sockets.emit('client_start', {
                 gamemap:gamemap,
-
                 t:Date.now(),
                 players:playerslocjson(),
                 projectiles:projectileslocjson(),
