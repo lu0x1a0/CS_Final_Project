@@ -32,6 +32,7 @@ class Player{
         this.invincible = true;
         this.invinc_time = 0;
 
+        this.treasure_fish_time = CONST.TREASURE_FISH_TIME
         this.SpaceCounter = 0
         this.SpacePressed = false
         this.OnTreasure = false
@@ -141,7 +142,7 @@ class Player{
             hitbox_size : this.hitbox_size,
             gold : this.gold,
             treasure_fish_time : CONST.TREASURE_FISH_TIME,
-            cannonJSON : this.cannon.toJSON(),
+            cannon : this.cannon.toJSON(),
             invincible : this.invincible,
         }
     }

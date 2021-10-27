@@ -19,6 +19,7 @@ module.exports = {
       "Jolly",
       "Great",
       "Crewmate",
+      "Dirty",
     ];
 
     const firstName = [
@@ -56,6 +57,7 @@ module.exports = {
       " the Great",
       " of the Sea",
       " McPirate",
+      " McNugget",
       " Knives",
       " Sparrow",
 
