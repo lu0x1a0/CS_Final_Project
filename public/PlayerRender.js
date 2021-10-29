@@ -1,7 +1,6 @@
 class PlayerRender {
   constructor(){
     this.username = ""
-    this.flash = true
   }
 
   preload() {
@@ -15,15 +14,17 @@ class PlayerRender {
     this.dir = playerJSON.dir
     this.size = playerJSON.size
     this.username = playerJSON.username
-    this.hitbox_size = player.hitbox_size
+    this.hitbox_size = playerJSON.hitbox_size
     this.health = playerJSON.health
     this.gold = playerJSON.gold
-    this.treasure_fish_time = playerJSON.treasure_fish_time
     this.invincible = playerJSON.invincible
-    this.flashing = playerJSON.flashing
     this.vel = playerJSON.vel
+    this.OnTreasure = playerJSON.OnTreasure
+    this.SpaceCounter = playerJSON.SpaceCounter
+    this.treasure_fish_time = playerJSON.treasure_fish_time
 
-    this.cannon = new CannonRender(playerJSON.cannonJSON, this)
+
+    this.cannon = new CannonRender(playerJSON.cannon, this)
   }
 
 
@@ -44,7 +45,7 @@ class PlayerRender {
     var imgy = this.pos.y //- 24
     imageMode(CENTER);
 
-    // Tint if invincible and on a true flash frame
+    // Tint if invincible
     if (this.invincible) {
       tint(255, 90)
     }
@@ -54,14 +55,13 @@ class PlayerRender {
     rotate(-this.dir-PI)
     //fill(255);
     //ellipse(this.pos.x, this.pos.y, this.size, this.size);
-    var debug = 1;
+
     if (true) {
       stroke(255, 0, 0);
       strokeWeight(1);
       rectMode(CENTER);
       rect(this.pos.x, this.pos.y, this.hitbox_size, this.hitbox_size);
       stroke(255,255,255);
-
     }
     pop()
 
@@ -87,10 +87,6 @@ class PlayerRender {
 
     push()
     if (this.OnTreasure) {
-      // // Treasure get SFX
-      // if (this.SpaceCounter == this.treasure_fish_time) {
-      //   this.sfx_get_treasure.play()
-      // }
 
       fill(100,63)
       rect(this.pos.x-this.size/2, this.pos.y-this.size/2-30,this.size,10);
@@ -110,11 +106,11 @@ class PlayerRender {
   // }
 }
 
-function showship(dir,x,y,img_boat,username,size,health,funcs,gold,OnTreasure,SpaceCounter,SpacePressed, invincible){
+function showship(dir,pos,img_boat,username,size,health,funcs,gold,OnTreasure,SpaceCounter,SpacePressed, invincible){
   push()
   rotate(dir+PI)
-  var imgx = x //-40
-  var imgy = y //- 24
+  var imgx = pos.x //-40
+  var imgy = pos.y //- 24
   imageMode(CENTER)
   if (invincible) {
     tint(255, 90)
@@ -126,29 +122,29 @@ function showship(dir,x,y,img_boat,username,size,health,funcs,gold,OnTreasure,Sp
   fill(255);
   textAlign(CENTER);
   textSize(12);
-  text(username, x, y + size*1.5);
+  text(username, pos.x, pos.y + size*1.5);
 
   fill(255);
   textAlign(CENTER);
   textSize(12);
-  text(gold, x, y + size*2);
+  text(gold, pos.x, pos.y + size*2);
 
   //health bar
   push()
   fill(100,63)
   //base
-  rect(x-size/2, y-size/2-20,size,10);
+  rect(pos.x-size/2, pos.y-size/2-20,size,10);
   //health
   fill(0,220,0)
-  rect(x-size/2, y-size/2-20,size*abs(health)/100,10);
+  rect(pos.x-size/2, pos.y-size/2-20,size*abs(health)/100,10);
   pop()
 
   push()
   if (OnTreasure) {
     fill(100,63)
-    rect(x-size/2, y-size/2-30,size,10);
+    rect(pos.x-size/2, pos.y-size/2-30,size,10);
     fill(0, 0, 255)
-    rect(x-size/2, y-size/2-30,size*abs(SpaceCounter)/this.treasure_fish_time,10);
+    rect(pos.x-size/2, pos.y-size/2-30,size*abs(SpaceCounter)/this.treasure_fish_time,10);
   }
   pop()
 

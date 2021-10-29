@@ -32,6 +32,7 @@ class Player{
         this.invincible = true;
         this.invinc_time = 0;
 
+        this.treasure_fish_time = CONST.TREASURE_FISH_TIME
         this.SpaceCounter = 0
         this.SpacePressed = false
         this.OnTreasure = false
@@ -53,11 +54,11 @@ class Player{
         for(var i in players){
             //console.log(i)
             if (players[i].id !== this.id){
-                var posangle = Math.atan2(players[i].pos.y-this.pos.y,players[i].pos.x-this.pos.x)        
+                var posangle = Math.atan2(players[i].pos.y-this.pos.y,players[i].pos.x-this.pos.x)
                 var center_distance = mag(players[i].pos.x-this.pos.x,players[i].pos.y-this.pos.y)
                 var dir_rad_1 = this.dim.a*this.dim.b/Math.sqrt( (this.dim.b*Math.cos(posangle-this.dir))**2+(this.dim.a*Math.sin(posangle-this.dir))**2  )
                 var dir_rad_2 = this.dim.a*this.dim.b/Math.sqrt( (this.dim.b*Math.cos(posangle-players[i].dir))**2+(this.dim.a*Math.sin(posangle-players[i].dir))**2  )
-    
+
                 if (center_distance <= (dir_rad_1 + dir_rad_2)){
                     this.onCollision(players[i],dir_rad_1,dir_rad_2,center_distance,posangle,soundmanager)
                 }
@@ -72,7 +73,7 @@ class Player{
         this.pos.x += Math.ceil(shared_dist)*Math.cos(collided_angle+Math.PI)
         this.pos.y += Math.ceil(shared_dist)*Math.sin(collided_angle+Math.PI)
 
-        ////pass forward momentum 
+        ////pass forward momentum
         collided.vel.x += this.vel.x*1.5 //0.9 //xacc*10
         collided.vel.y += this.vel.y*1.5 //0.9 //yacc*10
         //collided.pos.x += this.vel.x*5//xacc*10
@@ -81,10 +82,10 @@ class Player{
         //// receives momentum
         this.vel.x /= 2//collided.vel.x //+= collided.xacc*10
         this.vel.y /= 2//collided.vel.x //+= collided.yacc*10
-        
+
         this.collisionDamage(collided,collided_angle,soundmanager)
         //console.log(this,collided)
-    }    
+    }
     collisionDamage(collided,angle,soundmanager){
         var altangle = Math.sign(angle)*(-1) *(2*Math.PI-Math.abs(angle))
         var speed = mag(this.vel.x-collided.vel.x,this.vel.y-collided.vel.y)
@@ -95,11 +96,11 @@ class Player{
         if ((absdiff> Math.PI/6 && absdiff < 5*Math.PI/6) || (absdiff2> Math.PI/6 && absdiff2 < 5*Math.PI/6) ) {
             //((absdiff>field && absdiff<(Math.PI-field)) || (absdiff2> field && absdiff2<(Math.PI-field)))
             this.takeDamage(CONST.SIDE_DAMAGE_MULTIPLIER*speed, soundmanager)
-        } 
+        }
             // front or back damage
         else {
             this.takeDamage(CONST.FRONT_BACK_DAMAGE_MULTIPLIER*speed, soundmanager)
-        } 
+        }
         // collided takes damage
         var absdiff = Math.abs(angle-collided.dir)
         var absdiff2 = Math.abs(altangle-collided.dir)
@@ -123,15 +124,15 @@ class Player{
                     soundmanager.add_sound("damage", this.pos)
     
                 }
-            }
+            }    
         }
     }
-  
+
     endGame(){
-        this.healthobserver.playerDied(this.id)
+
     }
     dropTreasure(){
-
+      //rip drop treasure
     }
     toJSON() {
         return {
@@ -143,7 +144,7 @@ class Player{
             hitbox_size : this.hitbox_size,
             gold : this.gold,
             treasure_fish_time : CONST.TREASURE_FISH_TIME,
-            cannonJSON : this.cannon.toJSON(),
+            cannon : this.cannon.toJSON(),
             invincible : this.invincible,
         }
     }
@@ -167,7 +168,7 @@ class Player{
     updateTreasure(gamemap, soundmanager) {
         if (this.OnTreasure && this.SpacePressed) {
             if (this.SpaceCounter == CONST.TREASURE_FISH_TIME) {
-                //Remove Treasure coordinates 
+                //Remove Treasure coordinates
                 let encap = {x: Math.floor(this.pos.x/gamemap.tilesize), y: Math.floor(this.pos.y/gamemap.tilesize)};
                 gamemap.treasurelist.remove_treasure(encap)
                 soundmanager.add_sound("get_treasure", this.pos)
@@ -210,12 +211,12 @@ function Cannon(rangestat,visionfield,player){
     this.player = player
     this.speed = player.maxspeed*CONST.CANNON_SPEED_FACTOR
     this.range = rangestat.b*rangestat.framelife*this.speed // b is redundant because its set to 1
-    
+
     this.ellipsestat = {
         a :rangestat.a*rangestat.framelife*this.speed,
         b :rangestat.b*rangestat.framelife*this.speed
     }
-    this.ellipsestat['x0'] = this.ellipsestat.a-this.ellipsestat.b 
+    this.ellipsestat['x0'] = this.ellipsestat.a-this.ellipsestat.b
     this.ellipsestat['y0'] = 0
     this.ellipserange = function(theta) {
         //theta is wrt the bow/front of the ship
@@ -243,19 +244,19 @@ function Cannon(rangestat,visionfield,player){
             // move slightly off player's collision zone so the ball doesn't hit the player
             shift = setMag({x:targetX,y:targetY},this.player.size/2+20)
             shiftstart = addVec(startpos,shift)
-    
+
             // adj speed according to player velocity
             x = this.speed*Math.cos(this.angle)
             y = this.speed*Math.sin(this.angle)
             adjspeed = mag(x+this.player.vel.x,y+this.player.vel.y)
             move = setMag(move,this.ellipserange(this.angle-this.player.dir))//,this.range)
-            
+
             var data = {
                 start:shiftstart,
                 end:{x:startpos.x+move.x, y:startpos.y+move.y},
                 speed: adjspeed//this.speed
             }
-            return new Cannonball(data.start,data.end,data.speed)    
+            return new Cannonball(data.start,data.end,data.speed)
         }
     }
 
@@ -313,7 +314,7 @@ class Cannonball{
     update(){
         //delta = end.sub(this.start).setMag(this.speed);
         this.pos = addVec(this.pos,this.delta);
-        if ( (mag(this.pos.x-this.start.x,this.pos.y-this.start.y)>=mag(this.end.x-this.start.x,this.end.y-this.start.y))  
+        if ( (mag(this.pos.x-this.start.x,this.pos.y-this.start.y)>=mag(this.end.x-this.start.x,this.end.y-this.start.y))
             ){
             this.done = true;
             //console.log("done");
