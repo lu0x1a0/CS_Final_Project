@@ -7,6 +7,7 @@ class SoundRender {
     preload() {
         // Music
         this.music_main = loadSound('assets/main_music.mp3');
+        this.music_dead = loadSound('assets/dead_music.mp3');
 
         // SFX
         this.sfx_cannon_fire = loadSound('assets/sfx_cannon_fire.mp3')
@@ -22,6 +23,7 @@ class SoundRender {
 
     set_music_vol(val) {
         this.music_main.setVolume(val)
+        this.music_dead.setVolume(val)
     }
     
     set_sfx_vol(val) {

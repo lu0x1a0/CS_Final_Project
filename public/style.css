@@ -1,43 +1,77 @@
 html, body {
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    overscroll-behavior: none;
-  }
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
 
 
 .hidden {
-    display: none !important;
+  display: none !important;
 }
 
 #home-page {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translateY(-50%) translateX(-50%);
-    padding: 20px 30px;
-    background-color: blue;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    border-radius: 5px;
-    text-align: center;
-  }
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translateY(-50%) translateX(-50%);
+  padding: 20px 30px;
+  background-color: blue;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 5px;
+  text-align: center;
+}
 
-  #home-page p {
-    margin-bottom: 0;
-  }
 
-  #home-page input {
-    font-size: 18px;
-    outline: none;
-    border: none;
-    border-bottom: 1px solid black;
-    margin-bottom: 5px;
-    padding: 3px;
-    text-align: center;
-  }
+#home-page p {
+  margin-bottom: 0;
+}
 
-  #home-page input:hover {
-    outline: none;
-  }
+#home-page input {
+  font-size: 18px;
+  outline: none;
+  border: none;
+  border-bottom: 1px solid black;
+  margin-bottom: 5px;
+  padding: 3px;
+  text-align: center;
+}
+
+#home-page input:hover {
+  outline: none;
+}
+
+
+#death-menu {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translateY(-50%) translateX(-50%);
+  padding: 20px 30px;
+  background-color: blue;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 5px;
+  text-align: center;
+}
+
+#death-menu p {
+  margin-bottom: 0;
+}
+
+#death-menu input {
+  font-size: 18px;
+  outline: none;
+  border: none;
+  border-bottom: 1px solid black;
+  margin-bottom: 5px;
+  padding: 3px;
+  text-align: center;
+}
+
+#death-menu input:hover {
+  outline: none;
+}
