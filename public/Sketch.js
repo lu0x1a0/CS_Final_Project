@@ -2,6 +2,7 @@ var player
 var socket
 var zoom = 1
 var gameStarted = 0
+var dead = 0
 
 
 var state
@@ -34,7 +35,7 @@ function setup() {
   sfx_slider = createSlider(0, 1.0, 0.4, 0.01)
   sfx_slider.position(10, 30)
 
-  socket = io.connect('https://pirategametestthingy.herokuapp.com/',{reconnection: false} )// Change to if pushing to heroku 'https://hidden-reef-26635.herokuapp.com/' http://localhost:5000
+  socket = io.connect('http://localhost:5000',{reconnection: false} )// Change to if pushing to heroku 'https://hidden-reef-26635.herokuapp.com/' http://localhost:5000
 
 
 }
@@ -103,12 +104,25 @@ function startGame(usernameInput) {
     // else the socket will automatically try to reconnect
   })
 
+
   socket.on("dead",
-    function(){
-      div.remove()
-      gameStarted = 0
+    function(data) {
       console.log("dead")
-      showMenu()
+
+      // Ending alive sequence
+      dead = data.coords
+      gameStarted = 0
+      render.soundrender.music_main.stop()
+
+      // Death sequence
+      setTimeout(function(){
+        render.soundrender.music_dead.loop()
+      }, 2200)
+
+      //div.remove()
+      //showMenu()
+      //gameStarted = 0
+
 
     }
   )
@@ -141,8 +155,9 @@ function showMenu(){
 }
 
 function draw() {
-  if (gameStarted == 1) {
-    render.render(state.get_state())
+
+  if (gameStarted == 1 || dead) {
+    render.render(state.get_state(), dead)
 
     // Update volume
     render.soundrender.set_music_vol(music_slider.value())
@@ -164,7 +179,7 @@ function draw() {
     // }
 
   }
-  else if (gameStarted == 0){
+  else {
     background(255)
   }
 }

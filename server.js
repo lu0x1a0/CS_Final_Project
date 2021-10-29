@@ -63,9 +63,7 @@ playerslocjson = function(){
     var l = []
     //for(var i = 0; i<players.length; i++){
     for (var i in players){
-        //console.log(players[i])
-        //console.log("----------------------------")
-        //console.log(players[i].pos.x)
+
         l.push({
             username:players[i].username,
             id:players[i].id,
@@ -98,7 +96,6 @@ projectileslocjson = function(){
             })
         }
     }
-    console.log(l)
     return l
 }
 
@@ -179,12 +176,14 @@ function InitialiseBot(x,y) {
 }
 
 
-
-function playerDeath(id){
-  io.sockets.emit('dead', {})
-  console.log("dead and emit")
-
-}
+// This shit is never called cos HealthObserver does the work...
+//
+// function playerDeath(id){
+//     // Emit death coords
+//     console.log("players[id].pos  ", players[id].pos)
+//     io.sockets.emit('dead', {coords : players[id].pos})
+//     console.log("dead and emit")
+// }
 
 
 // RUNS WHEN A NEW CONNECTION JOINS
@@ -308,11 +307,7 @@ function newConnection(socket) {
             //console.log(data)
         }
     )
-    socket.on('fire',
-        function(data){
-            var player
-        }
-    )
+
 
     socket.on("disconnect", (reason) => {
         //console.log("--------------------reason-------------------")

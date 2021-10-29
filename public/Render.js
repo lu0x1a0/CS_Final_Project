@@ -33,19 +33,23 @@ class Render {
         this.turretrender.first_load(gamemap)
     }
 
-    render(state) {
+    render(state, dead=0) {
 
         // Background and camera
         background(0)
-        for (var i in state.playerlist) {
-            if (state.playerlist[i].id == this.id) {
-                var player = state.playerlist[i]
-            }
-        }
-
-
         translate(width / 2, height / 2)
-        translate(-player.pos.x, -player.pos.y)
+
+        if (!dead) {
+            for (var i in state.playerlist) {
+                if (state.playerlist[i].id == this.id) {
+                    var player = state.playerlist[i]
+                    continue
+                }
+            }
+            translate(-player.pos.x, -player.pos.y)
+        } else {
+            translate(-dead.x, -dead.y)
+        }
 
 
 
