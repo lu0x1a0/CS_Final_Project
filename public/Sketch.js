@@ -71,6 +71,7 @@ function startGame(usernameInput) {
       state.set_first_timestamp(newstatedata.t)
 
       gameStarted = 1
+      dead = 0
 
       div = createDiv('Leaderboard')
       div.style('font-size', '25px')
@@ -117,13 +118,8 @@ function startGame(usernameInput) {
       // Death sequence
       setTimeout(function(){
         render.soundrender.music_dead.loop()
+        showDeathMenu()
       }, 2200)
-
-      //div.remove()
-      //showMenu()
-      //gameStarted = 0
-
-
     }
   )
 
@@ -139,7 +135,7 @@ let K_D = 68
 let K_Space = 32
 
 // micro version of homepage because of loop referencing
-function showMenu(){
+function showMainMenu(){
   //import the values from the home page
   var Username = document.getElementById('username-input')
   var button = document.getElementById('play-button')
@@ -151,6 +147,40 @@ function showMenu(){
 
       playMenu.classList.add('hidden')
       startGame(Username.value)
+  }
+}
+
+
+function showDeathMenu(){
+
+  var Username = document.getElementById('username-input')
+  var retry = document.getElementById('retry-button')
+  var mainmenu = document.getElementById('mainmenu-button')
+  const deathMenu = document.getElementById('death-menu')
+  deathMenu.classList.remove('hidden')
+
+  retry.onclick = function(){
+    
+    // Clean up
+    div.remove()
+    gameStarted = 0
+    render.soundrender.music_dead.stop()
+
+    // Swap menus
+    deathMenu.classList.add('hidden')
+    startGame(Username.value)
+  }
+  mainmenu.onclick = function(){
+
+    // Clean up
+    div.remove()
+    gameStarted = 0
+    dead = 0
+    render.soundrender.music_dead.stop()
+
+    // Swap menus
+    deathMenu.classList.add('hidden')
+    showMainMenu()
   }
 }
 
