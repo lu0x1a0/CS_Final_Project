@@ -16,7 +16,7 @@ class HealthObserver{
         
         // re-added disconnect to that player pressing key doesnt trigger server update,
         // bcos player already removed from json
-        this.server.to(playerid).disconnectSockets(true)
+       // this.server.to(playerid).disconnectSockets(true)
 
         this.monitorstatistics['numships'] -= 1
     }
