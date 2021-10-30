@@ -11,9 +11,16 @@ class SoundRender {
 
         // SFX
         this.sfx_cannon_fire = loadSound('assets/sfx_cannon_fire.mp3')
+        this.sfx_cannon_fire.playMode('restart')
+
         this.sfx_damage = loadSound('assets/sfx_damage.mp3')
+        this.sfx_damage.playMode('restart')
+
         this.sfx_death = loadSound('assets/sfx_death.mp3')
+        this.sfx_death.playMode('restart')
+
         this.sfx_get_treasure = loadSound('assets/sfx_get_treasure.mp3')
+        this.sfx_get_treasure.playMode('restart')
 
     }
 
