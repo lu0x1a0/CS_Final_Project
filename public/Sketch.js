@@ -160,7 +160,7 @@ function showDeathMenu(){
   deathMenu.classList.remove('hidden')
 
   retry.onclick = function(){
-    
+
     // Clean up
     div.remove()
     gameStarted = 0
@@ -193,20 +193,22 @@ function draw() {
     render.soundrender.set_music_vol(music_slider.value())
     render.soundrender.set_sfx_vol(sfx_slider.value())
 
-    // leaderBoard_update_counter = leaderBoard_update_counter + 1
-    // if (leaderBoard_update_counter >= 40){
-    //   players.sort(function (x, y) {
-    //       return y.gold - x.gold
-    //   })
-    //   leaderBoard_update_counter = 0
-    //   var table = ""
-    //   for (var i = 0; i < players.length; i++ ) {
-    //     if (i >= 3 ) {break}
-    //     table = table + "<tr><td>" + players[i].gold + "</td><td>" + players[i].username + "</td></tr>"
-    //   }
-    //   div.html("<style>th, td {padding: 10pxtext-align: left}</style><h1>Gold pirated</h1><body><table>" + table + "</table></body>")
+     leaderBoard_update_counter = leaderBoard_update_counter + 1
+     if (leaderBoard_update_counter >= 40){
+         players = state.get_state().playerlist
+         console.log(players)
+       players.sort(function (x, y) {
+           return y.gold - x.gold
+       })
+       leaderBoard_update_counter = 0
+       var table = ""
+       for (var i = 0; i < players.length; i++ ) {
+         if (i >= 3 ) {break}
+         table = table + "<tr><td>" + players[i].gold + "</td><td>   </td><td>" + players[i].username + "</td></tr>"
+       }
+       div.html("<style>th, td {padding: 10pxtext-align: left}</style><h1>Gold pirated</h1><body><table>" + table + "</table></body>")
 
-    // }
+     }
 
   }
   else {
