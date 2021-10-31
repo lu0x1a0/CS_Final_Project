@@ -174,6 +174,10 @@ function heartbeat() {
         eventlist:soundmanager.pop_events(),
     })
 
+    if (monitorstatistics['numships'] == 0) {
+        InitialiseBot(gamemap)
+        monitorstatistics['numships'] += 1
+    }
 }
 
 botIdx = 0
