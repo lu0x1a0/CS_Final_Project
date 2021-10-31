@@ -68,20 +68,24 @@ class Player{
     onCollision(collided,this_dir_rad,collided_dir_rad,total_dist,collided_angle,soundmanager){
         //first separate collided entities
         var shared_dist = -(total_dist -  this_dir_rad - collided_dir_rad)
-        collided.pos.x += Math.ceil(shared_dist)*Math.cos(collided_angle)
-        collided.pos.y += Math.ceil(shared_dist)*Math.sin(collided_angle)
-        this.pos.x += Math.ceil(shared_dist)*Math.cos(collided_angle+Math.PI)
-        this.pos.y += Math.ceil(shared_dist)*Math.sin(collided_angle+Math.PI)
+        
+        // collided.pos.x += Math.ceil(shared_dist)*Math.cos(collided_angle)
+        // collided.pos.y += Math.ceil(shared_dist)*Math.sin(collided_angle)
+        // this.pos.x += Math.ceil(shared_dist)*Math.cos(collided_angle+Math.PI)
+        // this.pos.y += Math.ceil(shared_dist)*Math.sin(collided_angle+Math.PI)
 
         ////pass forward momentum
-        collided.vel.x += this.vel.x*1.5 //0.9 //xacc*10
-        collided.vel.y += this.vel.y*1.5 //0.9 //yacc*10
+        collided.vel.x = CONST.PLAYER_MAX_SPEED*Math.cos(collided_angle)
+        collided.vel.y = CONST.PLAYER_MAX_SPEED*Math.cos(collided_angle)
+
+        //collided.vel.x = this.vel.x*3.5 //0.9 //xacc*10
+        //collided.vel.y = this.vel.y*3.5 //0.9 //yacc*10
         //collided.pos.x += this.vel.x*5//xacc*10
         //collided.pos.y += this.vel.y*5//yacc*10
         //
         //// receives momentum
-        this.vel.x /= 2//collided.vel.x //+= collided.xacc*10
-        this.vel.y /= 2//collided.vel.x //+= collided.yacc*10
+        //this.vel.x /= 2//collided.vel.x //+= collided.xacc*10
+        //this.vel.y /= 2//collided.vel.x //+= collided.yacc*10
 
         this.collisionDamage(collided,collided_angle,soundmanager)
         //console.log(this,collided)
@@ -150,12 +154,16 @@ class Player{
 
     update(players, soundmanager,paths,costs,tupleval,index,Gmap) {
         // Called on every heartbeat
+
+        // Tick invincibility
         this.invincTick()
+        // Determine if we are on treasure
+        this.updateOnTreasure(Gmap.is_on_treasure(this.pos))
+        
         // change the velocity according to current drag and acceleration..
         // wasd acc movement version
         this.vel = {x:this.vel.x+this.xacc,y:this.vel.y+this.yacc}
         this.vel = setMag(this.vel, Math.min (Math.max(mag(this.vel.x,this.vel.y)-this.drag,0),this.maxspeed ) )
-        this.pos = addVec(this.pos,this.vel)
         if (mag(this.vel.x,this.vel.y)>0.0001){
             this.dir = Math.atan2(this.vel.y,this.vel.x)
         }

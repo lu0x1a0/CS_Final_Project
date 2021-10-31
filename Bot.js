@@ -243,7 +243,6 @@ class Bot extends entities.Player {
 
         this.vel = {x:this.vel.x+this.xacc,y:this.vel.y+this.yacc}
         this.vel = setMag(this.vel, Math.min (Math.max(mag(this.vel.x,this.vel.y)-this.drag,0),this.maxspeed ) )
-        this.pos = addVec(this.pos,this.vel)
         if (mag(this.vel.x,this.vel.y)>0.0001){
             this.dir = Math.atan2(this.vel.y,this.vel.x)
         }

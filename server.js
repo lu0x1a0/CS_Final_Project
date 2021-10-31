@@ -163,11 +163,12 @@ function heartbeat() {
 }
 
 botIdx = 0
-function InitialiseBot(x,y) {
+function InitialiseBot(gamemap) {
     console.log("A New Bot is being added")
     //What sort of data do the bots have?
 
-    var newBot = new BotEntity.Bot(botIdx,nameGenerator.name(),x,y,1.75,healthobserver)
+    var position = gamemap.get_spawn()
+    var newBot = new BotEntity.Bot(botIdx,nameGenerator.name(),position.x,position.y,1.75,healthobserver)
 
     //players.push(newBot)
     players[botIdx] = newBot
@@ -198,7 +199,10 @@ function newConnection(socket) {
             console.log("start called")
             console.log(data)
             if (monitorstatistics['numships'] == 0) {
-                InitialiseBot(800,300)
+                InitialiseBot(gamemap)
+                InitialiseBot(gamemap)
+                InitialiseBot(gamemap)
+                InitialiseBot(gamemap)
             }
 
             if (data.username == '') {
@@ -246,15 +250,15 @@ function newConnection(socket) {
                 //console.log(player.xacc)
             } else if (data.pressedkeycode ===K_A){
                 player.xacc = -CONST.PLAYER_ACCELERATION
-                player.updateOnTreasure(false)
+                player.updateSpacePressed(false)
                 player.SpaceCounter = 0
             } else if (data.pressedkeycode ===K_S){
                 player.yacc = CONST.PLAYER_ACCELERATION
-                player.updateOnTreasure(false)
+                player.updateSpacePressed(false)
                 player.SpaceCounter = 0
             } else if (data.pressedkeycode ===K_D){
                 player.xacc = CONST.PLAYER_ACCELERATION
-                player.updateOnTreasure(false)
+                player.updateSpacePressed(false)
                 player.SpaceCounter = 0
 
             } else if (data.pressedkeycode ==="mouse"){
@@ -267,19 +271,7 @@ function newConnection(socket) {
                 }
                 player.SpaceCounter = 0
             } else if (data.pressedkeycode === K_Space) {
-                //Check if player is on the same location as the treasure.
-
-                if (!player.onTreasure) {
-                    for (let i = 0; i < gamemap.treasurelist.treasure_array.length; ++i) {
-                        let encap = {x: Math.floor(player.pos.x/gamemap.tilesize), y: Math.floor(player.pos.y/gamemap.tilesize)}
-                        if (encap.x === gamemap.treasurelist.treasure_array[i].x
-                            && encap.y === gamemap.treasurelist.treasure_array[i].y) {
-                            player.updateOnTreasure(true)
-                            player.updateSpacePressed(true)
-                            break
-                        }
-                    }
-                }
+                player.updateSpacePressed(true)
             }
         }
     )
