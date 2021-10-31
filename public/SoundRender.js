@@ -5,26 +5,49 @@ class SoundRender {
 
 
     preload() {
-        // Music
-        this.music_main = loadSound('assets/main_music.mp3');
-        this.music_main.playMode('restart')
 
-        this.music_dead = loadSound('assets/dead_music.mp3');
-        this.music_dead.playMode('restart')
+        // Music
+        this.music_main = new Howl({
+            src:'assets/main_music.mp3',
+            loop: true,
+        })
+        this.music_dead = new Howl({
+            src:'assets/dead_music.mp3',
+            loop: true,
+        })
 
         // SFX
-        this.sfx_cannon_fire = loadSound('assets/sfx_cannon_fire.mp3')
-        this.sfx_cannon_fire.playMode('restart')
+        this.sfx_cannon_fire = new Howl({
+            src:'assets/sfx_cannon_fire.mp3',
+        })
 
-        this.sfx_damage = loadSound('assets/sfx_damage.mp3')
-        this.sfx_damage.playMode('restart')
+        this.sfx_damage = new Howl({
+            src:'assets/sfx_damage.mp3',
+        })
 
-        this.sfx_death = loadSound('assets/sfx_death.mp3')
-        this.sfx_death.playMode('restart')
+        this.sfx_death = new Howl({
+            src:'assets/sfx_death.mp3',
+        })
 
-        this.sfx_get_treasure = loadSound('assets/sfx_get_treasure.mp3')
-        this.sfx_get_treasure.playMode('restart')
+        this.sfx_get_treasure = new Howl({
+            src:'assets/sfx_get_treasure.mp3',
+        })
+    }
 
+    start_music_main() {
+        this.music_main.play()
+    }
+
+    stop_music_main() {
+        this.music_main.stop()
+    }
+
+    start_music_dead() {
+        this.music_dead.play()
+    }
+
+    stop_music_dead() {
+        this.music_dead.stop()
     }
 
     set_tilesize(tilesize) {
@@ -32,8 +55,8 @@ class SoundRender {
     }
 
     set_music_vol(val) {
-        this.music_main.setVolume(val)
-        this.music_dead.setVolume(val)
+        this.music_main.volume(val)
+        this.music_dead.volume(val)
     }
     
     set_sfx_vol(val) {
@@ -50,18 +73,20 @@ class SoundRender {
 
                 switch (eventlist[i].type) {
                     case 'cannon_fire':
-                        //this.sfx_cannon_fire.setVolume(this.sfx_vol*vol_factor)
-                        this.sfx_cannon_fire.play(0,1,this.sfx_vol*vol_factor);
+                        this.sfx_cannon_fire.volume(this.sfx_vol*vol_factor)
+                        this.sfx_cannon_fire.play(/*0,1,this.sfx_vol*vol_factor*/)
                         break;
                     case 'get_treasure':
-                        //this.sfx_get_treasure.setVolume(this.sfx_vol*vol_factor)
-                        this.sfx_get_treasure.play(0,1,this.sfx_vol*vol_factor);
+                        this.sfx_get_treasure.volume(this.sfx_vol*vol_factor)
+                        this.sfx_get_treasure.play(/*0,1,this.sfx_vol*vol_factor*/)
                         break;
                     case 'damage':
-                        this.sfx_damage.play(0,1,this.sfx_vol*vol_factor);
+                        this.sfx_damage.volume(this.sfx_vol*vol_factor)
+                        this.sfx_damage.play(/*0,1,this.sfx_vol*vol_factor*/)
                         break;
                     case 'death':
-                        this.sfx_death.play(0,1,this.sfx_vol*vol_factor);
+                        this.sfx_death.volume(this.sfx_vol*vol_factor)
+                        this.sfx_death.play(/*0,1,this.sfx_vol*vol_factor*/)
                         break;
                     default:
                         break;
