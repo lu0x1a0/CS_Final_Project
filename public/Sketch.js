@@ -169,6 +169,9 @@ function showDeathMenu(){
 
 function draw() {
 
+  console.log(width)
+  console.log(height)
+
   if (gameStarted == 1 || dead) {
     render.render(state.get_state(), dead)
 

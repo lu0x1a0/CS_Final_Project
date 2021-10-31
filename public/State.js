@@ -70,12 +70,12 @@ class State {
         // Else interpolate
         if (base < 0) {
             this.state_list[this.state_list.length - 1].eventlist = this.pop_sounds()
-            console.log("Here")
+            //console.log("Here")
             return this.state_list[this.state_list.length - 1]
         }
 
         else if (base === this.state_list.length - 1) {
-            console.log("HFere")
+            //console.log("HFere")
             this.state_list[base].eventlist = this.pop_sounds()
             return this.state_list[base]
         }
@@ -87,8 +87,8 @@ class State {
 
             print(base_update.eventlist)
 
-            console.log("BASE :" + base_update.projectilelist)
-            console.log("NEXT : " + next.projectilelist)
+            //console.log("BASE :" + base_update.projectilelist)
+            //console.log("NEXT : " + next.projectilelist)
 
             return {
                 playerlist : interpolatePlayerList(base_update.playerlist, next.playerlist, r),
