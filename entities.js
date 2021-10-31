@@ -26,7 +26,6 @@ class Player{
         this.health = CONST.PLAYER_HEALTH
         this.hitbox_size = CONST.PLAYER_HITBOX_SIZE
         this.dim = {a:80/2,b:48/2} // to replace hitbox_size
-        this.isBot = false;
         this.gold = CONST.PLAYER_START_GOLD;
 
         this.invincible = true;
@@ -203,6 +202,7 @@ class Player{
     }
 
 }
+
 function Cannon(rangestat,visionfield,player){
     this.pos = player.pos
     this.visionfield = visionfield

@@ -2,6 +2,10 @@ const entities = require('./entities.js')
 const mag = require("./utils.js").mag
 const addVec = require("./utils.js").addVec
 const setMag = require("./utils.js").setMag
+
+const Cannonball = require('./entities.js').Cannonball
+
+
 const CONST = require('./Constants.js').CONST
 const sin = Math.sin
 const cos = Math.cos
@@ -112,6 +116,14 @@ class Bot extends entities.Player {
        this.BotMinCoord = []
     }
 
+    static getCannonBalls() {
+        return Bot.CannonBalls
+    }
+
+    static ResetCannonBalls() {
+        Bot.CannonBalls = {}
+    }
+
     EscapeTick(Gmap, forbidden) {
         this.EscapePivTicks++;
         if (this.EscapePivTicks >= CONST.UPDATE_ESCAPEPIVOTS) {
@@ -130,7 +142,7 @@ class Bot extends entities.Player {
         }
     }
  
-    update(players,soundmanager,paths,costs,tupleval,index,Gmap, forbidden, projectiles) { 
+    update(players,soundmanager,paths,costs,tupleval,index,Gmap, forbidden) { 
         if (!this.initialiseEscapePivots) {
             this.XBoundary = (Gmap.xlen/2) - 1
             this.YBoundary = (Gmap.ylen/2) - 1
@@ -140,7 +152,7 @@ class Bot extends entities.Player {
         this.invincTick()
         this.EscapeTick(Gmap, forbidden)
         this.ShootingTick()
-        this.updateBot(players,paths,costs,tupleval,index,Gmap, projectiles)
+        this.updateBot(players,paths,costs,tupleval,index,Gmap)
         this.collisionCheck(players,soundmanager)
     };
 
@@ -243,7 +255,7 @@ class Bot extends entities.Player {
     
     
     //Can be from any location
-    NearestPlayerObject(newplayers,costs,tupleval,from,tilesize) {
+    NearestPlayerObj(newplayers,costs,tupleval,from,tilesize) {
         let x = MapX(newplayers[0].pos.x,tilesize)
         let y = MapY(newplayers[0].pos.y,tilesize)
         let min = [x,y]
@@ -272,7 +284,6 @@ class Bot extends entities.Player {
                 player = newplayers[i]
             }
         }
-        this.closestplayer = player
         return min
     }
 
@@ -308,19 +319,20 @@ class Bot extends entities.Player {
         //update this.RandomPivots if we want to add more random points throughout the graph
     }
 
-    Shooting(x,y,projectiles) {
+    Shooting(x,y) {
         if (this.shoot) {
-            let cannonball = this.fire(x, y)
+            let cannonball =  new Cannonball({x:this.pos.x,y:this.pos.y}, {x:x,y:y}, CONST.PLAYER_MAX_SPEED*CONST.CANNON_SPEED_FACTOR, false)
             if (cannonball){
                 // use playerid+current time stamp as id, might not safe from server attack with spamming io
-                let x = this.id+(new Date()).getTime()
-                projectiles[x] = cannonball
+                Bot.CannonBalls[this.id] = cannonball
+                //console.log("server : " + server)
+                //server.UpdateProjectiles.UpdateProjectiles(this.id, cannonball)
             }
             this.shoot = false;
         } 
     }
 
-    updateBot(players,paths,costs,tupleval,index,Gmap,projectiles) {
+    updateBot(players,paths,costs,tupleval,index,Gmap) {
         let tilesize = Gmap.tilesize
         let BotX = MapX(this.pos.x, tilesize)
         let BotY = MapY(this.pos.y, tilesize)
@@ -333,6 +345,7 @@ class Bot extends entities.Player {
             return
         } 
         let min = this.NearestPlayer(newplayers,costs,tupleval,start,tilesize)
+        let closestplayer = this.NearestPlayerObj(newplayers,costs,tupleval,start,tilesize)
         if (this.health <= CONST.BOT_LOW_HEALTH) {
             //if min < then the radius, just hover
             let indx = this.Escape(Gmap,min)
@@ -343,56 +356,25 @@ class Bot extends entities.Player {
         } 
         else if (this.health >= CONST.BOT_RAM_CONDITION) {
             let end = index.get(paths[tupleval.get(min)][tupleval.get(start)])
-            this.DecisionHandler(start, end, Gmap.map)    
+            this.DecisionHandler(start, end, Gmap.map)  
+            this.Shooting(closestplayer.pos.x, closestplayer.pos.y)
         } else {
             //it means in between check the distance between each other
+            //If the distance bewteen the nearest ship and the bot is greater
+            //then the shooting range, then we keep following. 
             let DirectionVector = [cos(this.dir),sin(this.dir)]
-            let closestplayer = this.NearestPlayerObject(newplayers,costs,tupleval,start,tilesize)
             let PlayerDirection = [closestplayer.pos.x - this.pos.x, closestplayer.pos.y - this.pos.y]
             let theta =  Angle(DirectionVector,PlayerDirection)
             let threshold = this.cannon.ellipserange(theta)
             let magnitude = mag(PlayerDirection[0], PlayerDirection[1])
-            //If the distance bewteen the nearest ship and the bot is greater
-            //then the shooting range, then we keep following. 
+
             if (magnitude > threshold) {
                 let end = index.get(paths[tupleval.get(min)][tupleval.get(start)])
                 this.DecisionHandler(start, end, Gmap.map) 
-            } else {
-                this.Shooting(this.closestplayer.pos.x, this.closestplayer.pos.y, projectiles)
+            } else {  
+                this.Shooting(closestplayer.pos.x, closestplayer.pos.y)
             }   
-            //if it isnt we do nothing.
         }
-
-        /*
-        else if (this.health >= CONST.BOT_RAM_CONDITION){
-            let end = index.get(paths[tupleval.get(min)][tupleval.get(start)])
-            this.DecisionHandler(start, end, Gmap.map)
-            let DirectionVector = [cos(this.dir),sin(this.dir)]
-            let PlayerDirection = [this.closestplayer.pos.x - this.pos.x, this.closestplayer.pos.y - this.pos.y]
-            let theta =  Angle(DirectionVector,PlayerDirection)
-            let threshold = this.cannon.ellipserange(theta)
-            //console.log("threshold = " + threshold)
-            //console.log("length = "+mag(PlayerDirection[0], PlayerDirection[1]))
-
-            let magnitude = mag(PlayerDirection[0], PlayerDirection[1])
-            if (magnitude < threshold) {
-                this.Shooting(this.closestplayer.pos.x, this.closestplayer.pos.y, projectiles)
-            }
-
-        } else { //need to shoot here
-            let DirectionVector = [cos(this.dir),sin(this.dir)]
-            let PlayerDirection = [this.closestplayer.pos.x - this.pos.x, this.closestplayer.pos.y - this.pos.y]
-            let theta =  Angle(DirectionVector,PlayerDirection)
-            let threshold = this.cannon.ellipserange(theta)
-            //console.log("threshold = " + threshold)
-            //console.log("length = "+mag(PlayerDirection[0], PlayerDirection[1]))
-
-            let magnitude = mag(PlayerDirection[0], PlayerDirection[1])
-            if (magnitude < threshold) {
-                this.Shooting(this.closestplayer.pos.x, this.closestplayer.pos.y, projectiles)
-            }
-        }
-        */
     }
 
     DecisionHandler(Start,DecisionIndex) {
@@ -467,6 +449,8 @@ class Bot extends entities.Player {
         return AV;
     }
 }
+
+Bot.CannonBalls = {}
 
 module.exports = {
     Bot : Bot

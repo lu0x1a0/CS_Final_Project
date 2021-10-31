@@ -102,6 +102,10 @@ projectileslocjson = function(){
 
 //------------------------------ SERVER EVENTS -------------------------------//
 
+function UpdateProjectiles(id,cannonball) {
+    projectiles[id+(new Date()).getTime()] = cannonball
+}
+
 // Update every 50 ms
 setInterval(heartbeat, CONST.HEARTBEAT_INTERVAL)
 
@@ -113,7 +117,7 @@ function heartbeat() {
         if (players[i]){
             var player = players[i]
             players[i].updateTreasure(gamemap, soundmanager)
-            players[i].update(players, soundmanager,paths,costs,tupleval,index,gamemap,forbidden,projectiles);
+            players[i].update(players, soundmanager,paths,costs,tupleval,index,gamemap,forbidden);
             if (player.health > 0){
                 gamemap.player_move(player, soundmanager)
             }
@@ -142,6 +146,15 @@ function heartbeat() {
     // Refresh treasure
     gamemap.try_add_treasure()
 
+    let BotCannonBalls = BotEntity.Bot.getCannonBalls()
+    for (let id in BotCannonBalls) {
+        projectiles[id+(new Date()).getTime()] = BotCannonBalls[id]
+        soundmanager.add_sound("cannon_fire", BotCannonBalls[id].pos)
+        console.log("added")
+    }
+
+    BotEntity.Bot.ResetCannonBalls()
+
     // Turrets fire/repair
     var turret_cannonballs = gamemap.turretlist.fire_all(players)
     for (var tID in turret_cannonballs) {
@@ -149,10 +162,7 @@ function heartbeat() {
         soundmanager.add_sound("cannon_fire", turret_cannonballs[tID].pos)
     }
 
-    let bot_cannonballs = {}
     gamemap.turretlist.repair()
-
-
     // Data we send to front end'
    
     io.sockets.emit('heartbeat', {
@@ -203,9 +213,6 @@ function newConnection(socket) {
             console.log(data)
             if (monitorstatistics['numships'] == 0) {
                 InitialiseBot(gamemap)
-                InitialiseBot(gamemap)
-                InitialiseBot(gamemap)
-                InitialiseBot(gamemap)
             }
 
 
@@ -239,6 +246,7 @@ function newConnection(socket) {
     socket.on('updatepressed',
         function(data) {
             var player
+
             //console.log('-----------------updatepressed-----------------------')
             //console.log(data)
             //console.log(player)
@@ -248,6 +256,7 @@ function newConnection(socket) {
             //        player = players[i]
             //    }
             //}
+
             player = players[socket.id]
             if (data.pressedkeycode ===K_W){
                 player.yacc = -CONST.PLAYER_ACCELERATION
@@ -332,3 +341,4 @@ function newConnection(socket) {
       }
     )
 }
+
