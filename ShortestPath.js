@@ -1,3 +1,5 @@
+const CONST = require('./Constants.js').CONST
+
 function shuffle(array) {
     let currentIndex = array.length,  randomIndex;
     
@@ -16,38 +18,54 @@ function shuffle(array) {
     return array;
 }
 
+function IndexCheck(V,map) {
+    //Returns true if its good, false if its bad
+    let x = V[0]
+    let y = V[1]
+    if (x < 0 || x >= map.length) {
+        return false
+    }
+
+    if (y < 0 || y >= map[0].length) {
+        return false
+    }
+
+    return true;
+}
+
 function ComputeAdjacentVertex(V,map) {
     var AV = [];
+    //Check Map Dimensions 
 
-    if (map[V[0]-1][V[1]+1] != 'L' && map[V[0]-1][V[1]+1] != 'T') {
+    if (IndexCheck([V[0]-1,V[1]+1],map) && map[V[0]-1][V[1]+1] != 'L' && map[V[0]-1][V[1]+1] != 'T') {
         AV.push([V[0]-1,V[1]+1])
     }
 
-    if (map[V[0]-1][V[1]-1] != 'L' && map[V[0]-1][V[1]-1] != 'T') {
+    if (IndexCheck([V[0]-1,V[1]-1],map) && map[V[0]-1][V[1]-1] != 'L' && map[V[0]-1][V[1]-1] != 'T') {
         AV.push([V[0]-1,V[1]-1])
     }
 
-    if (map[V[0]+1][V[1]+1] != 'L' && map[V[0]+1][V[1]+1] != 'T') {
+    if (IndexCheck([V[0]+1,V[1]+1],map) && map[V[0]+1][V[1]+1] != 'L' && map[V[0]+1][V[1]+1] != 'T') {
         AV.push([V[0]+1,V[1]+1])
     }
     
-    if (map[V[0]+1][V[1]-1] != 'L' &&  map[V[0]+1][V[1]-1] != 'T') {
+    if (IndexCheck([V[0]+1,V[1]-1],map) && map[V[0]+1][V[1]-1] != 'L' &&  map[V[0]+1][V[1]-1] != 'T') {
         AV.push([V[0]+1,V[1]-1])
     }
 
-    if (map[V[0]][V[1]-1] != 'L' &&  map[V[0]][V[1]-1] != 'T') {
+    if (IndexCheck([V[0],V[1]-1],map) && map[V[0]][V[1]-1] != 'L' &&  map[V[0]][V[1]-1] != 'T') {
         AV.push([V[0],V[1]-1])
     }
 
-    if (map[V[0]][V[1]+1] != 'L' && map[V[0]][V[1]+1] != 'T') {
+    if (IndexCheck([V[0],V[1]+1],map) && map[V[0]][V[1]+1] != 'L' && map[V[0]][V[1]+1] != 'T') {
         AV.push([V[0],V[1]+1])
     }
 
-    if (map[V[0]+1][V[1]] != 'L' && map[V[0]+1][V[1]] != 'T') {
+    if (IndexCheck([V[0]+1,V[1]],map) && map[V[0]+1][V[1]] != 'L' && map[V[0]+1][V[1]] != 'T') {
         AV.push([V[0]+1,V[1]])
         }
 
-    if (map[V[0]-1][V[1]] != 'L' && map[V[0]-1][V[1]] != 'T' ) {
+    if (IndexCheck([V[0]-1,V[1]],map) && map[V[0]-1][V[1]] != 'L' && map[V[0]-1][V[1]] != 'T' ) {
         AV.push([V[0]-1,V[1]])
     }
     AV = shuffle(AV)
@@ -88,14 +106,58 @@ function FloydWarshall(path,cost) {
         }
     }
 }
+/*
+// Generates a heat map for every single point 
+function FloodAlgorithm(index,tuplelist,map) {
+    //For every single tuplelist we generate a heat map
+    //Each coordinate is associatd with a tuplelist
+    let PositiveHeatMaps = new Array(index.length)
+    for (let coords = 0; coords < tuplelist.length; ++coords) {
+        //HeatMaps[coords], initialise a new map 
+        PositiveHeatMaps[coords] = new Array(map.length)
+        for (let i = 0; i < map.length; ++i) {
+            PositiveHeatMaps[coords][i] = new Array(map[i].length);
+            PositiveHeatMaps[coords][i].fill(0)
+        }
+        let levels = 0; //We start off a level 0?
+        let Q = []
+        Q.push(coords)
+        while (Q.length == 0) {
+            let level_size = Q
+        }
+
+
+
+        
+        
+    }
+
+}
+*/
   
 
 function Generation(map) {
     let tuplelist = []
+    let TurretListQ = []
+    let LandListQ = []
+    let Found = new Array(map.length)
+    for (let i = 0; i < map.length; ++i) {
+        Found[i] = new Array(map[i].length)
+        Found[i].fill(0)
+    }
+
     for (let i = 0; i < map.length; ++i) {
         for (let j = 0; j < map[i].length; ++j) {
             if (map[i][j] == 'W' || map[i][j] == 'S' ) {
                 tuplelist.push([i,j])
+            }
+            else if (map[i][j] == 'T') {
+                TurretListQ.push([i,j])
+                Found[i][j] = 1
+            }
+            else if (map[i][j] == 'L') {
+                LandListQ.push([i,j])
+                Found[i][j] = 1
             }
         }
     }
@@ -129,10 +191,69 @@ function Generation(map) {
         let x = ComputeAdjacentVertex(tuplelist[i],map)
         graph.set(tuplelist[i], x) //Maps a [x,y] to [[x,y],[x,y], ...]
     }
+
     
+    // Level Wise iterations of places near turrets.
+    let ForbiddenVals = new ArrayKeyedMap()
+    let TurretLevelVal = new ArrayKeyedMap()
+    let levels = 0; //This should be some range
+    while (TurretListQ.length != 0 && levels < CONST.TURRET_FIRING_RANGE-3)  {
+        let level_size = TurretListQ.length
+        while(level_size--) {
+            let V = TurretListQ.shift()
+            let AV = ComputeAdjacentVertex(V,map)
+            for (let i = 0; i < AV.length; ++i) {
+                if (!Found[AV[i][0]][AV[i][1]]) {
+                    Found[AV[i][0]][AV[i][1]] = 1
+                    if (tupleVal.has(AV[i])) {
+                        TurretListQ.push(AV[i])
+                        TurretLevelVal.set(AV[i], levels+1)
+                        ForbiddenVals.set(AV[i], 0);
+                        //let x = levels+1
+                        //map[AV[i][0]][AV[i][1]] = "X"
+                    }
+                }
+            }
+        }
+        levels++;
+        //console.log(levels)
+    }
+
+    //Level Wise iterations of places near land Have a slight penalty for this too.
+    let LandLevelVal = new ArrayKeyedMap()
+    levels = 0 
+    while (LandListQ.length != 0 && levels < CONST.NEARBY_LAND_ITERATIONS) {
+        let level_size = LandListQ.length
+        while(level_size--) {
+            let V = LandListQ.shift() 
+            //Need to index check.
+            let AV = ComputeAdjacentVertex(V,map)
+            for (let i = 0; i < AV.length; ++i) {
+                if (!Found[AV[i][0]][AV[i][1]]) { //If space has already been occupied by turrets then dont worry
+                    Found[AV[i][0]][AV[i][1]] = 1
+                    if (tupleVal.has(AV[i])) {
+                        LandListQ.push(AV[i])
+                        LandLevelVal.set(AV[i], levels+1)
+                        //let x = levels+1
+                        //map[AV[i][0]][AV[i][1]] = "Y"
+                    }
+                }
+            }
+        }
+        levels++
+    }
+    
+
     for (let [key, value] of graph) {
         for (let i = 0; i < value.length; i++) {
-            cost[tupleVal.get(key)][tupleVal.get(value[i])] = 1
+            if (TurretLevelVal.has(value[i])) {
+                cost[tupleVal.get(key)][tupleVal.get(value[i])] = CONST.COST_INIT_PENALTY - TurretLevelVal.get(value[i])*CONST.TURRET_LOSING_RATE
+            } 
+            else if (LandLevelVal.has(value[i])) {
+                cost[tupleVal.get(key)][tupleVal.get(value[i])] = CONST.LAND_COST_INIT_PENATY - LandLevelVal.get(value[i])*CONST.LAND_LOSING_RATE
+            } else {
+                cost[tupleVal.get(key)][tupleVal.get(value[i])] = CONST.COST_INIT_VALUE
+            }
         }
     }
 
@@ -145,8 +266,9 @@ function Generation(map) {
             }
         }
     }
+
     FloydWarshall(path,cost)
-    return [path, cost, tupleVal, index]
+    return [path, cost, tupleVal, index, ForbiddenVals]
 }
 
 
