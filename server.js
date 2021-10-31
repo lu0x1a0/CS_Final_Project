@@ -45,6 +45,7 @@ let paths = obj[0]
 let costs = obj[1]
 let tupleval = obj[2]
 let index = obj[3]
+let forbidden = obj[4]
 
 
 // Initialize SoundManager
@@ -112,7 +113,7 @@ function heartbeat() {
         if (players[i]){
             var player = players[i]
             players[i].updateTreasure(gamemap, soundmanager)
-            players[i].update(players, soundmanager,paths,costs,tupleval,index,gamemap)
+            players[i].update(players, soundmanager,paths,costs,tupleval,index,gamemap,forbidden,projectiles);
             if (player.health > 0){
                 gamemap.player_move(player, soundmanager)
             }
@@ -147,10 +148,13 @@ function heartbeat() {
         projectiles[tID+(new Date()).getTime()] =  turret_cannonballs[tID]
         soundmanager.add_sound("cannon_fire", turret_cannonballs[tID].pos)
     }
+
+    let bot_cannonballs = {}
     gamemap.turretlist.repair()
 
 
-    // Data we send to front end
+    // Data we send to front end'
+   
     io.sockets.emit('heartbeat', {
         t:Date.now(),
         players:playerslocjson(),
@@ -196,10 +200,8 @@ function newConnection(socket) {
         function(data) {
 
             console.log("start called")
-            console.log(data)
-            if (monitorstatistics['numships'] == 0) {
-                InitialiseBot(800,300)
-            }
+            InitialiseBot(800,300)
+
 
             if (data.username == '') {
               data.username = nameGenerator.name()

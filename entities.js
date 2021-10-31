@@ -148,7 +148,7 @@ class Player{
         }
     }
 
-    update(players, soundmanager,paths,costs,tupleval,index,Gmap) {
+    update(players, soundmanager,paths,costs,tupleval,index,Gmap,forbidden,projectiles) {
         // Called on every heartbeat
         this.invincTick()
         // change the velocity according to current drag and acceleration..
