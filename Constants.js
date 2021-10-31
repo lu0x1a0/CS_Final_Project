@@ -5,8 +5,8 @@ CONST = {
     
     // Entity constants
     PLAYER_SIZE : 64,
-    PLAYER_MAX_SPEED : 8,
-    PLAYER_ACCELERATION : 1.2,
+    PLAYER_MAX_SPEED : 16,
+    PLAYER_ACCELERATION : 2.4,
     PLAYER_DRAG : 0.5,
     PLAYER_HEALTH : 100,
     PLAYER_HITBOX_SIZE : 45,
@@ -25,6 +25,8 @@ CONST = {
 
     // Bot constants
     BOT_LOW_HEALTH : 50,
+    BOT_RAM_CONDITION: 70,
+
 
     // Timing constants
     HEARTBEAT_INTERVAL : 1000/20,
@@ -38,12 +40,23 @@ CONST = {
     SIDE_DAMAGE_MULTIPLIER : 1,
     FRONT_BACK_DAMAGE_MULTIPLIER : 0.25,
 
-    UPDATE_ESCAPEPIVOTS : 150,
+    UPDATE_ESCAPEPIVOTS : 200,
+    ESCAPE_RADIUS: 300,
+
+    COST_INIT_VALUE: 1,
+    TURRET_LOSING_RATE: 0.09,
+    COST_INIT_PENALTY: 5,
+
+    LAND_COST_INIT_PENATY: 4,
+    NEARBY_LAND_ITERATIONS: 3,
+    LAND_LOSING_RATE: 0.10,
+
+    SHOOTING: 100
 }
 
 CONST['RANGESTAT'] = {
-    a        :0.75,
-    b        :0.5,
+    a        :0.42,
+    b        :0.35,
     framelife:18, // 
     range    :CONST.PLAYER_SIZE*CONST.CANNON_VISION_FACTOR
 }

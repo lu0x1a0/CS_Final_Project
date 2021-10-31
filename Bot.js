@@ -27,7 +27,37 @@ const sqrt = Math.sqrt
     a specific magnitude from the bot, for it to trigger
     the escape algorithm. If it is within a safe space why
     should it move that specific area?
+
+    To do:
+    Implement Bot Radius, if player is still following bot 
+    and player is stil within bots radius and bot arrives to 
+    the random pivot then the escape pivots will also update, 
+    so the bot can go to its new position. 
 */
+function CreateVec(a,b) {
+    let result = [];
+    for (let i=0; i<a.length; i++) {
+        result.push(b[i]-a[i]);
+    }
+    return result
+}
+
+function rand(items) {
+    // "|" for a kinda "int div"
+    return items[items.length * Math.random() | 0];
+}
+
+function DotProduct(a,b) {
+    let result = 0
+    for (let i = 0; i < a.length; ++i) {
+        result += a[i]*b[i]
+    }
+    return result
+}
+
+function Angle(a,b) {
+    return Math.acos(DotProduct(a,b)/(mag(a[0],a[1])*mag(b[0],b[1])))
+}
 
 function RandInterval(min, max) { // min and max included 
     return Math.floor(Math.random() * (max - min + 1) + min)
@@ -64,33 +94,53 @@ class Bot extends entities.Player {
     constructor(id,username, x, y, dir, healthobserver) {
        super(id,username, x, y, dir, healthobserver) 
        this.initialiseEscapePivots = false
+       this.closestplayer = null
        this.EscapePivTicks = 0
+       this.ShootingTicks = 0
+       this.Shoot = true;
+       this.EscapeRadius = CONST.ESCAPE_RADIUS
+
+       this.topright = []
+       this.topleft = []
+       this.bottomright = []
+       this.bottomright = []
+
        this.XBoundary = 0
        this.YBoundary = 0
-       this.topleft = []
-       this.topright = []
-       this.bottomleft = []
-       this.bottomright = []
+       this.RandomPivots = []
+
+       this.BotMinCoord = []
     }
 
-    EscapeTick(Gmap) {
+    EscapeTick(Gmap, forbidden) {
         this.EscapePivTicks++;
         if (this.EscapePivTicks >= CONST.UPDATE_ESCAPEPIVOTS) {
             this.EscapePivTicks = 0
-            this.GeneratePivots(Gmap)
+            this.GeneratePivots(Gmap, forbidden)
         }
     } 
 
-    update(players,soundmanager,paths,costs,tupleval,index,Gmap) { 
+    ShootingTick() {
+        if (!this.shoot) {
+            this.ShootingTicks += 1
+            if (this.ShootingTicks >= CONST.SHOOTING) {
+                this.shoot = true
+                this.ShootingTicks = 0
+            }
+        }
+    }
+ 
+    update(players,soundmanager,paths,costs,tupleval,index,Gmap, forbidden, projectiles) { 
         if (!this.initialiseEscapePivots) {
             this.XBoundary = (Gmap.xlen/2) - 1
             this.YBoundary = (Gmap.ylen/2) - 1
-            this.GeneratePivots(Gmap)
+            this.GeneratePivots(Gmap, forbidden)
             this.initialiseEscapePivots = true
         }   
         this.invincTick()
-        this.EscapeTick(Gmap)
-        this.updateBot(players,paths,costs,tupleval,index,Gmap)
+        this.EscapeTick(Gmap, forbidden)
+        this.ShootingTick()
+        this.updateBot(players,paths,costs,tupleval,index,Gmap, projectiles)
         this.collisionCheck(players,soundmanager)
     };
 
@@ -153,87 +203,217 @@ class Bot extends entities.Player {
     TreasureRetrievalQuest(player,paths,costs,tupleval,index,Gmap) {
 
     }
-
     */
-    
-    /*
-    Escape(player,paths,costs,tupleval,index,Gmap) {
+    Escape(Gmap,min) {
         //Runs away from the nearest if and only if 
+        //Generate all angles
+
+        if (min.length == 0) {
+            let minCoord =  rand(this.RandomPivots)
+            return minCoord
+        } 
+
+        let BotCoord = [MapX(this.pos.x,Gmap.tilesize), MapY(this.pos.y,Gmap.tilesize)]
+        let ClosestPlayer = min
+        if (this.BotMinCoord.length != 0) {
+            if (this.BotMinCoord[0] == BotCoord[0] && this.BotMinCoord[1] == BotCoord[1]) {
+                console.log("FOUND")
+                let index = this.RandomPivots.indexOf(this.BotMinCoord);
+                if (index > -1) {
+                    this.RandomPivots.splice(index, 1);
+                }
+            }
+        }
+
+        let maxCoord = this.RandomPivots[0]
+        let A = CreateVec(BotCoord, ClosestPlayer)
+        let B = CreateVec(BotCoord, maxCoord)
+        let maxAngle = Angle(A,B) + (Math.random() * (0.1000 - 0.0200) + 0.0200)
+        for (let i = 1; i < this.RandomPivots.length; ++i) {
+            B = CreateVec(BotCoord, this.RandomPivots[i])
+            if (maxAngle <= Angle(A,B)) {
+                maxAngle = Angle(A,B)
+                maxCoord = this.RandomPivots[i]
+                this.BotMinCoord = this.RandomPivots[i]
+            }
+        }
+        return maxCoord
+            
     }
-    */
     
-    NearestPlayer(newplayers,costs,tupleval,from,tilesize) {
+    
+    //Can be from any location
+    NearestPlayerObject(newplayers,costs,tupleval,from,tilesize) {
         let x = MapX(newplayers[0].pos.x,tilesize)
         let y = MapY(newplayers[0].pos.y,tilesize)
         let min = [x,y]
+        let player = newplayers[0]
         for (let i = 1; i < newplayers.length; ++i) {
             x = MapX(newplayers[i].pos.x,tilesize)
             y = MapY(newplayers[i].pos.y,tilesize)
             if (costs[tupleval.get([x,y])][tupleval.get(from)] < costs[tupleval.get(min)][tupleval.get(from)]) {
                 min = [x,y]
+                player = newplayers[i]
             }
         }
+        return player
+    }
+
+    NearestPlayer(newplayers,costs,tupleval,from,tilesize) {
+        let x = MapX(newplayers[0].pos.x,tilesize)
+        let y = MapY(newplayers[0].pos.y,tilesize)
+        let min = [x,y]
+        let player = newplayers[0]
+        for (let i = 1; i < newplayers.length; ++i) {
+            x = MapX(newplayers[i].pos.x,tilesize)
+            y = MapY(newplayers[i].pos.y,tilesize)
+            if (costs[tupleval.get([x,y])][tupleval.get(from)] < costs[tupleval.get(min)][tupleval.get(from)]) {
+                min = [x,y]
+                player = newplayers[i]
+            }
+        }
+        this.closestplayer = player
         return min
     }
 
-    generate_coords(Xmin,Xmax,Ymin,Ymax,Gmap) {
+    generate_coords(Xmin,Xmax,Ymin,Ymax,Gmap,forbidden) {
         let randx = RandInterval(Xmin, Xmax);
         let randy = RandInterval(Ymin,Ymax)
         // Generate until we hit water
-        while (Gmap.map[randx][randy] !== 'W') {
+        while (Gmap.map[randx][randy] !== 'W' && !forbidden.has([randx][randy])) {
             randx = RandInterval(Xmin, Xmax);
             randy = RandInterval(Ymin,Ymax)
         }
         return [randx, randy]
     }
 
-    GeneratePivots(Gmap) {
-        this.topright = this.generate_coords(this.XBoundary+1, 2*this.XBoundary-1,0,this.YBoundary,Gmap)
-        this.topleft = this.generate_coords(0,this.XBoundary,0,this.YBoundary,Gmap)
-        this.bottomleft = this.generate_coords(0,this.XBoundary,this.YBoundary+1,2*this.YBoundary-1,Gmap)
-        this.bottomright = this.generate_coords(0,this.XBoundary,this.YBoundary+1,2*this.YBoundary-1,Gmap)
+    GeneratePivots(Gmap, forbidden) {
+        
+        this.topright = this.generate_coords(this.XBoundary+1, 2*this.XBoundary-1,0,this.YBoundary,Gmap, forbidden)
+        this.topleft = this.generate_coords(0,this.XBoundary,0,this.YBoundary,Gmap, forbidden)
+        this.bottomleft = this.generate_coords(0,this.XBoundary,this.YBoundary+1,2*this.YBoundary-1,Gmap, forbidden)
+        this.bottomright = this.generate_coords(this.XBoundary+1,2*this.XBoundary-1,this.YBoundary+1,2*this.YBoundary-1,Gmap, forbidden)
+        this.RandomPivots.push(this.topright)
+        this.RandomPivots.push(this.topleft)
+        this.RandomPivots.push(this.bottomleft)
+        this.RandomPivots.push(this.bottomright)
+
+
+        /*
+        this.RandomPivots.push(this.generate_coords(this.XBoundary+1, 2*this.XBoundary-1,0,this.YBoundary,Gmap))
+        this.RandomPivots.push(this.generate_coords(0,this.XBoundary,0,this.YBoundary,Gmap))
+        this.RandomPivots.push(this.generate_coords(0,this.XBoundary,this.YBoundary+1,2*this.YBoundary-1,Gmap))
+        this.RandomPivots.push(this.generate_coords(this.XBoundary+1,2*this.XBoundary-1,this.YBoundary+1,2*this.YBoundary-1,Gmap))
+        */
+        //update this.RandomPivots if we want to add more random points throughout the graph
     }
 
-    updateBot(players,paths,costs,tupleval,index,Gmap) {
-
-        if (this.health <= CONST.BOT_LOW_HEALTH) {
-            //Escape(players,paths,costs,tupleval,index,Gmap)
-        } else {
-            let tilesize = Gmap.tilesize
-            let BotX = MapX(this.pos.x, tilesize)
-            let BotY = MapY(this.pos.y, tilesize)
-            var start = [BotX,BotY]
-            let newplayers = this.PlayersList(players)
-            //Edge Case where the bot is the only ship on the map - moves randomly
-            if (newplayers.length == 0) {
-                //Ideally it should go to the nearest treasure as well or Escape(players,paths,costs,tupleval,index,Gmap)
-                return
+    Shooting(x,y,projectiles) {
+        if (this.shoot) {
+            let cannonball = this.fire(x, y)
+            if (cannonball){
+                // use playerid+current time stamp as id, might not safe from server attack with spamming io
+                let x = this.id+(new Date()).getTime()
+                projectiles[x] = cannonball
             }
-            let min = this.NearestPlayer(newplayers,costs,tupleval,start,tilesize)
+            this.shoot = false;
+        } 
+    }
+
+    updateBot(players,paths,costs,tupleval,index,Gmap,projectiles) {
+        let tilesize = Gmap.tilesize
+        let BotX = MapX(this.pos.x, tilesize)
+        let BotY = MapY(this.pos.y, tilesize)
+        var start = [BotX,BotY]
+        let newplayers = this.PlayersList(players)
+        if (newplayers.length == 0) {
+            let indx = this.Escape(Gmap,[])
+            indx = index.get(paths[tupleval.get(indx)][tupleval.get(start)])
+            this.DecisionHandler(start, indx, Gmap.map)
+            return
+        } 
+        let min = this.NearestPlayer(newplayers,costs,tupleval,start,tilesize)
+        if (this.health <= CONST.BOT_LOW_HEALTH) {
+            //if min < then the radius, just hover
+            let indx = this.Escape(Gmap,min)
+            if (indx.length != 0) {
+                indx = index.get(paths[tupleval.get(indx)][tupleval.get(start)])
+                this.DecisionHandler(start, indx, Gmap.map)
+            }
+        } 
+        else if (this.health >= CONST.BOT_RAM_CONDITION) {
+            let end = index.get(paths[tupleval.get(min)][tupleval.get(start)])
+            this.DecisionHandler(start, end, Gmap.map)    
+        } else {
+            //it means in between check the distance between each other
+            let DirectionVector = [cos(this.dir),sin(this.dir)]
+            let closestplayer = this.NearestPlayerObject(newplayers,costs,tupleval,start,tilesize)
+            let PlayerDirection = [closestplayer.pos.x - this.pos.x, closestplayer.pos.y - this.pos.y]
+            let theta =  Angle(DirectionVector,PlayerDirection)
+            let threshold = this.cannon.ellipserange(theta)
+            let magnitude = mag(PlayerDirection[0], PlayerDirection[1])
+            //If the distance bewteen the nearest ship and the bot is greater
+            //then the shooting range, then we keep following. 
+            if (magnitude > threshold) {
+                let end = index.get(paths[tupleval.get(min)][tupleval.get(start)])
+                this.DecisionHandler(start, end, Gmap.map) 
+            } else {
+                this.Shooting(this.closestplayer.pos.x, this.closestplayer.pos.y, projectiles)
+            }   
+            //if it isnt we do nothing.
+        }
+
+        /*
+        else if (this.health >= CONST.BOT_RAM_CONDITION){
             let end = index.get(paths[tupleval.get(min)][tupleval.get(start)])
             this.DecisionHandler(start, end, Gmap.map)
+            let DirectionVector = [cos(this.dir),sin(this.dir)]
+            let PlayerDirection = [this.closestplayer.pos.x - this.pos.x, this.closestplayer.pos.y - this.pos.y]
+            let theta =  Angle(DirectionVector,PlayerDirection)
+            let threshold = this.cannon.ellipserange(theta)
+            //console.log("threshold = " + threshold)
+            //console.log("length = "+mag(PlayerDirection[0], PlayerDirection[1]))
+
+            let magnitude = mag(PlayerDirection[0], PlayerDirection[1])
+            if (magnitude < threshold) {
+                this.Shooting(this.closestplayer.pos.x, this.closestplayer.pos.y, projectiles)
+            }
+
+        } else { //need to shoot here
+            let DirectionVector = [cos(this.dir),sin(this.dir)]
+            let PlayerDirection = [this.closestplayer.pos.x - this.pos.x, this.closestplayer.pos.y - this.pos.y]
+            let theta =  Angle(DirectionVector,PlayerDirection)
+            let threshold = this.cannon.ellipserange(theta)
+            //console.log("threshold = " + threshold)
+            //console.log("length = "+mag(PlayerDirection[0], PlayerDirection[1]))
+
+            let magnitude = mag(PlayerDirection[0], PlayerDirection[1])
+            if (magnitude < threshold) {
+                this.Shooting(this.closestplayer.pos.x, this.closestplayer.pos.y, projectiles)
+            }
         }
+        */
     }
 
     DecisionHandler(Start,DecisionIndex) {
         let i = Start[0] - DecisionIndex[0]
         let j = Start[1] - DecisionIndex[1]
-        if (i == -1 ) {
+        if (i <= -1 ) {
             this.xacc = CONST.PLAYER_ACCELERATION
             //accelerates to the right
         }
-        else if (i == 1) {
+        else if (i >= 1) {
             this.xacc = -CONST.PLAYER_ACCELERATION
             //This accelerates to the left
         }
         else if (i == 0) {
             this.xacc = 0
         }
-        if (j == 1) {
+        if (j >= 1) {
             //Accelerates to the bottom
             this.yacc = -CONST.PLAYER_ACCELERATION
         }
-        else if (j == -1) {
+        else if (j <= -1) {
             //Accelerates to the top
             this.yacc = CONST.PLAYER_ACCELERATION
         }
@@ -243,7 +423,6 @@ class Bot extends entities.Player {
 
         this.vel = {x:this.vel.x+this.xacc,y:this.vel.y+this.yacc}
         this.vel = setMag(this.vel, Math.min (Math.max(mag(this.vel.x,this.vel.y)-this.drag,0),this.maxspeed ) )
-        this.pos = addVec(this.pos,this.vel)
         if (mag(this.vel.x,this.vel.y)>0.0001){
             this.dir = Math.atan2(this.vel.y,this.vel.x)
         }
@@ -291,3 +470,23 @@ class Bot extends entities.Player {
 module.exports = {
     Bot : Bot
 }
+
+/*
+    1. Check if bot is below 40
+        If bot is below 40 check if nearest player is within its danger radius.
+            If it is go to next best action to get away from it. 
+        If it isnt, then just hover (havent implemented this most likely wont now)
+    
+    2. If Bot is above 40 but below 70. 
+        Check if nearest player is within its firing range. 
+            If player is within firing range shoot at the player (maybe implement soom randomization here)
+
+            Should the bot move ? Or should it stay stationary ? and let the next iteration handle the next move?
+
+        If it isn't keep following the player. 
+    
+    3. If Bot is above 70
+        Keep following player until you can ram the nearest player. 
+        If you can also shoot, shoot the player too.
+
+*/

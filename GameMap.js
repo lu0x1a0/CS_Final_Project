@@ -68,6 +68,16 @@ class GameMap {
 
     }
 
+    is_on_treasure(pos) {
+        for (let i = 0; i < this.treasurelist.treasure_array.length; i++) {
+            let encap = {x: Math.floor(pos.x/this.tilesize), y: Math.floor(pos.y/this.tilesize)}
+            if (encap.x === this.treasurelist.treasure_array[i].x && encap.y === this.treasurelist.treasure_array[i].y) {
+                return true
+            }
+        }
+        return false
+    }
+
     player_move(player, soundmanager) {
 
         // Impassible tiles
@@ -100,7 +110,11 @@ class GameMap {
             new_pos.y = Math.min(new_pos.y, (py+1)*this.tilesize - 0.5*player.hitbox_size)
         }
 
-        player.pos = new_pos;
+        // If the new position is still in a wall, use old position
+        if (!impassible.includes(this.map[Math.floor((new_pos.x)/this.tilesize)][Math.floor((new_pos.y)/this.tilesize)])) {
+            player.pos = new_pos;
+        }
+
     }
 
 }

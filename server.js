@@ -45,6 +45,7 @@ let paths = obj[0]
 let costs = obj[1]
 let tupleval = obj[2]
 let index = obj[3]
+let forbidden = obj[4]
 
 
 // Initialize SoundManager
@@ -112,7 +113,7 @@ function heartbeat() {
         if (players[i]){
             var player = players[i]
             players[i].updateTreasure(gamemap, soundmanager)
-            players[i].update(players, soundmanager,paths,costs,tupleval,index,gamemap)
+            players[i].update(players, soundmanager,paths,costs,tupleval,index,gamemap,forbidden,projectiles);
             if (player.health > 0){
                 gamemap.player_move(player, soundmanager)
             }
@@ -147,10 +148,13 @@ function heartbeat() {
         projectiles[tID+(new Date()).getTime()] =  turret_cannonballs[tID]
         soundmanager.add_sound("cannon_fire", turret_cannonballs[tID].pos)
     }
+
+    let bot_cannonballs = {}
     gamemap.turretlist.repair()
 
 
-    // Data we send to front end
+    // Data we send to front end'
+   
     io.sockets.emit('heartbeat', {
         t:Date.now(),
         players:playerslocjson(),
@@ -163,11 +167,12 @@ function heartbeat() {
 }
 
 botIdx = 0
-function InitialiseBot(x,y) {
+function InitialiseBot(gamemap) {
     console.log("A New Bot is being added")
     //What sort of data do the bots have?
 
-    var newBot = new BotEntity.Bot(botIdx,nameGenerator.name(),x,y,1.75,healthobserver)
+    var position = gamemap.get_spawn()
+    var newBot = new BotEntity.Bot(botIdx,nameGenerator.name(),position.x,position.y,1.75,healthobserver)
 
     //players.push(newBot)
     players[botIdx] = newBot
@@ -195,11 +200,14 @@ function newConnection(socket) {
     socket.on('start',
         function(data) {
 
-            console.log("start called")
             console.log(data)
             if (monitorstatistics['numships'] == 0) {
-                InitialiseBot(800,300)
+                InitialiseBot(gamemap)
+                InitialiseBot(gamemap)
+                InitialiseBot(gamemap)
+                InitialiseBot(gamemap)
             }
+
 
             if (data.username == '') {
               data.username = nameGenerator.name()
@@ -246,15 +254,15 @@ function newConnection(socket) {
                 //console.log(player.xacc)
             } else if (data.pressedkeycode ===K_A){
                 player.xacc = -CONST.PLAYER_ACCELERATION
-                player.updateOnTreasure(false)
+                player.updateSpacePressed(false)
                 player.SpaceCounter = 0
             } else if (data.pressedkeycode ===K_S){
                 player.yacc = CONST.PLAYER_ACCELERATION
-                player.updateOnTreasure(false)
+                player.updateSpacePressed(false)
                 player.SpaceCounter = 0
             } else if (data.pressedkeycode ===K_D){
                 player.xacc = CONST.PLAYER_ACCELERATION
-                player.updateOnTreasure(false)
+                player.updateSpacePressed(false)
                 player.SpaceCounter = 0
 
             } else if (data.pressedkeycode ==="mouse"){
@@ -267,19 +275,7 @@ function newConnection(socket) {
                 }
                 player.SpaceCounter = 0
             } else if (data.pressedkeycode === K_Space) {
-                //Check if player is on the same location as the treasure.
-
-                if (!player.onTreasure) {
-                    for (let i = 0; i < gamemap.treasurelist.treasure_array.length; ++i) {
-                        let encap = {x: Math.floor(player.pos.x/gamemap.tilesize), y: Math.floor(player.pos.y/gamemap.tilesize)}
-                        if (encap.x === gamemap.treasurelist.treasure_array[i].x
-                            && encap.y === gamemap.treasurelist.treasure_array[i].y) {
-                            player.updateOnTreasure(true)
-                            player.updateSpacePressed(true)
-                            break
-                        }
-                    }
-                }
+                player.updateSpacePressed(true)
             }
         }
     )
