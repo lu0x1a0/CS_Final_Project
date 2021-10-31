@@ -249,33 +249,35 @@ function newConnection(socket) {
             //    }
             //}
             player = players[socket.id]
-            if (data.pressedkeycode ===K_W){
-                player.yacc = -CONST.PLAYER_ACCELERATION
-                //console.log(player.xacc)
-            } else if (data.pressedkeycode ===K_A){
-                player.xacc = -CONST.PLAYER_ACCELERATION
-                player.updateSpacePressed(false)
-                player.SpaceCounter = 0
-            } else if (data.pressedkeycode ===K_S){
-                player.yacc = CONST.PLAYER_ACCELERATION
-                player.updateSpacePressed(false)
-                player.SpaceCounter = 0
-            } else if (data.pressedkeycode ===K_D){
-                player.xacc = CONST.PLAYER_ACCELERATION
-                player.updateSpacePressed(false)
-                player.SpaceCounter = 0
-
-            } else if (data.pressedkeycode ==="mouse"){
-                cannonball = player.fire(data.targetX,data.targetY)
-                soundmanager.add_sound("cannon_fire", player.pos)
-                //console.log("----------------genball----------------\n",cannonball)
-                if (cannonball){
-                    // use playerid+current time stamp as id, might not safe from server attack with spamming io
-                    projectiles[player.id+(new Date()).getTime()] = cannonball
-                }
-                player.SpaceCounter = 0
-            } else if (data.pressedkeycode === K_Space) {
-                player.updateSpacePressed(true)
+            if (player) {
+                if (data.pressedkeycode ===K_W){
+                    player.yacc = -CONST.PLAYER_ACCELERATION
+                    //console.log(player.xacc)
+                } else if (data.pressedkeycode ===K_A){
+                    player.xacc = -CONST.PLAYER_ACCELERATION
+                    player.updateSpacePressed(false)
+                    player.SpaceCounter = 0
+                } else if (data.pressedkeycode ===K_S){
+                    player.yacc = CONST.PLAYER_ACCELERATION
+                    player.updateSpacePressed(false)
+                    player.SpaceCounter = 0
+                } else if (data.pressedkeycode ===K_D){
+                    player.xacc = CONST.PLAYER_ACCELERATION
+                    player.updateSpacePressed(false)
+                    player.SpaceCounter = 0
+    
+                } else if (data.pressedkeycode ==="mouse"){
+                    cannonball = player.fire(data.targetX,data.targetY)
+                    soundmanager.add_sound("cannon_fire", player.pos)
+                    //console.log("----------------genball----------------\n",cannonball)
+                    if (cannonball){
+                        // use playerid+current time stamp as id, might not safe from server attack with spamming io
+                        projectiles[player.id+(new Date()).getTime()] = cannonball
+                    }
+                    player.SpaceCounter = 0
+                } else if (data.pressedkeycode === K_Space) {
+                    player.updateSpacePressed(true)
+                }    
             }
         }
     )
@@ -289,15 +291,17 @@ function newConnection(socket) {
             //    }
             //}
             player = players[socket.id]
-            if ((data.releasedkeycode === K_W && player.yacc<0) ||
-                (data.releasedkeycode === K_S && player.yacc>0)) {
-                player.yacc = 0
-            } else if ( (data.releasedkeycode === K_A && player.xacc<0) ||
-                        (data.releasedkeycode === K_D && player.xacc>0)){
-                player.xacc = 0
-            } else if (data.releasedkeycode === K_Space) {
-                player.updateSpacePressed(false)
-                player.SpaceCounter = 0
+            if (player){
+                if ((data.releasedkeycode === K_W && player.yacc<0) ||
+                    (data.releasedkeycode === K_S && player.yacc>0)) {
+                    player.yacc = 0
+                } else if ( (data.releasedkeycode === K_A && player.xacc<0) ||
+                            (data.releasedkeycode === K_D && player.xacc>0)){
+                    player.xacc = 0
+                } else if (data.releasedkeycode === K_Space) {
+                    player.updateSpacePressed(false)
+                    player.SpaceCounter = 0
+                }
             }
             //console.log('-----------------updatereleased-----------------------')
             //console.log(data)
