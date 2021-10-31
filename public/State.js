@@ -66,7 +66,6 @@ class State {
 
         const base = this.get_base_update()
         const server_time = this.current_server_time()
-
         // If base is most recent state, use it
         // Else interpolate
         if (base < 0) {

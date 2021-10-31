@@ -8,9 +8,9 @@ var dead = 0
 var state
 var render
 
-var leaderBoard_update_counter = 1000
-
 var socket
+
+var leaderboard
 
 //Runs when first connected to the webpage
 
@@ -35,7 +35,7 @@ function setup() {
   sfx_slider = createSlider(0, 1.0, 0.4, 0.01)
   sfx_slider.position(10, 30)
 
-  socket = io.connect('https://pirategametestthingy.herokuapp.com/',{reconnection: false} )// Change to if pushing to heroku 'https://hidden-reef-26635.herokuapp.com/' http://localhost:5000
+  socket = io.connect('http://localhost:5000/',{reconnection: false} )// Change to if pushing to heroku 'https://hidden-reef-26635.herokuapp.com/' http://localhost:5000
 
 
 }
@@ -73,14 +73,7 @@ function startGame(usernameInput) {
       gameStarted = 1
       dead = 0
 
-      div = createDiv('Leaderboard')
-      div.style('font-size', '25px')
-      div.style('color','black')
-      div.style('height',' 25%')
-      div.style('width','15%')
-      div.style('opacity',' 0.5')
-      div.style('background-color','powderblue')
-      div.position(10, 500)
+      leaderboard = new Leaderboard()
 
       // Begin music
       render.soundrender.start_music_main()
@@ -160,9 +153,9 @@ function showDeathMenu(){
   deathMenu.classList.remove('hidden')
 
   retry.onclick = function(){
-    
+
     // Clean up
-    div.remove()
+    leaderboard.delete()
     gameStarted = 0
     render.soundrender.stop_music_dead()
 
@@ -173,7 +166,7 @@ function showDeathMenu(){
   mainmenu.onclick = function(){
 
     // Clean up
-    div.remove()
+    leaderboard.delete()
     gameStarted = 0
     dead = 0
     render.soundrender.stop_music_dead()
@@ -193,20 +186,7 @@ function draw() {
     render.soundrender.set_music_vol(music_slider.value())
     render.soundrender.set_sfx_vol(sfx_slider.value())
 
-    // leaderBoard_update_counter = leaderBoard_update_counter + 1
-    // if (leaderBoard_update_counter >= 40){
-    //   players.sort(function (x, y) {
-    //       return y.gold - x.gold
-    //   })
-    //   leaderBoard_update_counter = 0
-    //   var table = ""
-    //   for (var i = 0; i < players.length; i++ ) {
-    //     if (i >= 3 ) {break}
-    //     table = table + "<tr><td>" + players[i].gold + "</td><td>" + players[i].username + "</td></tr>"
-    //   }
-    //   div.html("<style>th, td {padding: 10pxtext-align: left}</style><h1>Gold pirated</h1><body><table>" + table + "</table></body>")
-
-    // }
+    leaderboard.update(state.get_state())
 
   }
   else {
