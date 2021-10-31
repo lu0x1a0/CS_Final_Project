@@ -40,7 +40,7 @@ class Leaderboard {
         if (i >= 5 ) {break}
         table = table + "<tr><td>" + players[i].gold +"</td><td>" + " - "+ "</td><td>" + players[i].username + "</td></tr>"
       }
-      this.div.html("<style>th, td {padding: 10pxtext-align: left}</style><h2>Gold Leaderboard</h2><body><table>" + table + "</table></body>")
+      this.div.html("<style>th, td {padding: 10pxtext-align: left}</style><h2>Leaderboard</h2><body><table>" + table + "</table></body>")
 
     }
 
