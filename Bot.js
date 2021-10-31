@@ -327,7 +327,6 @@ class Bot extends entities.Player {
             console.log(cannonball)
             console.log(this.pos.x,this.pos.y)
             console.log(this.cannon.pos.x,this.cannon.pos.y)
-
             if (cannonball){
                 // use playerid+current time stamp as id, might not safe from server attack with spamming io
                 Bot.CannonBalls[this.id] = cannonball
