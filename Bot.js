@@ -143,6 +143,7 @@ class Bot extends entities.Player {
     }
  
     update(players,soundmanager,paths,costs,tupleval,index,Gmap, forbidden) { 
+        this.cannon.update()
         if (!this.initialiseEscapePivots) {
             this.XBoundary = (Gmap.xlen/2) - 1
             this.YBoundary = (Gmap.ylen/2) - 1
@@ -321,7 +322,13 @@ class Bot extends entities.Player {
 
     Shooting(x,y) {
         if (this.shoot) {
-            let cannonball =  new Cannonball({x:this.pos.x,y:this.pos.y}, {x:x,y:y}, CONST.PLAYER_MAX_SPEED*CONST.CANNON_SPEED_FACTOR, false)
+            //let cannonball =  new Cannonball({x:this.pos.x,y:this.pos.y}, {x:x,y:y}, CONST.PLAYER_MAX_SPEED*CONST.CANNON_SPEED_FACTOR, false)
+            let cannonball = this.fire(x-this.pos.x,y-this.pos.y)
+            console.log("----------shooting--------")
+            console.log(cannonball)
+            console.log(this.pos.x,this.pos.y)
+            console.log(this.cannon.pos.x,this.cannon.pos.y)
+            
             if (cannonball){
                 // use playerid+current time stamp as id, might not safe from server attack with spamming io
                 Bot.CannonBalls[this.id] = cannonball
