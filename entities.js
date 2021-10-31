@@ -68,7 +68,7 @@ class Player{
     onCollision(collided,this_dir_rad,collided_dir_rad,total_dist,collided_angle,soundmanager){
         //first separate collided entities
         var shared_dist = -(total_dist -  this_dir_rad - collided_dir_rad)
-        
+
         // collided.pos.x += Math.ceil(shared_dist)*Math.cos(collided_angle)
         // collided.pos.y += Math.ceil(shared_dist)*Math.sin(collided_angle)
         // this.pos.x += Math.ceil(shared_dist)*Math.cos(collided_angle+Math.PI)
@@ -126,7 +126,7 @@ class Player{
                     return "dead"
                 } else {
                     soundmanager.add_sound("damage", this.pos)
-                }    
+                }
             }
         }
     }
@@ -159,7 +159,7 @@ class Player{
         this.invincTick()
         // Determine if we are on treasure
         this.updateOnTreasure(Gmap.is_on_treasure(this.pos))
-        
+
         // change the velocity according to current drag and acceleration..
         // wasd acc movement version
         this.vel = {x:this.vel.x+this.xacc,y:this.vel.y+this.yacc}
@@ -179,7 +179,16 @@ class Player{
                 let encap = {x: Math.floor(this.pos.x/gamemap.tilesize), y: Math.floor(this.pos.y/gamemap.tilesize)};
                 gamemap.treasurelist.remove_treasure(encap)
                 soundmanager.add_sound("get_treasure", this.pos)
-                this.gold += CONST.GOLD_AMT;
+
+                if ( Math.random() >= CONST.GOLD_HEALTH_CHANCE ) {
+                  this.gold += CONST.GOLD_AMT
+                } else {
+                  this.health += CONST.MAX_HEALTH_AMT
+                  if (this.health >= CONST.PLAYER_HEALTH) {
+                    this.health = CONST.PLAYER_HEALTH
+                  }
+                }
+
                 this.SpaceCounter = 0;
                 this.OnTreasure = false;
                 this.SpacePressed = false;

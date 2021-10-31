@@ -2,7 +2,7 @@ CONST = {
     // Map constants
     TILESIZE : 64,
     WALL_DAMAGE : 0.5,
-    
+
     // Entity constants
     PLAYER_SIZE : 64,
     PLAYER_MAX_SPEED : 16,
@@ -35,7 +35,10 @@ CONST = {
     TURRET_FRAME_FREQ : 20*2,
     TURRET_REPAIR_TIME : 20*5,
 
+    // Treasure constants 
     GOLD_AMT : 10,
+    MAX_HEALTH_AMT: 20,
+    GOLD_HEALTH_CHANCE: 0.5,
 
     SIDE_DAMAGE_MULTIPLIER : 1,
     FRONT_BACK_DAMAGE_MULTIPLIER : 0.25,
@@ -57,11 +60,11 @@ CONST = {
 CONST['RANGESTAT'] = {
     a        :0.42,
     b        :0.35,
-    framelife:18, // 
+    framelife:18, //
     range    :CONST.PLAYER_SIZE*CONST.CANNON_VISION_FACTOR
 }
 
 
 module.exports = {
-    CONST: CONST    
+    CONST: CONST
 }
