@@ -167,11 +167,12 @@ function heartbeat() {
 }
 
 botIdx = 0
-function InitialiseBot(x,y) {
+function InitialiseBot(gamemap) {
     console.log("A New Bot is being added")
     //What sort of data do the bots have?
 
-    var newBot = new BotEntity.Bot(botIdx,nameGenerator.name(),x,y,1.75,healthobserver)
+    var position = gamemap.get_spawn()
+    var newBot = new BotEntity.Bot(botIdx,nameGenerator.name(),position.x,position.y,1.75,healthobserver)
 
     //players.push(newBot)
     players[botIdx] = newBot
@@ -199,8 +200,13 @@ function newConnection(socket) {
     socket.on('start',
         function(data) {
 
-            console.log("start called")
-            InitialiseBot(800,300)
+            console.log(data)
+            if (monitorstatistics['numships'] == 0) {
+                InitialiseBot(gamemap)
+                InitialiseBot(gamemap)
+                InitialiseBot(gamemap)
+                InitialiseBot(gamemap)
+            }
 
 
             if (data.username == '') {
