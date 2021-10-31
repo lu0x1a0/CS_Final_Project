@@ -83,7 +83,7 @@ function startGame(usernameInput) {
       div.position(10, 500)
 
       // Begin music
-      render.soundrender.music_main.loop()
+      render.soundrender.start_music_main()
     }
   )
 
@@ -113,11 +113,11 @@ function startGame(usernameInput) {
       // Ending alive sequence
       dead = data.coords
       gameStarted = 0
-      render.soundrender.music_main.stop()
+      render.soundrender.stop_music_main()
 
       // Death sequence
       setTimeout(function(){
-        render.soundrender.music_dead.loop()
+        render.soundrender.start_music_dead()
         showDeathMenu()
       }, 2200)
     }
@@ -164,7 +164,7 @@ function showDeathMenu(){
     // Clean up
     div.remove()
     gameStarted = 0
-    render.soundrender.music_dead.stop()
+    render.soundrender.stop_music_dead()
 
     // Swap menus
     deathMenu.classList.add('hidden')
@@ -176,7 +176,7 @@ function showDeathMenu(){
     div.remove()
     gameStarted = 0
     dead = 0
-    render.soundrender.music_dead.stop()
+    render.soundrender.stop_music_dead()
 
     // Swap menus
     deathMenu.classList.add('hidden')
