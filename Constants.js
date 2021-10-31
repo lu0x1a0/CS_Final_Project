@@ -5,8 +5,8 @@ CONST = {
     
     // Entity constants
     PLAYER_SIZE : 64,
-    PLAYER_MAX_SPEED : 8,
-    PLAYER_ACCELERATION : 1.2,
+    PLAYER_MAX_SPEED : 16,
+    PLAYER_ACCELERATION : 2.4,
     PLAYER_DRAG : 0.5,
     PLAYER_HEALTH : 100,
     PLAYER_HITBOX_SIZE : 45,
@@ -42,8 +42,8 @@ CONST = {
 }
 
 CONST['RANGESTAT'] = {
-    a        :0.75,
-    b        :0.5,
+    a        :0.42,
+    b        :0.35,
     framelife:18, // 
     range    :CONST.PLAYER_SIZE*CONST.CANNON_VISION_FACTOR
 }

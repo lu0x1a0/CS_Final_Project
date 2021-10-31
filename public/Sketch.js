@@ -29,7 +29,7 @@ function setup() {
   render = new Render()
 
   // Volume sliders
-  music_slider = createSlider(0, 0.5, 0.1, 0.01)
+  music_slider = createSlider(0, 0.5, 0.0, 0.01)
   music_slider.position(10, 10)
 
   sfx_slider = createSlider(0, 1.0, 0.4, 0.01)

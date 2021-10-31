@@ -7,7 +7,10 @@ class SoundRender {
     preload() {
         // Music
         this.music_main = loadSound('assets/main_music.mp3');
+        this.music_main.playMode('restart')
+
         this.music_dead = loadSound('assets/dead_music.mp3');
+        this.music_dead.playMode('restart')
 
         // SFX
         this.sfx_cannon_fire = loadSound('assets/sfx_cannon_fire.mp3')
