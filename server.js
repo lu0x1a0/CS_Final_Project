@@ -164,7 +164,7 @@ function heartbeat() {
 
     gamemap.turretlist.repair()
     // Data we send to front end'
-   
+
     io.sockets.emit('heartbeat', {
         t:Date.now(),
         players:playerslocjson(),
@@ -278,7 +278,7 @@ function newConnection(socket) {
                     player.xacc = CONST.PLAYER_ACCELERATION
                     player.updateSpacePressed(false)
                     player.SpaceCounter = 0
-    
+
                 } else if (data.pressedkeycode ==="mouse"){
                     cannonball = player.fire(data.targetX,data.targetY)
                     soundmanager.add_sound("cannon_fire", player.pos)
@@ -290,7 +290,7 @@ function newConnection(socket) {
                     player.SpaceCounter = 0
                 } else if (data.pressedkeycode === K_Space) {
                     player.updateSpacePressed(true)
-                }    
+                }
             }
         }
     )
@@ -337,4 +337,3 @@ function newConnection(socket) {
       }
     )
 }
-

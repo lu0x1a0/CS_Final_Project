@@ -13,19 +13,19 @@ const sqrt = Math.sqrt
 
 /*
     A couple of things we need to add are:
-    Multiple Escape Pivots which helps the bot 
-    choose where to go when escaping. 
+    Multiple Escape Pivots which helps the bot
+    choose where to go when escaping.
 
     Hovering Pivot when a bot wants to explore/hover
     around some safe area when there are no nearby
-    bots around as moving to another point may 
+    bots around as moving to another point may
     mean the escape algorithm is redundant. Hover Pivots
-    maybe around an escape pivot too, and hovering pivots 
+    maybe around an escape pivot too, and hovering pivots
     are only formed when
-    
+
     When the bot is hovering, it should have a hovering speed
     as to not stuff up the animations, since it won't be
-    going at full speed in that area. 
+    going at full speed in that area.
 
     Escape Radial Length. The nearest player must be within
     a specific magnitude from the bot, for it to trigger
@@ -33,10 +33,10 @@ const sqrt = Math.sqrt
     should it move that specific area?
 
     To do:
-    Implement Bot Radius, if player is still following bot 
-    and player is stil within bots radius and bot arrives to 
-    the random pivot then the escape pivots will also update, 
-    so the bot can go to its new position. 
+    Implement Bot Radius, if player is still following bot
+    and player is stil within bots radius and bot arrives to
+    the random pivot then the escape pivots will also update,
+    so the bot can go to its new position.
 */
 function CreateVec(a,b) {
     let result = [];
@@ -63,7 +63,7 @@ function Angle(a,b) {
     return Math.acos(DotProduct(a,b)/(mag(a[0],a[1])*mag(b[0],b[1])))
 }
 
-function RandInterval(min, max) { // min and max included 
+function RandInterval(min, max) { // min and max included
     return Math.floor(Math.random() * (max - min + 1) + min)
 }
 
@@ -77,26 +77,26 @@ function MapY(y,tilesize) {
 
 function shuffle(array) {
     let currentIndex = array.length,  randomIndex;
-    
+
     // While there remain elements to shuffle...
     while (currentIndex != 0) {
-    
+
         // Pick a remaining element...
         randomIndex = Math.floor(Math.random() * currentIndex);
         currentIndex--;
-    
+
         // And swap it with the current element.
         [array[currentIndex], array[randomIndex]] = [
         array[randomIndex], array[currentIndex]];
     }
-    
+
     return array;
 }
 
 
 class Bot extends entities.Player {
     constructor(id,username, x, y, dir, healthobserver) {
-       super(id,username, x, y, dir, healthobserver) 
+       super(id,username, x, y, dir, healthobserver)
        this.initialiseEscapePivots = false
        this.closestplayer = null
        this.EscapePivTicks = 0
@@ -130,7 +130,7 @@ class Bot extends entities.Player {
             this.EscapePivTicks = 0
             this.GeneratePivots(Gmap, forbidden)
         }
-    } 
+    }
 
     ShootingTick() {
         if (!this.shoot) {
@@ -141,15 +141,15 @@ class Bot extends entities.Player {
             }
         }
     }
- 
-    update(players,soundmanager,paths,costs,tupleval,index,Gmap, forbidden) { 
+
+    update(players,soundmanager,paths,costs,tupleval,index,Gmap, forbidden) {
         this.cannon.update()
         if (!this.initialiseEscapePivots) {
             this.XBoundary = (Gmap.xlen/2) - 1
             this.YBoundary = (Gmap.ylen/2) - 1
             this.GeneratePivots(Gmap, forbidden)
             this.initialiseEscapePivots = true
-        }   
+        }
         this.invincTick()
         this.EscapeTick(Gmap, forbidden)
         this.ShootingTick()
@@ -167,28 +167,28 @@ class Bot extends entities.Player {
         return newplayers
     }
     /*
-        Retrieve Treasure checks if each player is some constant magnitude away 
+        Retrieve Treasure checks if each player is some constant magnitude away
         from the nearest treasure to the bot. And checks if each player is
-        some cost value away from the bot too. If the player is within 
-        the radius of the bot but not within the radius of the treasure then 
-        depending on the health of the player we decide if we should go for 
-        the treasure or not. If it is above 70 we should go for the player. 
-        If it is below 70, but the nearest players health is smaller than the 
-        bots health then we should go for the player as there is a greater reward 
+        some cost value away from the bot too. If the player is within
+        the radius of the bot but not within the radius of the treasure then
+        depending on the health of the player we decide if we should go for
+        the treasure or not. If it is above 70 we should go for the player.
+        If it is below 70, but the nearest players health is smaller than the
+        bots health then we should go for the player as there is a greater reward
         in killing the player, if it is less than 70 and the nearest players health
-        is greater than the bots health by some fixed constant then we should 
-        opt to get the treasure. If the health is less than 40, if there are no nearest 
-        players near the bot by some fixed radius from the treasure and bot then it 
-        is assumed to be safe to go, but if there happens to be a player nearby 
+        is greater than the bots health by some fixed constant then we should
+        opt to get the treasure. If the health is less than 40, if there are no nearest
+        players near the bot by some fixed radius from the treasure and bot then it
+        is assumed to be safe to go, but if there happens to be a player nearby
         we don't go as we need to be more concerned with the bot survival.
 
         Conditions to implement:
 
         Need to decide on some constants:
             -> How far should each player be from the nearest treasure for the bot?
-            -> How far should each player be from the nearest bot? -> This will later be decided as the radial length for escaping. 
+            -> How far should each player be from the nearest bot? -> This will later be decided as the radial length for escaping.
 
-        Const - PlayerTreasureDist 
+        Const - PlayerTreasureDist
         Const - PlayerBotDist  // This helps us know if we are in a safe space or not. If we are then we will place a hover pivot in this area.
         Let X = NearestPlayerToUs
         Let X1 = NearestPlayerToTreasure
@@ -196,41 +196,41 @@ class Bot extends entities.Player {
         let Z = TreasurePosition
 
         Firstly, check if the ship is already on the treasure. If it is this.onTreasure and this.spacePressed should be 1.
-        Then UpdateTreasure will automatically increment everythng. Once the treasure is removed (It will not be in the  
-        treasure map) what happens next will depend on the health of the bot and the condition of the nearest player. 
+        Then UpdateTreasure will automatically increment everythng. Once the treasure is removed (It will not be in the
+        treasure map) what happens next will depend on the health of the bot and the condition of the nearest player.
 
         if (bothealth < 40) {
             if abs(X-Y) < PlayerBotDist then we go to our escape pivot.  (Dont go to the treasure)
-            if abs(X-Y) > PlayerBotDist and abs(X-Z) > PlayerTreasureDist then go towards the treasure. 
+            if abs(X-Y) > PlayerBotDist and abs(X-Z) > PlayerTreasureDist then go towards the treasure.
         } else {
             if (40 < bothealth < 70) {
-                if abs(X-Y) < PlayerBotDist but C*BotHealth < PlayerHealth  then we should go for the treasure. 
+                if abs(X-Y) < PlayerBotDist but C*BotHealth < PlayerHealth  then we should go for the treasure.
                 i
             } else { // bothealth > 70
 
             }
         }
-        
-        Need to finish designing conditionals. 
+
+        Need to finish designing conditionals.
 
     TreasureRetrievalQuest(player,paths,costs,tupleval,index,Gmap) {
 
     }
     */
     Escape(Gmap,min) {
-        //Runs away from the nearest if and only if 
+        //Runs away from the nearest if and only if
         //Generate all angles
 
         if (min.length == 0) {
             let minCoord =  rand(this.RandomPivots)
             return minCoord
-        } 
+        }
 
         let BotCoord = [MapX(this.pos.x,Gmap.tilesize), MapY(this.pos.y,Gmap.tilesize)]
         let ClosestPlayer = min
         if (this.BotMinCoord.length != 0) {
             if (this.BotMinCoord[0] == BotCoord[0] && this.BotMinCoord[1] == BotCoord[1]) {
-                console.log("FOUND")
+                //console.log("FOUND")
                 let index = this.RandomPivots.indexOf(this.BotMinCoord);
                 if (index > -1) {
                     this.RandomPivots.splice(index, 1);
@@ -251,10 +251,10 @@ class Bot extends entities.Player {
             }
         }
         return maxCoord
-            
+
     }
-    
-    
+
+
     //Can be from any location
     NearestPlayerObj(newplayers,costs,tupleval,from,tilesize) {
         let x = MapX(newplayers[0].pos.x,tilesize)
@@ -300,7 +300,7 @@ class Bot extends entities.Player {
     }
 
     GeneratePivots(Gmap, forbidden) {
-        
+
         this.topright = this.generate_coords(this.XBoundary+1, 2*this.XBoundary-1,0,this.YBoundary,Gmap, forbidden)
         this.topleft = this.generate_coords(0,this.XBoundary,0,this.YBoundary,Gmap, forbidden)
         this.bottomleft = this.generate_coords(0,this.XBoundary,this.YBoundary+1,2*this.YBoundary-1,Gmap, forbidden)
@@ -323,10 +323,10 @@ class Bot extends entities.Player {
     Shooting(x,y) {
         if (this.shoot) {
             let cannonball = this.fire(x-this.pos.x,y-this.pos.y)
-            console.log("----------shooting--------")
-            console.log(cannonball)
-            console.log(this.pos.x,this.pos.y)
-            console.log(this.cannon.pos.x,this.cannon.pos.y)
+            //console.log("----------shooting--------")
+            //console.log(cannonball)
+            //console.log(this.pos.x,this.pos.y)
+            //console.log(this.cannon.pos.x,this.cannon.pos.y)
             if (cannonball){
                 // use playerid+current time stamp as id, might not safe from server attack with spamming io
                 Bot.CannonBalls[this.id] = cannonball
@@ -334,7 +334,7 @@ class Bot extends entities.Player {
                 //server.UpdateProjectiles.UpdateProjectiles(this.id, cannonball)
             }
             this.shoot = false;
-        } 
+        }
     }
 
     updateBot(players,paths,costs,tupleval,index,Gmap) {
@@ -348,7 +348,7 @@ class Bot extends entities.Player {
             indx = index.get(paths[tupleval.get(indx)][tupleval.get(start)])
             this.DecisionHandler(start, indx, Gmap.map)
             return
-        } 
+        }
         let min = this.NearestPlayer(newplayers,costs,tupleval,start,tilesize)
         let closestplayer = this.NearestPlayerObj(newplayers,costs,tupleval,start,tilesize)
         if (this.health <= CONST.BOT_LOW_HEALTH) {
@@ -359,15 +359,15 @@ class Bot extends entities.Player {
                 this.DecisionHandler(start, indx, Gmap.map)
                 this.Shooting(closestplayer.pos.x, closestplayer.pos.y)
             }
-        } 
+        }
         else if (this.health >= CONST.BOT_RAM_CONDITION) {
             let end = index.get(paths[tupleval.get(min)][tupleval.get(start)])
-            this.DecisionHandler(start, end, Gmap.map)  
+            this.DecisionHandler(start, end, Gmap.map)
             this.Shooting(closestplayer.pos.x, closestplayer.pos.y)
         } else {
             //it means in between check the distance between each other
             //If the distance bewteen the nearest ship and the bot is greater
-            //then the shooting range, then we keep following. 
+            //then the shooting range, then we keep following.
             let DirectionVector = [cos(this.dir),sin(this.dir)]
             let PlayerDirection = [closestplayer.pos.x - this.pos.x, closestplayer.pos.y - this.pos.y]
             let theta =  Angle(DirectionVector,PlayerDirection)
@@ -376,10 +376,10 @@ class Bot extends entities.Player {
 
             if (magnitude > threshold) {
                 let end = index.get(paths[tupleval.get(min)][tupleval.get(start)])
-                this.DecisionHandler(start, end, Gmap.map) 
-            } else {  
+                this.DecisionHandler(start, end, Gmap.map)
+            } else {
                 this.Shooting(closestplayer.pos.x, closestplayer.pos.y)
-            }   
+            }
         }
     }
 
@@ -415,7 +415,7 @@ class Bot extends entities.Player {
             this.dir = Math.atan2(this.vel.y,this.vel.x)
         }
     }
-    
+
     ComputeAdjacentVertex(V,map) {
         var AV = [];
 
@@ -430,7 +430,7 @@ class Bot extends entities.Player {
         if (map[V[0]+1][V[1]+1] != 'L' && map[V[0]+1][V[1]+1] != 'T') {
             AV.push([V[0]+1,V[1]+1])
         }
-        
+
         if (map[V[0]+1][V[1]-1] != 'L' &&  map[V[0]+1][V[1]-1] != 'T') {
             AV.push([V[0]+1,V[1]-1])
         }
@@ -464,19 +464,19 @@ module.exports = {
 /*
     1. Check if bot is below 40
         If bot is below 40 check if nearest player is within its danger radius.
-            If it is go to next best action to get away from it. 
+            If it is go to next best action to get away from it.
         If it isnt, then just hover (havent implemented this most likely wont now)
-    
-    2. If Bot is above 40 but below 70. 
-        Check if nearest player is within its firing range. 
+
+    2. If Bot is above 40 but below 70.
+        Check if nearest player is within its firing range.
             If player is within firing range shoot at the player (maybe implement soom randomization here)
 
             Should the bot move ? Or should it stay stationary ? and let the next iteration handle the next move?
 
-        If it isn't keep following the player. 
-    
+        If it isn't keep following the player.
+
     3. If Bot is above 70
-        Keep following player until you can ram the nearest player. 
+        Keep following player until you can ram the nearest player.
         If you can also shoot, shoot the player too.
 
 */
