@@ -32,7 +32,7 @@ function setup() {
 
   // https://pirategametestthingy.herokuapp.com/
   // http://localhost:5000
-  socket = io.connect('https://pirategametestthingy.herokuapp.com/',{reconnection: false} )
+  socket = io.connect('http://localhost:5000/',{reconnection: false} )
 
 }
 
@@ -83,15 +83,12 @@ function startGame(usernameInput) {
       // the disconnection was initiated by the server, you need to reconnect manually
       //socket.connect()
     }
-
-    console.log(reason)
     // else the socket will automatically try to reconnect
   })
 
 
   socket.on("dead",
     function(data) {
-      console.log("dead")
 
       // Ending alive sequence
       dead = data.coords
@@ -168,9 +165,6 @@ function showDeathMenu(){
 }
 
 function draw() {
-
-  console.log(width)
-  console.log(height)
 
   if (gameStarted == 1 || dead) {
     render.render(state.get_state(), dead)

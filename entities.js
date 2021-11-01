@@ -3,6 +3,7 @@ const addVec = require("./utils.js").addVec
 const setMag = require("./utils.js").setMag
 const CONST = require('./Constants.js').CONST
 const Maps = require("./MapFiles.js").Maps
+const Treasure = require('./Treasure.js')
 const sin = Math.sin
 const cos = Math.cos
 const sqrt = Math.sqrt
@@ -122,6 +123,7 @@ class Player{
                 if (this.health <= 0){
                     soundmanager.add_sound("death", this.pos)
                     this.healthobserver.playerDied(this.id)
+                    //gamemap.treasurelist.add_death_treasure(this.pos,int(this.gold*0.5),0,0)
                     return "dead"
                 } else {
                     soundmanager.add_sound("damage", this.pos)
@@ -176,17 +178,17 @@ class Player{
             if (this.SpaceCounter == CONST.TREASURE_FISH_TIME) {
                 //Remove Treasure coordinates
                 let encap = {x: Math.floor(this.pos.x/gamemap.tilesize), y: Math.floor(this.pos.y/gamemap.tilesize)};
+                let treasure = gamemap.treasurelist.get_treasure(encap)
                 gamemap.treasurelist.remove_treasure(encap)
-                soundmanager.add_sound("get_treasure", this.pos)
 
-                if ( Math.random() >= CONST.GOLD_HEALTH_CHANCE ) {
-                  this.gold += CONST.GOLD_AMT
+                this.gold += treasure.gold
+
+                if (this.health + treasure.health >= CONST.PLAYER_HEALTH) {
+                  this.health = CONST.PLAYER_HEALTH
                 } else {
-                  this.health += CONST.MAX_HEALTH_AMT
-                  if (this.health >= CONST.PLAYER_HEALTH) {
-                    this.health = CONST.PLAYER_HEALTH
-                  }
+                  this.health += treasure.health
                 }
+                soundmanager.add_sound("get_treasure", this.pos)
 
                 this.SpaceCounter = 0;
                 this.OnTreasure = false;
