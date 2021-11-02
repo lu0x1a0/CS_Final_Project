@@ -5,8 +5,8 @@ class PlayerRender {
 
   preload() {
     // Images
-    this.img_boat = loadImage('assets/img_boat.png');
-    this.img_water = loadImage('assets/img_water.png');
+    this.img_boat = loadImage('assets/imgs/img_boat.png');
+    this.img_water = loadImage('assets/imgs/img_water.png');
   }
 
   load_player(playerJSON) {

@@ -3,7 +3,7 @@ class TreasureRender {
     constructor() { }
 
     preload() {
-        this.img_treasure_water = loadImage('assets/img_treasure_water.png');
+        this.img_treasure_water = loadImage('assets/imgs/img_treasure_water.png');
     }
 
     first_load(gamemap) {

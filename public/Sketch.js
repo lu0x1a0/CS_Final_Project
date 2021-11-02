@@ -11,6 +11,11 @@ var socket
 var leaderboard
 var div
 
+function preload() {
+  state = new State()
+  render = new Render()
+}
+
 
 function setup() {
 
@@ -19,9 +24,7 @@ function setup() {
   createCanvas(windowWidth, windowHeight)
   imageMode(CENTER)
 
-
-  state = new State()
-  render = new Render()
+  render.setup()
 
   // Volume sliders
   music_slider = createSlider(0, 0.5, 0.0, 0.01)

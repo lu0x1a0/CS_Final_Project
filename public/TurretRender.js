@@ -3,7 +3,7 @@ class TurretRender {
     constructor() { }
 
     preload() {
-        this.img_turret = loadImage('assets/img_turret.png');
+        this.img_turret = loadImage('assets/imgs/img_turret.png');
     }
 
     first_load(gamemap) {

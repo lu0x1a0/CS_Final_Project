@@ -8,29 +8,29 @@ class SoundRender {
 
         // Music
         this.music_main = new Howl({
-            src:'assets/main_music.mp3',
+            src:'assets/mus/main_music.mp3',
             loop: true,
         })
         this.music_dead = new Howl({
-            src:'assets/dead_music.mp3',
+            src:'assets/mus/dead_music.mp3',
             loop: true,
         })
 
         // SFX
         this.sfx_cannon_fire = new Howl({
-            src:'assets/sfx_cannon_fire.mp3',
+            src:'assets/sfx/sfx_cannon_fire.mp3',
         })
 
         this.sfx_damage = new Howl({
-            src:'assets/sfx_damage.mp3',
+            src:'assets/sfx/sfx_damage.mp3',
         })
 
         this.sfx_death = new Howl({
-            src:'assets/sfx_death.mp3',
+            src:'assets/sfx/sfx_death.mp3',
         })
 
         this.sfx_get_treasure = new Howl({
-            src:'assets/sfx_get_treasure.mp3',
+            src:'assets/sfx/sfx_get_treasure.mp3',
         })
     }
 
