@@ -1,7 +1,7 @@
 class Treasure{
-  constructor(x,y,gold,health,weaponID) {
-    this.x = x
-    this.y = y
+  constructor(coords,gold,health,weaponID) {
+    this.x = coords.x
+    this.y = coords.y
     this.gold = gold
     this.health = health
     this.weaponID = weaponID

@@ -26,6 +26,7 @@ CONST = {
     // Bot constants
     BOT_LOW_HEALTH : 50,
     BOT_RAM_CONDITION: 70,
+    MAX_BOTS_ONSERVER: 7,
 
 
     // Timing constants
@@ -35,10 +36,11 @@ CONST = {
     TURRET_FRAME_FREQ : 20*2,
     TURRET_REPAIR_TIME : 20*5,
 
-    // Treasure constants 
+    // Treasure constants
     GOLD_AMT : 10,
     MAX_HEALTH_AMT: 20,
     GOLD_HEALTH_CHANCE: 0.5,
+    GOLD_PERCENT_DROP: 0.5,
 
     SIDE_DAMAGE_MULTIPLIER : 1,
     FRONT_BACK_DAMAGE_MULTIPLIER : 0.25,

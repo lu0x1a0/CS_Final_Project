@@ -123,7 +123,7 @@ class Player{
                 if (this.health <= 0){
                     soundmanager.add_sound("death", this.pos)
                     this.healthobserver.playerDied(this.id)
-                    //gamemap.treasurelist.add_death_treasure(this.pos,int(this.gold*0.5),0,0)
+                    //
                     return "dead"
                 } else {
                     soundmanager.add_sound("damage", this.pos)
