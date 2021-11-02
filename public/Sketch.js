@@ -33,6 +33,9 @@ function setup() {
   sfx_slider = createSlider(0, 1.0, 0.4, 0.01)
   sfx_slider.position(10, 30)
 
+  // Start title theme
+  render.soundrender.start_music_title()
+
   // https://pirategametestthingy.herokuapp.com/
   // http://localhost:5000
   socket = io.connect('http://localhost:5000/',{reconnection: false} )
@@ -68,7 +71,8 @@ function startGame(usernameInput) {
 
       leaderboard = new Leaderboard()
 
-      // Begin music
+      // Change music
+      render.soundrender.stop_music_title()
       render.soundrender.start_music_main()
     }
   )
@@ -125,6 +129,9 @@ function showMainMenu(){
   const playMenu = document.getElementById('home-page')
   playMenu.classList.remove('hidden')
 
+  // Play main menu music
+  render.soundrender.start_music_title()
+
   //When the play button is clicked hide the homepage and generate the player with the given username
   button.onclick = function(){
 
@@ -169,12 +176,12 @@ function showDeathMenu(){
 
 function draw() {
 
+  // Update volume
+  render.soundrender.set_music_vol(music_slider.value())
+  render.soundrender.set_sfx_vol(sfx_slider.value())
+
   if (gameStarted == 1 || dead) {
     render.render(state.get_state(), dead)
-
-    // Update volume
-    render.soundrender.set_music_vol(music_slider.value())
-    render.soundrender.set_sfx_vol(sfx_slider.value())
 
     leaderboard.update(state.get_state())
 

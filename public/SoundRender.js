@@ -7,6 +7,10 @@ class SoundRender {
     preload() {
 
         // Music
+        this.music_title = new Howl({
+            src:'assets/mus/title_music.mp3',
+            loop: true,
+        })
         this.music_main = new Howl({
             src:'assets/mus/main_music.mp3',
             loop: true,
@@ -34,6 +38,14 @@ class SoundRender {
         })
     }
 
+    start_music_title() {
+        this.music_title.play()
+    }
+
+    stop_music_title() {
+        this.music_title.stop()
+    }
+
     start_music_main() {
         this.music_main.play()
     }
@@ -55,6 +67,7 @@ class SoundRender {
     }
 
     set_music_vol(val) {
+        this.music_title.volume(val)
         this.music_main.volume(val)
         this.music_dead.volume(val)
     }
