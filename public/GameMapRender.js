@@ -52,8 +52,8 @@ class GameMapRender {
                     case 'S':
                         image(this.img_water, x*this.tilesize, y*this.tilesize, this.tilesize, this.tilesize);
                         break;
-                    case 'W':
-                        image(this.frames_water[Math.floor(frameNo/5) % this.frames_water.length], x*this.tilesize, y*this.tilesize, this.tilesize, this.tilesize);
+                    case ' ':
+                        image(this.frames_water[Math.floor(frameNo/12) % this.frames_water.length], x*this.tilesize, y*this.tilesize, this.tilesize, this.tilesize);
                         break;
                     default:
                         image(this.img_missing, x*this.tilesize, y*this.tilesize, this.tilesize, this.tilesize);
