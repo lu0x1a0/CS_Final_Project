@@ -49,8 +49,9 @@ class State {
             projectilelist : newstatedata.projectiles,
             treasurelist : newstatedata.treasurelist,
             turretlist : newstatedata.turretlist,
+            whirllist: newstatedata.whirllist
         })
-
+        
         this.eventlist = this.eventlist.concat(newstatedata.eventlist)
 
         const base = this.get_base_update()
@@ -80,13 +81,14 @@ class State {
             const next = this.state_list[base+1]
             const r = (server_time - base_update.t) / (next.t - base_update.t)
 
-            print(base_update.eventlist)
+            //print(base_update.eventlist)
 
             return {
                 playerlist : interpolatePlayerList(base_update.playerlist, next.playerlist, r),
                 projectilelist : interpolateProjectileList(base_update.projectilelist, next.projectilelist, r),
                 treasurelist : base_update.treasurelist,
                 turretlist : base_update.turretlist,
+                whirllist : base_update.whirllist,
                 eventlist : this.pop_sounds(),
             }
         }

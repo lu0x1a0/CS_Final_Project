@@ -2,6 +2,7 @@ const CONST = require('./Constants.js').CONST
 const addVec = require("./utils.js").addVec
 const TreasureList = require("./TreasureList.js").TreasureList
 const TurretList = require("./TownTurrets.js").TurretList
+const WhirlList = require('./Whirlpool.js').WhirlList
 
 class GameMap {
     constructor(map) {
@@ -19,6 +20,7 @@ class GameMap {
         // Initialize
         this.treasurelist = new TreasureList(this)
         this.turretlist = new TurretList(this)
+        this.whirllist =  new WhirlList(this,map.max_whirls)
 
         // Initialize spawn positions
         this.whichSpawn = 0
@@ -30,7 +32,38 @@ class GameMap {
                 }
             }
         }
+    }
+    // find available position that whirlpool can move to
+    gridAroundAvail(cp){
+        //cp : current position
+        var avail = []
+        if ( (cp.x-1)>=0 && (cp.y-1)>=0 && this.map[cp.x-1][cp.y-1]=='W' ){
+            avail.push({x:cp.x-1,y:cp.y-1})          
+        }
+        if ( (cp.x-1)>=0  && this.map[cp.x-1][cp.y]=='W'){
+            avail.push({x:cp.x-1,y:cp.y})          
+        }
+        if ( (cp.y-1)>=0  && this.map[cp.x][cp.y-1]=='W'){
+            avail.push({x:cp.x,y:cp.y-1})          
+        }
+        
+        if ( (cp.x+1)<this.xlen && (cp.y+1)<this.ylen && this.map[cp.x+1][cp.y+1]=='W'){
+            avail.push({x:cp.x,y:cp.y+1})          
+        }
+        if ( (cp.x+1)<this.xlen && this.map[cp.x+1][cp.y]=='W'){
+            avail.push({x:cp.x+1,y:cp.y})          
+        }
+        if ( (cp.y+1)<this.ylen && this.map[cp.x][cp.y+1]=='W'){
+            avail.push({x:cp.x,y:cp.y+1})          
+        }
 
+        if ( (cp.x+1)<this.xlen && (cp.y-1)>=0  && this.map[cp.x+1][cp.y-1]=='W'){
+            avail.push({x:cp.x+1,y:cp.y})          
+        }
+        if ( (cp.x-1)>=0 && (cp.y+1)<this.ylen  && this.map[cp.x-1][cp.y+1]=='W'){
+            avail.push({x:cp.x,y:cp.y+1})          
+        }
+        return avail
     }
 
     get_spawn() {

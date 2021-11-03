@@ -111,6 +111,8 @@ setInterval(heartbeat, CONST.HEARTBEAT_INTERVAL)
 
 // RUNS EVERY SERVER-WIDE UPDATE
 function heartbeat() {
+    // update whirlpool position
+    gamemap.whirllist.update(gamemap)
 
     for (var i in players){
         // checks that players[i] is not removed from the object by previous damages
@@ -171,6 +173,7 @@ function heartbeat() {
         projectiles:projectileslocjson(),
         treasurelist:gamemap.treasurelist,
         turretlist:gamemap.turretlist,
+        whirllist:gamemap.whirllist,
         eventlist:soundmanager.pop_events(),
     })
 

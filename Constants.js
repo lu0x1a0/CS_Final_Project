@@ -34,6 +34,7 @@ CONST = {
     TREASURE_FISH_TIME : 20*2,
     TURRET_FRAME_FREQ : 20*2,
     TURRET_REPAIR_TIME : 20*5,
+    WHIRLMOVETICK : 2000/(1000/20), //2 seconds, 
 
     // Treasure constants 
     GOLD_AMT : 10,
@@ -54,7 +55,7 @@ CONST = {
     NEARBY_LAND_ITERATIONS: 3,
     LAND_LOSING_RATE: 0.10,
 
-    SHOOTING: 30
+    SHOOTING: 30,
 }
 
 CONST['RANGESTAT'] = {

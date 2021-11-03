@@ -24,8 +24,8 @@ class Leaderboard {
   }
 
   update(gameState) {
-    console.log("started update")
-    console.log(gameState)
+    //console.log("started update")
+    //console.log(gameState)
 
     this.leaderBoard_update_counter = this.leaderBoard_update_counter + 1
     if (this.leaderBoard_update_counter >= 40){
