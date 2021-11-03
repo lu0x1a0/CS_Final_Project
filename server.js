@@ -111,6 +111,8 @@ setInterval(heartbeat, CONST.HEARTBEAT_INTERVAL)
 
 // RUNS EVERY SERVER-WIDE UPDATE
 function heartbeat() {
+    // update whirlpool position
+    gamemap.whirllist.update(gamemap)
 
     for (var i in players){
         // checks that players[i] is not removed from the object by previous damages
@@ -175,6 +177,7 @@ function heartbeat() {
         projectiles:projectileslocjson(),
         treasurelist:gamemap.treasurelist,
         turretlist:gamemap.turretlist,
+        whirllist:gamemap.whirllist,
         eventlist:soundmanager.pop_events(),
     })
 
@@ -246,6 +249,7 @@ function newConnection(socket) {
                 projectiles:projectileslocjson(),
                 treasurelist:gamemap.treasurelist,
                 turretlist:gamemap.turretlist,
+                whirllist:gamemap.whirllist,
                 eventlist:soundmanager.pop_events(),
             })
         }
@@ -287,7 +291,6 @@ function newConnection(socket) {
                 } else if (data.pressedkeycode ==="mouse"){
                     cannonball = player.fire(data.targetX,data.targetY)
                     soundmanager.add_sound("cannon_fire", player.pos)
-                    //console.log("----------------genball----------------\n",cannonball)
                     if (cannonball){
                         // use playerid+current time stamp as id, might not safe from server attack with spamming io
                         projectiles[player.id+(new Date()).getTime()] = cannonball
