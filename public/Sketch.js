@@ -32,7 +32,7 @@ function setup() {
 
   // https://pirategametestthingy.herokuapp.com/
   // http://localhost:5000
-  socket = io.connect('http://localhost:5000/',{reconnection: false} )
+  socket = io.connect('https://pirategametestthingy.herokuapp.com/',{reconnection: false} )
 
 }
 

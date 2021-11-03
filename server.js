@@ -56,7 +56,7 @@ var soundmanager = new SoundManager()
 var players = {}
 var monitorstatistics = {'numships' : 0}
 var projectiles = {}
-var healthobserver = new HealthObserver(players, io, monitorstatistics)//io.sockets)
+var healthobserver = new HealthObserver(players, io, monitorstatistics,gamemap)//io.sockets)
 
 //------------------------------ JSON HELPER FUNCTIONS -------------------------------//
 
@@ -125,6 +125,11 @@ function heartbeat() {
             }
         }
     }
+
+    if (monitorstatistics['numships'] <= CONST.MAX_BOTS_ONSERVER) {
+        InitialiseBot(gamemap)
+    }
+
     for (var key in projectiles) {
         if (projectiles.hasOwnProperty(key)) {
             projectiles[key].update()
@@ -152,7 +157,6 @@ function heartbeat() {
     for (let id in BotCannonBalls) {
         projectiles[id+(new Date()).getTime()] = BotCannonBalls[id]
         soundmanager.add_sound("cannon_fire", BotCannonBalls[id].pos)
-        console.log("added")
     }
 
     BotEntity.Bot.ResetCannonBalls()
@@ -176,14 +180,12 @@ function heartbeat() {
         whirllist:gamemap.whirllist,
         eventlist:soundmanager.pop_events(),
     })
-    //console.log("-------------EMIT-------------")
-    //console.log(gamemap.whirllist)
-    //console.log("-------------END-------------")
-    
-    if (monitorstatistics['numships'] == 0) {
-        InitialiseBot(gamemap)
-        monitorstatistics['numships'] += 1
-    }
+
+    //if (monitorstatistics['numships'] == 0) {
+    //    InitialiseBot(gamemap)
+    //    monitorstatistics['numships'] += 1
+    //}
+
 }
 
 botIdx = 0
@@ -220,7 +222,7 @@ function newConnection(socket) {
     socket.on('start',
         function(data) {
 
-            console.log(data)
+            //console.log(data)
             if (monitorstatistics['numships'] == 0) {
                 InitialiseBot(gamemap)
             }
