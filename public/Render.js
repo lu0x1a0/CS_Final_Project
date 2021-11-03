@@ -3,6 +3,7 @@ class Render {
     constructor() {
 
         this.id
+        this.frameNo = 0
 
         this.playerrender = new PlayerRender()
         this.playerrender.preload()
@@ -20,6 +21,10 @@ class Render {
         this.soundrender = new SoundRender()
         this.soundrender.preload()
 
+    }
+
+    setup() {
+        this.gamemaprender.setup()
     }
 
     set_id(id) {
@@ -58,7 +63,7 @@ class Render {
         this.turretrender.load_turrets(state.turretlist)
 
         // Map-based render
-        this.gamemaprender.display()
+        this.gamemaprender.display(this.frameNo)
         this.treasurerender.display()
         this.turretrender.display()
 
@@ -98,5 +103,8 @@ class Render {
             var projectile = state.projectilelist[i]
             cannonballshow(projectile.pos, projectile.diameter)
         }
+
+        // Increase frameNo
+        this.frameNo++
     }
 }
