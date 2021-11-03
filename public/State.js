@@ -92,15 +92,6 @@ class State {
                 eventlist : this.pop_sounds(),
             }
         }
-
-        // return {
-        //     gamemap:this.gamemap,
-        //     playerlist:this.playerlist,
-        //     projectilelist:this.projectilelist,
-        //     treasurelist:this.treasurelist,
-        //     turretlist:this.turretlist,
-        //     eventlist:this.pop_sounds(),
-        // }
     }
 
     pop_sounds() {

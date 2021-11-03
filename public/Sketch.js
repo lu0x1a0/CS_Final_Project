@@ -167,7 +167,7 @@ function showDeathMenu(){
 function draw() {
 
   if (gameStarted == 1 || dead) {
-    console.log(state.state_list)
+    console.log("BEFORE RENDER")
     render.render(state.get_state(), dead)
 
     // Update volume

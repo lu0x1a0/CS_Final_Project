@@ -176,7 +176,10 @@ function heartbeat() {
         whirllist:gamemap.whirllist,
         eventlist:soundmanager.pop_events(),
     })
-
+    //console.log("-------------EMIT-------------")
+    //console.log(gamemap.whirllist)
+    //console.log("-------------END-------------")
+    
     if (monitorstatistics['numships'] == 0) {
         InitialiseBot(gamemap)
         monitorstatistics['numships'] += 1
@@ -244,6 +247,7 @@ function newConnection(socket) {
                 projectiles:projectileslocjson(),
                 treasurelist:gamemap.treasurelist,
                 turretlist:gamemap.turretlist,
+                whirllist:gamemap.whirllist,
                 eventlist:soundmanager.pop_events(),
             })
         }
@@ -285,7 +289,6 @@ function newConnection(socket) {
                 } else if (data.pressedkeycode ==="mouse"){
                     cannonball = player.fire(data.targetX,data.targetY)
                     soundmanager.add_sound("cannon_fire", player.pos)
-                    //console.log("----------------genball----------------\n",cannonball)
                     if (cannonball){
                         // use playerid+current time stamp as id, might not safe from server attack with spamming io
                         projectiles[player.id+(new Date()).getTime()] = cannonball

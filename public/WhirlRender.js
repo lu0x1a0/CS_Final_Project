@@ -3,7 +3,7 @@ class WhirlRender {
     constructor() { }
 
     preload() {
-        this.img_whirl  = loadImage('assets/img_treasure_water.png');
+        this.img_whirl  = loadImage('assets/img_whirl.png');
     }
 
     first_load(gamemap) {
@@ -20,7 +20,9 @@ class WhirlRender {
         imageMode(CORNER);
         console.log("TRYING TO DISPLAY WHIRL")
         for (let whirl of this.whirl_array) {
-            image(this.img_whirl, whirl.x*this.tilesize, whirl.y*this.tilesize, this.tilesize, this.tilesize);
+            console.log(whirl)
+            image(this.img_whirl, whirl.loc.x*this.tilesize, whirl.loc.y*this.tilesize, this.tilesize, this.tilesize);
+            console.log(whirl.x, whirl.y)
         }
     }
 

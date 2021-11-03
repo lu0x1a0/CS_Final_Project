@@ -147,6 +147,17 @@ class GameMap {
         if (!impassible.includes(this.map[Math.floor((new_pos.x)/this.tilesize)][Math.floor((new_pos.y)/this.tilesize)])) {
             player.pos = new_pos;
         }
+        
+        // take whirlpool damage
+        var key = px.toString() + '-' + py.toString()
+        if (key in this.whirllist.whirl_coord_map) {
+            player.takeDamage(CONST.WHIRL_DAMAGE,soundmanager)
+        }
+        //console.log("--------move--------")
+        //console.log({x:px,y:py})
+        //console.log(this.whirllist.whirl_coord_map)
+        //console.log("----------------")
+
 
     }
 
