@@ -32,7 +32,8 @@ function setup() {
 
   // https://pirategametestthingy.herokuapp.com/
   // http://localhost:5000
-  socket = io.connect('https://pirategametestthingy.herokuapp.com/',{reconnection: false} )
+  var addr = window.location.href
+  socket = io.connect(addr,{reconnection: false} )
 
 }
 
