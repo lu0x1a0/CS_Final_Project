@@ -1,6 +1,8 @@
 class WhirlRender {
 
-    constructor() { }
+    constructor() { 
+        this.angle = 0
+    }
 
     preload() {
         this.img_whirl  = loadImage('assets/img_whirl.png');
@@ -17,13 +19,16 @@ class WhirlRender {
     }
 
     display() {
-        imageMode(CORNER);
+        imageMode(CENTER);
         console.log("TRYING TO DISPLAY WHIRL")
         for (let whirl of this.whirl_array) {
-            console.log(whirl)
-            image(this.img_whirl, whirl.loc.x*this.tilesize, whirl.loc.y*this.tilesize, this.tilesize, this.tilesize);
-            console.log(whirl.x, whirl.y)
+            push()
+            translate((whirl.loc.x+0.5)*this.tilesize, (whirl.loc.y+0.5)*this.tilesize)
+            rotate(this.angle)
+            image(this.img_whirl, 0,0, this.tilesize, this.tilesize);
+            pop()
         }
+        this.angle += PI/18
     }
 
 }
