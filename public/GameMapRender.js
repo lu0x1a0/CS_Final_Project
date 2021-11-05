@@ -102,6 +102,7 @@ class GameMapRender {
                         image(this.img_land, x*this.tilesize, y*this.tilesize, this.tilesize, this.tilesize);
                         break;
                     case 'T':
+                        image(this.img_land, x*this.tilesize, y*this.tilesize, this.tilesize, this.tilesize);
                         image(this.img_turret, x*this.tilesize, y*this.tilesize, this.tilesize, this.tilesize);
                         break;
                     case 'S':

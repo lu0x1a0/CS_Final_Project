@@ -64,7 +64,7 @@ class Render {
 
         // Map-based render
         this.gamemaprender.display(this.frameNo)
-        this.treasurerender.display()
+        this.treasurerender.display(this.frameNo)
         this.turretrender.display()
 
 
