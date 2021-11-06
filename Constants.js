@@ -28,7 +28,7 @@ CONST = {
     // Bot constants
     BOT_LOW_HEALTH : 50,
     BOT_RAM_CONDITION: 70,
-    MAX_BOTS_ONSERVER: 7,
+    MAX_BOTS_ONSERVER: 1,
 
 
     // Timing constants
@@ -38,6 +38,7 @@ CONST = {
     TURRET_FRAME_FREQ : 20*2,
     TURRET_REPAIR_TIME : 20*5,
     WHIRLMOVETICK : 2000/(1000/20), //2 seconds, 
+    WEAPON_EFFECT_PERIOD : 20*20, // 20 Seconds
 
     // Treasure constants
     GOLD_AMT : 10,

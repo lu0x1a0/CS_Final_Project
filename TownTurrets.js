@@ -1,6 +1,6 @@
 const CONST = require('./Constants.js').CONST
 const distance = require("./utils.js").distance
-const Cannonball = require('./entities.js').Cannonball
+const Cannonball = require('./Weapons/Cannon.js').Cannonball
 
 
 class TurretList {
