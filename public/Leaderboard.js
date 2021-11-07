@@ -2,7 +2,6 @@ class Leaderboard {
 
   constructor() {
 
-    console.log("constructor")
     var div
     this.div = createDiv()
     this.div.style('font-size', '25px')
@@ -24,13 +23,12 @@ class Leaderboard {
   }
 
   update(gameState) {
-    //console.log("started update")
-    //console.log(gameState)
+
 
     this.leaderBoard_update_counter = this.leaderBoard_update_counter + 1
     if (this.leaderBoard_update_counter >= 40){
         var players = gameState.playerlist
-        //console.log(players)
+
         players.sort(function (x, y) {
           return y.gold - x.gold
         })

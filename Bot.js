@@ -292,7 +292,7 @@ class Bot extends entities.Player {
         let randx = RandInterval(Xmin, Xmax);
         let randy = RandInterval(Ymin,Ymax)
         // Generate until we hit water
-        while (Gmap.map[randx][randy] !== 'W' && !forbidden.has([randx][randy])) {
+        while (Gmap.map[randx][randy] !== ' ' && !forbidden.has([randx][randy])) {
             randx = RandInterval(Xmin, Xmax);
             randy = RandInterval(Ymin,Ymax)
         }
