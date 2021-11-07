@@ -23,17 +23,17 @@ class TimedEffect{
 }
 class TimedAmplifiedEffect{
     // deals with attributes only
-    constructor(obj,attr,multiplier,period){
+    constructor(obj,attr,original_val, new_val ,period){
         this.obj = obj
         this.attr = attr
 
-        this.original_val = obj[this.attr]
-        this.multiplier = multiplier
+        this.original_val = original_val
+        this.new_val = new_val
         this.period = period
         this.startEffect()
     }
     startEffect(){
-        this.obj[this.attr] = this.original_val*this.multiplier;
+        this.obj[this.attr] = this.new_val;
     }
     countdown(){
         if (this.period <= 0){
@@ -49,8 +49,8 @@ class TimedAmplifiedEffect{
 
 function LargeBall(player){
     return new TimedAmplifiedEffect(
-        player.cannon,"calibre",
-        10,CONST.WEAPON_EFFECT_PERIOD
+        player.cannon,"calibre",player.cannon.basecalibre,
+        5*player.cannon.basecalibre,CONST.WEAPON_EFFECT_PERIOD
     )
 }
 

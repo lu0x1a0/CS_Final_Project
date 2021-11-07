@@ -16,7 +16,12 @@ class HealthObserver{
         var deathpos = this.playerlist[playerid].pos
         var keys = Object.keys(Weapons)
         var weaponID = keys[Math.floor(Math.random()*keys.length)]
-        this.gamemap.treasurelist.add_death_treasure(deathpos,Math.floor(this.playerlist[playerid].gold*CONST.GOLD_PERCENT_DROP),0,weaponID)
+        this.gamemap.treasurelist.add_death_treasure(
+            deathpos,
+            Math.floor(this.playerlist[playerid].gold*CONST.GOLD_PERCENT_DROP),
+            CONST.MAX_HEALTH_AMT/2,
+            weaponID
+        )
         delete this.playerlist[playerid]
         this.server.to(playerid).emit('dead', {coords : deathpos})
 
