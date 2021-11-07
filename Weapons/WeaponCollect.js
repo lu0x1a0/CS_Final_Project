@@ -107,9 +107,9 @@ function LargeRange(player){
 
 module.exports = {
     Weapons : {
-        //LargeBall:LargeBall,
+        LargeBall:LargeBall,
         LargeRange:LargeRange,
-        //FastSpeed:FastSpeed,
+        FastSpeed:FastSpeed,
 
     }
 }
