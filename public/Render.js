@@ -3,6 +3,7 @@ class Render {
     constructor() {
 
         this.id
+        this.frameNo = 0
 
         this.playerrender = new PlayerRender()
         this.playerrender.preload()
@@ -16,12 +17,20 @@ class Render {
         this.turretrender = new TurretRender()
         this.turretrender.preload()
 
+        this.eventrender = new EventRender()
+        this.eventrender.preload()
+
         this.whirlrender = new WhirlRender()
         this.whirlrender.preload()
+
         // Sounds
         this.soundrender = new SoundRender()
         this.soundrender.preload()
 
+    }
+
+    setup() {
+        this.gamemaprender.setup()
     }
 
     set_id(id) {
@@ -61,10 +70,13 @@ class Render {
         this.whirlrender.load_whirl(state.whirllist)
         
         // Map-based render
-        this.gamemaprender.display()
-        this.treasurerender.display()
+        this.gamemaprender.display(this.frameNo)
+        this.treasurerender.display(this.frameNo)
         this.turretrender.display()
         this.whirlrender.display()
+
+        // Event render
+        this.eventrender.display(state.deadlist)
 
 
         for (var i in state.playerlist) {
@@ -100,7 +112,10 @@ class Render {
         // Projectiles
         for (var i in state.projectilelist){
             var projectile = state.projectilelist[i]
-            cannonballshow(projectile.pos, projectile.diameter)
+            this.playerrender.cannonballshow(projectile.pos, projectile.diameter)
         }
+
+        // Increase frameNo
+        this.frameNo++
     }
 }

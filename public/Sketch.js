@@ -11,6 +11,11 @@ var socket
 var leaderboard
 var div
 
+function preload() {
+  state = new State()
+  render = new Render()
+}
+
 
 function setup() {
 
@@ -19,9 +24,7 @@ function setup() {
   createCanvas(windowWidth, windowHeight)
   imageMode(CENTER)
 
-
-  state = new State()
-  render = new Render()
+  render.setup()
 
   // Volume sliders
   music_slider = createSlider(0, 0.5, 0.0, 0.01)
@@ -29,6 +32,9 @@ function setup() {
 
   sfx_slider = createSlider(0, 1.0, 0.4, 0.01)
   sfx_slider.position(10, 30)
+
+  // Start title theme
+  render.soundrender.start_music_title()
 
   // https://pirategametestthingy.herokuapp.com/
   // http://localhost:5000
@@ -66,7 +72,8 @@ function startGame(usernameInput) {
 
       leaderboard = new Leaderboard()
 
-      // Begin music
+      // Change music
+      render.soundrender.stop_music_title()
       render.soundrender.start_music_main()
     }
   )
@@ -104,6 +111,13 @@ function startGame(usernameInput) {
     }
   )
 
+  socket.on("playerdeath",
+    function(data) {
+      console.log(data)
+      state.add_death(data.pos, data.dir)
+    }
+  )
+
 }
 
 
@@ -123,7 +137,12 @@ function showMainMenu(){
   const playMenu = document.getElementById('home-page')
   const effects_table = document.getElementById('effects_table');
   playMenu.classList.remove('hidden')
+
+  // Play main menu music
+  render.soundrender.start_music_title()
+
   effects_table.classList.add('hidden')
+
   //When the play button is clicked hide the homepage and generate the player with the given username
   button.onclick = function(){
       effects_table.classList.remove('hidden')
@@ -172,12 +191,12 @@ function showDeathMenu(){
 
 function draw() {
 
+  // Update volume
+  render.soundrender.set_music_vol(music_slider.value())
+  render.soundrender.set_sfx_vol(sfx_slider.value())
+
   if (gameStarted == 1 || dead) {
     render.render(state.get_state(), dead)
-
-    // Update volume
-    render.soundrender.set_music_vol(music_slider.value())
-    render.soundrender.set_sfx_vol(sfx_slider.value())
 
     leaderboard.update(state.get_state())
 

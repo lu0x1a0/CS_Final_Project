@@ -84,7 +84,7 @@ class GameMap {
         var randy = Math.floor(Math.random()*this.ylen);
 
         // Generate until we hit water
-        while (this.map[randx][randy] !== 'W') {
+        while (this.map[randx][randy] !== ' ') {
             randx = Math.floor(Math.random()*this.xlen);
             randy = Math.floor(Math.random()*this.ylen);
         }

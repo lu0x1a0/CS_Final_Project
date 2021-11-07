@@ -74,8 +74,3 @@ class CannonRender {
         }
     }
 }
-
-function cannonballshow(pos,size){
-    fill(255);
-    circle(pos.x,pos.y,size)
-}

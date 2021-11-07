@@ -148,7 +148,7 @@ function Generation(map) {
 
     for (let i = 0; i < map.length; ++i) {
         for (let j = 0; j < map[i].length; ++j) {
-            if (map[i][j] == 'W' || map[i][j] == 'S' ) {
+            if (map[i][j] == ' ' || map[i][j] == 'S' ) {
                 tuplelist.push([i,j])
             }
             else if (map[i][j] == 'T') {

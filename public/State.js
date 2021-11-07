@@ -9,6 +9,7 @@ class State {
 
         this.state_list = []
         this.eventlist = []
+        this.deadlist = []
 
     }
 
@@ -22,11 +23,27 @@ class State {
     }
 
     clear_state_list() {
-      this.state_list = []
+        this.state_list = []
     }
 
     current_server_time() {
         return this.first_server_timestamp + (Date.now() - this.game_start) - RENDER_DELAY
+    }
+
+    add_death(pos, dir) {
+        this.deadlist.push({
+            pos : pos,
+            dir : dir,
+            frame : 0,
+        })
+    }
+
+    tick_deadlist() {
+        for (let i = this.deadlist.length-1; i >= 0; i--) {
+            this.deadlist[i].frame++
+            if (this.deadlist[i].frame > 200) { this.deadlist.splice(i,1) }
+        }
+        return this.deadlist
     }
 
     get_base_update() {
@@ -49,6 +66,7 @@ class State {
             projectilelist : newstatedata.projectiles,
             treasurelist : newstatedata.treasurelist,
             turretlist : newstatedata.turretlist,
+            deadlist : this.tick_deadlist(),
             whirllist: newstatedata.whirllist
         })
         
@@ -90,6 +108,7 @@ class State {
                 turretlist : base_update.turretlist,
                 whirllist : base_update.whirllist,
                 eventlist : this.pop_sounds(),
+                deadlist : this.tick_deadlist(),
             }
         }
     }
