@@ -37,6 +37,12 @@ class Player{
         this.healthobserver = healthobserver
 
         this.effects = {}
+
+        this.gamestat = {
+            kill: 0,
+            gold_time: [Date.now()],
+            gold_amount: [this.gold]
+        }
     }
 
     invincTick() {
@@ -103,26 +109,26 @@ class Player{
         }
             // front or back damage
         else {
-            this.takeDamage(CONST.FRONT_BACK_DAMAGE_MULTIPLIER*speed, soundmanager)
+            this.takeDamage(CONST.FRONT_BACK_DAMAGE_MULTIPLIER*speed, soundmanager,collided.id)
         }
         // collided takes damage
         var absdiff = Math.abs(angle-collided.dir)
         var absdiff2 = Math.abs(altangle-collided.dir)
         if ( (absdiff> Math.PI/6 && absdiff < 5*Math.PI/6) || (absdiff2> Math.PI/6 && absdiff2 < 5*Math.PI/6) ) {
-            collided.takeDamage(CONST.SIDE_DAMAGE_MULTIPLIER*speed, soundmanager)
+            collided.takeDamage(CONST.SIDE_DAMAGE_MULTIPLIER*speed, soundmanager,this.id)
         } else {
-            collided.takeDamage(CONST.FRONT_BACK_DAMAGE_MULTIPLIER*speed, soundmanager)
+            collided.takeDamage(CONST.FRONT_BACK_DAMAGE_MULTIPLIER*speed, soundmanager,this.id)
         }
 
     }
 
-  takeDamage(damage, soundmanager){
+  takeDamage(damage, soundmanager,idfrom){
         if (!this.invincible) {
             if (this.health > 0){
                 this.health -=damage
                 if (this.health <= 0){
                     soundmanager.add_sound("death", this.pos)
-                    this.healthobserver.playerDied(this.id)
+                    this.healthobserver.playerDied(this.id,idfrom)
                     //
                     return "dead"
                 } else {
@@ -190,6 +196,8 @@ class Player{
                     gamemap.treasurelist.remove_treasure(encap)
 
                     this.gold += treasure.gold
+                    this.gamestat.gold_time.push(Date.now())
+                    this.gamestat.gold_amount.push(this.gold)
 
                     if (this.health + treasure.health >= CONST.PLAYER_HEALTH) {
                       this.health = CONST.PLAYER_HEALTH

@@ -148,8 +148,8 @@ function heartbeat() {
                 hit = projectiles[key].contactcheck(players, gamemap.turretlist.turret_array)
                 if (projectiles[key].done){
                     //projectiles.splice(key,1)
+                    hit.takeDamage(CONST.CANNONBALL_DAMAGE, soundmanager,projectiles[key].playerid)
                     delete projectiles[key]
-                    hit.takeDamage(CONST.CANNONBALL_DAMAGE, soundmanager)
                     continue
                 }
             }

@@ -106,7 +106,7 @@ function startGame(usernameInput) {
       // Death sequence
       setTimeout(function(){
         render.soundrender.start_music_dead()
-        showDeathMenu()
+        showDeathMenu(data)
       }, 2200)
     }
   )
@@ -152,7 +152,7 @@ function showMainMenu(){
 }
 
 
-function showDeathMenu(){
+function showDeathMenu(data){
 
   var Username = document.getElementById('username-input')
   var retry = document.getElementById('retry-button')
@@ -162,6 +162,22 @@ function showDeathMenu(){
   effects_table.classList.add('hidden')
   deathMenu.classList.remove('hidden')
   
+  const deathstat = document.getElementById("death-stat")
+  deathstat.innerHTML = ""
+
+  var players = data.players
+  console.log(players)
+
+  players.sort(function (x, y) {
+    return y.gold - x.gold
+  })
+  for (var i = 0; i<players.length;i++){
+    if (players[i].id == socket.id){
+      deathstat.innerHTML = "You came " + i+"/"+ players.length + "!"
+      break;
+    }
+  }
+
   retry.onclick = function(){
 
     // Clean up
