@@ -59,7 +59,13 @@ var projectiles = {}
 var healthobserver = new HealthObserver(players, io, monitorstatistics,gamemap)//io.sockets)
 
 //------------------------------ JSON HELPER FUNCTIONS -------------------------------//
-
+effects2json = function(effects){
+    var ef = {}
+    for (var key in effects){
+        ef[key] = effects[key].period
+    }
+    return ef
+}
 playerslocjson = function(){
     var l = []
     //for(var i = 0; i<players.length; i++){
@@ -81,6 +87,7 @@ playerslocjson = function(){
             SpacePressed:players[i].SpacePressed,
             invincible:players[i].invincible,
             cannon:players[i].cannon,
+            effects:effects2json(players[i].effects)
         })
     }
 

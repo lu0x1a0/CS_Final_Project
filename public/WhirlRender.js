@@ -20,7 +20,6 @@ class WhirlRender {
 
     display() {
         imageMode(CENTER);
-        console.log("TRYING TO DISPLAY WHIRL")
         for (let whirl of this.whirl_array) {
             push()
             translate((whirl.loc.x+0.5)*this.tilesize, (whirl.loc.y+0.5)*this.tilesize)
