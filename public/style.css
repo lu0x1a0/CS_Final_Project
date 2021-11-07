@@ -92,3 +92,12 @@ html, body {
   opacity: 0.5;
   color: black;
 }
+
+#effects_table {
+  position: fixed;
+  top: 10%;
+  left: 10%;
+} 
+#effects_list {
+  list-style-type: none;
+}

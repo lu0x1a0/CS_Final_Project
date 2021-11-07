@@ -31,6 +31,9 @@ class Cannon{
             a :rangestat.a*rangestat.framelife*this.speed,
             b :rangestat.b*rangestat.framelife*this.speed
         }
+        this.baseellipsestat['x0'] = this.ellipsestat.a-this.ellipsestat.b
+        this.baseellipsestat['y0'] = 0    
+
         this.ellipsestat['x0'] = this.ellipsestat.a-this.ellipsestat.b
         this.ellipsestat['y0'] = 0    
     }

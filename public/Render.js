@@ -55,7 +55,6 @@ class Render {
         }
 
 
-        console.log(state)
         // Loading map-based render
         this.treasurerender.load_treasure(state.treasurelist)
         this.turretrender.load_turrets(state.turretlist)

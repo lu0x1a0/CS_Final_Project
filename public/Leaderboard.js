@@ -30,7 +30,7 @@ class Leaderboard {
     this.leaderBoard_update_counter = this.leaderBoard_update_counter + 1
     if (this.leaderBoard_update_counter >= 40){
         var players = gameState.playerlist
-        console.log(players)
+        //console.log(players)
         players.sort(function (x, y) {
           return y.gold - x.gold
         })

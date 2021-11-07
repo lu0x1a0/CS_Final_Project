@@ -53,7 +53,7 @@ class TimedAmplifiedEffect{
             return 1
         }else{
             this.period -= 1
-            //console.log("COUNTDOWN",this.period, this.attr,this.obj[this.attr],this.obj)
+            
 
         }
     }
@@ -80,7 +80,15 @@ function LargeRange(player){
     return new TimedAmplifiedEffect(
         player.cannon, 
         ["ellipsestat","range"],
-        [player.cannon['baseellipsestat'],player.cannon.baserange],
+        [   
+            {
+                a:player.cannon['baseellipsestat'].a,
+                b:player.cannon['baseellipsestat'].b,
+                x0:player.cannon['baseellipsestat'].x0,
+                y0:player.cannon['baseellipsestat'].y0
+            },
+            player.cannon.baserange
+        ],
         [   
             {
                 a:player.cannon['baseellipsestat'].a*1.5,
@@ -99,8 +107,9 @@ function LargeRange(player){
 
 module.exports = {
     Weapons : {
-        LargeBall:LargeBall,
+        //LargeBall:LargeBall,
         LargeRange:LargeRange,
-        FastSpeed:FastSpeed
+        //FastSpeed:FastSpeed,
+
     }
 }

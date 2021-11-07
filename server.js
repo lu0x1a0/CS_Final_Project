@@ -64,6 +64,7 @@ effects2json = function(effects){
     for (var key in effects){
         ef[key] = effects[key].period
     }
+    return ef
 }
 playerslocjson = function(){
     var l = []
