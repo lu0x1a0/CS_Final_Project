@@ -3,7 +3,7 @@ const mag = require("./utils.js").mag
 const addVec = require("./utils.js").addVec
 const setMag = require("./utils.js").setMag
 
-const Cannonball = require('./entities.js').Cannonball
+//const Cannonball = require('./entities.js').Cannonball
 
 
 const CONST = require('./Constants.js').CONST

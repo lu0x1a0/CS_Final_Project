@@ -24,9 +24,11 @@ class Leaderboard {
 
   update(gameState) {
 
+
     this.leaderBoard_update_counter = this.leaderBoard_update_counter + 1
     if (this.leaderBoard_update_counter >= 40){
         var players = gameState.playerlist
+
         players.sort(function (x, y) {
           return y.gold - x.gold
         })

@@ -142,7 +142,7 @@ class GameMapRender {
                         break;
                     default:
                         image(this.img_missing, x*this.tilesize, y*this.tilesize, this.tilesize, this.tilesize);
-                    
+
                 }
             }
         }

@@ -8,6 +8,7 @@ class TreasureList {
 
         this.treasure_array = [];
         this.max_treasure = gamemap.max_treasure;
+        this.tilesize = gamemap.tilesize
 
         // Attempt to generate treasure
         for (let i = 0; i < this.max_treasure; i++) {
@@ -35,13 +36,12 @@ class TreasureList {
           } else {
             health = CONST.MAX_HEALTH_AMT
           }
-          let treasure = new Treasure(coords.x,coords.y,gold,health,0)
+          let treasure = new Treasure(coords,gold,health,0)
           this.treasure_array.push(treasure)
         }
     }
 
-    add_death_treasure(coords,gold,health,id) {
-
+    add_death_treasure(coords,gold,health,weaponID) {
 
         // Treasure array will never contain duplicate treasures
         var double_treasure = false;
@@ -49,14 +49,9 @@ class TreasureList {
             if (treasure === coords) { double_treasure = true; }
         }
         if (double_treasure == false) {
-          var gold = 0
-          var health = 0
-          if ( Math.random() >= CONST.GOLD_HEALTH_CHANCE ) {
-            gold = CONST.GOLD_AMT
-          } else {
-            health = CONST.MAX_HEALTH_AMT
-          }
-          let treasure = new Treasure(coords.x,coords.y,gold,health,id)
+          var mapCoords = {x: Math.floor(coords.x/this.tilesize),y: Math.floor(coords.y/this.tilesize)}
+
+          let treasure = new Treasure(mapCoords,gold,health,weaponID)
           this.treasure_array.push(treasure)
         }
     }

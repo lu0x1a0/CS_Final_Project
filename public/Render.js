@@ -20,6 +20,9 @@ class Render {
         this.eventrender = new EventRender()
         this.eventrender.preload()
 
+        this.whirlrender = new WhirlRender()
+        this.whirlrender.preload()
+
         // Sounds
         this.soundrender = new SoundRender()
         this.soundrender.preload()
@@ -39,6 +42,7 @@ class Render {
         this.soundrender.set_tilesize(gamemap.tilesize)
         this.treasurerender.first_load(gamemap)
         this.turretrender.first_load(gamemap)
+        this.whirlrender.first_load(gamemap)
     }
 
     render(state, dead=0) {
@@ -60,15 +64,16 @@ class Render {
         }
 
 
-
         // Loading map-based render
         this.treasurerender.load_treasure(state.treasurelist)
         this.turretrender.load_turrets(state.turretlist)
-
+        this.whirlrender.load_whirl(state.whirllist)
+        
         // Map-based render
         this.gamemaprender.display(this.frameNo)
         this.treasurerender.display(this.frameNo)
         this.turretrender.display()
+        this.whirlrender.display()
 
         // Event render
         this.eventrender.display(state.deadlist)

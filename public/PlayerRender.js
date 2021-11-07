@@ -22,7 +22,7 @@ class PlayerRender {
     this.OnTreasure = playerJSON.OnTreasure
     this.SpaceCounter = playerJSON.SpaceCounter
     this.treasure_fish_time = playerJSON.treasure_fish_time
-
+    this.effects = playerJSON.effects
 
     this.cannon = new CannonRender(playerJSON.cannon, this)
   }
@@ -96,7 +96,18 @@ class PlayerRender {
     pop()
 
     this.cannon.showRange()
+    this.showEffects()
   };
+  showEffects(){
+    const effects_list = document.getElementById("effects_list")
+    effects_list.innerHTML = ''
+    var l = ""
+    for (var key in this.effects){
+      l += "<li>" + key + ": "+ this.effects[key] + "<\li> \n"
+    }
+    effects_list.innerHTML = l
+    //console.log(this.effects)
+  }
 
   cannonballshow(pos,size) {
     imageMode(CENTER)

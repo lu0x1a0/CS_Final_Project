@@ -23,9 +23,12 @@ CONST = {
     TURRET_HEALTH : 50,
     TURRET_SIZE : 32,
 
+    WHIRL_DAMAGE : 5,
+
     // Bot constants
     BOT_LOW_HEALTH : 50,
     BOT_RAM_CONDITION: 70,
+    MAX_BOTS_ONSERVER: 5,
 
 
     // Timing constants
@@ -34,14 +37,17 @@ CONST = {
     TREASURE_FISH_TIME : 20*2,
     TURRET_FRAME_FREQ : 20*2,
     TURRET_REPAIR_TIME : 20*5,
+    WHIRLMOVETICK : 2000/(1000/20), //2 seconds, 
+    WEAPON_EFFECT_PERIOD : 20*20, // 20 Seconds
 
-    // Treasure constants 
+    // Treasure constants
     GOLD_AMT : 10,
     MAX_HEALTH_AMT: 20,
     GOLD_HEALTH_CHANCE: 0.5,
+    GOLD_PERCENT_DROP: 0.5,
 
-    SIDE_DAMAGE_MULTIPLIER : 1,
-    FRONT_BACK_DAMAGE_MULTIPLIER : 0.25,
+    SIDE_DAMAGE_MULTIPLIER : 1/3,
+    FRONT_BACK_DAMAGE_MULTIPLIER : 0.25/3,
 
     UPDATE_ESCAPEPIVOTS : 200,
     ESCAPE_RADIUS: 300,
@@ -54,7 +60,7 @@ CONST = {
     NEARBY_LAND_ITERATIONS: 3,
     LAND_LOSING_RATE: 0.10,
 
-    SHOOTING: 30
+    SHOOTING: 30,
 }
 
 CONST['RANGESTAT'] = {

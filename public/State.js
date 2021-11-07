@@ -67,8 +67,9 @@ class State {
             treasurelist : newstatedata.treasurelist,
             turretlist : newstatedata.turretlist,
             deadlist : this.tick_deadlist(),
+            whirllist: newstatedata.whirllist
         })
-
+        
         this.eventlist = this.eventlist.concat(newstatedata.eventlist)
 
         const base = this.get_base_update()
@@ -98,26 +99,18 @@ class State {
             const next = this.state_list[base+1]
             const r = (server_time - base_update.t) / (next.t - base_update.t)
 
-            print(base_update.eventlist)
+            //print(base_update.eventlist)
 
             return {
                 playerlist : interpolatePlayerList(base_update.playerlist, next.playerlist, r),
                 projectilelist : interpolateProjectileList(base_update.projectilelist, next.projectilelist, r),
                 treasurelist : base_update.treasurelist,
                 turretlist : base_update.turretlist,
+                whirllist : base_update.whirllist,
                 eventlist : this.pop_sounds(),
                 deadlist : this.tick_deadlist(),
             }
         }
-
-        // return {
-        //     gamemap:this.gamemap,
-        //     playerlist:this.playerlist,
-        //     projectilelist:this.projectilelist,
-        //     treasurelist:this.treasurelist,
-        //     turretlist:this.turretlist,
-        //     eventlist:this.pop_sounds(),
-        // }
     }
 
     pop_sounds() {

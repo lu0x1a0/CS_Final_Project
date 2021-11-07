@@ -56,10 +56,16 @@ var soundmanager = new SoundManager()
 var players = {}
 var monitorstatistics = {'numships' : 0}
 var projectiles = {}
-var healthobserver = new HealthObserver(players, io, monitorstatistics)//io.sockets)
+var healthobserver = new HealthObserver(players, io, monitorstatistics,gamemap)//io.sockets)
 
 //------------------------------ JSON HELPER FUNCTIONS -------------------------------//
-
+effects2json = function(effects){
+    var ef = {}
+    for (var key in effects){
+        ef[key] = effects[key].period
+    }
+    return ef
+}
 playerslocjson = function(){
     var l = []
     //for(var i = 0; i<players.length; i++){
@@ -81,6 +87,7 @@ playerslocjson = function(){
             SpacePressed:players[i].SpacePressed,
             invincible:players[i].invincible,
             cannon:players[i].cannon,
+            effects:effects2json(players[i].effects)
         })
     }
 
@@ -111,6 +118,8 @@ setInterval(heartbeat, CONST.HEARTBEAT_INTERVAL)
 
 // RUNS EVERY SERVER-WIDE UPDATE
 function heartbeat() {
+    // update whirlpool position
+    gamemap.whirllist.update(gamemap)
 
     for (var i in players){
         // checks that players[i] is not removed from the object by previous damages
@@ -123,6 +132,11 @@ function heartbeat() {
             }
         }
     }
+
+    if (monitorstatistics['numships'] <= CONST.MAX_BOTS_ONSERVER) {
+        InitialiseBot(gamemap)
+    }
+
     for (var key in projectiles) {
         if (projectiles.hasOwnProperty(key)) {
             projectiles[key].update()
@@ -135,7 +149,7 @@ function heartbeat() {
                 if (projectiles[key].done){
                     //projectiles.splice(key,1)
                     delete projectiles[key]
-                    console.log(hit.takeDamage(CONST.CANNONBALL_DAMAGE, soundmanager))
+                    hit.takeDamage(CONST.CANNONBALL_DAMAGE, soundmanager)
                     continue
                 }
             }
@@ -150,7 +164,6 @@ function heartbeat() {
     for (let id in BotCannonBalls) {
         projectiles[id+(new Date()).getTime()] = BotCannonBalls[id]
         soundmanager.add_sound("cannon_fire", BotCannonBalls[id].pos)
-        console.log("added")
     }
 
     BotEntity.Bot.ResetCannonBalls()
@@ -171,13 +184,15 @@ function heartbeat() {
         projectiles:projectileslocjson(),
         treasurelist:gamemap.treasurelist,
         turretlist:gamemap.turretlist,
+        whirllist:gamemap.whirllist,
         eventlist:soundmanager.pop_events(),
     })
 
-    if (monitorstatistics['numships'] == 0) {
-        InitialiseBot(gamemap)
-        monitorstatistics['numships'] += 1
-    }
+    //if (monitorstatistics['numships'] == 0) {
+    //    InitialiseBot(gamemap)
+    //    monitorstatistics['numships'] += 1
+    //}
+
 }
 
 botIdx = 0
@@ -214,7 +229,7 @@ function newConnection(socket) {
     socket.on('start',
         function(data) {
 
-            console.log(data)
+            //console.log(data)
             if (monitorstatistics['numships'] == 0) {
                 InitialiseBot(gamemap)
             }
@@ -241,6 +256,7 @@ function newConnection(socket) {
                 projectiles:projectileslocjson(),
                 treasurelist:gamemap.treasurelist,
                 turretlist:gamemap.turretlist,
+                whirllist:gamemap.whirllist,
                 eventlist:soundmanager.pop_events(),
             })
         }
@@ -282,7 +298,6 @@ function newConnection(socket) {
                 } else if (data.pressedkeycode ==="mouse"){
                     cannonball = player.fire(data.targetX,data.targetY)
                     soundmanager.add_sound("cannon_fire", player.pos)
-                    //console.log("----------------genball----------------\n",cannonball)
                     if (cannonball){
                         // use playerid+current time stamp as id, might not safe from server attack with spamming io
                         projectiles[player.id+(new Date()).getTime()] = cannonball
