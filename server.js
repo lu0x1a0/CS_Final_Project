@@ -142,7 +142,7 @@ function heartbeat() {
                 if (projectiles[key].done){
                     //projectiles.splice(key,1)
                     delete projectiles[key]
-                    console.log(hit.takeDamage(CONST.CANNONBALL_DAMAGE, soundmanager))
+                    hit.takeDamage(CONST.CANNONBALL_DAMAGE, soundmanager)
                     continue
                 }
             }
@@ -151,7 +151,7 @@ function heartbeat() {
     }
 
     // Refresh treasure
-    //gamemap.try_add_treasure()
+    gamemap.try_add_treasure()
 
     let BotCannonBalls = BotEntity.Bot.getCannonBalls()
     for (let id in BotCannonBalls) {

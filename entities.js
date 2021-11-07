@@ -36,7 +36,7 @@ class Player{
         this.OnTreasure = false
         this.healthobserver = healthobserver
 
-        this.effects = []
+        this.effects = {}
     }
 
     invincTick() {
@@ -156,19 +156,12 @@ class Player{
     update(players, soundmanager,paths,costs,tupleval,index,Gmap,forbidden,projectiles) {
         // Called on every heartbeat
         //check whether to remove effect
-        for(var i = 0; i<this.effects.length; i++){
-            var done = this.effects[i].countdown()
-            if (done){
-                this.effects.splice(i,1);
-                i--;
+        var effectdone = 1
+        for (var key in this.effects) {
+            if ( effectdone === this.effects[key].countdown()){
+                delete this.effects[key]
             }
         }
-        var status = '---- NO EFFECTS ----'
-        if (this.effects.length>0) {
-            status = '---- EFFECTS ----'
-        }
-        console.log(status)
-        console.log(this.cannon.calibre)
         
         // Tick invincibility
         this.invincTick()
@@ -203,7 +196,9 @@ class Player{
                   this.health += treasure.health
                 }
 
-                this.effects.push( Weapons[treasure.weaponID](this))
+                if (Weapons.hasOwnProperty(treasure.weaponID)){
+                    this.effects[treasure.weaponID] = new Weapons[treasure.weaponID](this)
+                }
 
                 soundmanager.add_sound("get_treasure", this.pos)
 

@@ -28,7 +28,7 @@ CONST = {
     // Bot constants
     BOT_LOW_HEALTH : 50,
     BOT_RAM_CONDITION: 70,
-    MAX_BOTS_ONSERVER: 1,
+    MAX_BOTS_ONSERVER: 5,
 
 
     // Timing constants

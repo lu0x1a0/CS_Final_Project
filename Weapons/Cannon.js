@@ -32,35 +32,7 @@ class Cannon{
         this.ellipsestat['x0'] = this.ellipsestat.a-this.ellipsestat.b
         this.ellipsestat['y0'] = 0    
     }
-    setRangeMultiplier(mult){
-        this.rangemult = mult
-        this.range = mult*this.baserange
-    }
-    resetRangeMultiplier(){
-        this.rangemult = 1
-        this.range = this.baserange
-    }
-    setSpeedMultiplier(mult){
-        this.speedmult = mult
-        this.speed = mult*this.basespeed
-    }
-    resetSpeedMultiplier(){
-        this.speedmult = 1
-        this.speed = this.basespeed
-    }
-    setCalibreMultiplier(mult){
-        this.calibremult = mult
-        this.calibre = mult*this.basecalibre
-        console.log("--- CANNON EFFECT DEBUG")
-        console.log(this)
-        console.log(this.calibremult,this.basecalibre)
-        console.log(this.calibre)
-    }
-    resetCalibreMultiplier(){
-        this.calibremult = 1
-        this.calibre = this.basecalibre
-    }
-
+    
     ellipserange(theta) {
         //theta is wrt the bow/front of the ship
         var a  = this.ellipsestat.a*this.rangemult
@@ -81,7 +53,6 @@ class Cannon{
       //    console.log("what the heck:",this.player.id)
       //    console.log(this.basecalibre)
       //}
-        console.log("::::::",this.player.id,"::",this.basecalibre)
     }
 
     fire(targetX,targetY){
@@ -90,7 +61,7 @@ class Cannon{
             this.angle = Math.atan2(targetY,targetX)
             var startpos = {x:this.pos.x,y:this.pos.y}
             // move slightly off player's collision zone so the ball doesn't hit the player
-            var shift = setMag({x:targetX,y:targetY},this.player.size/2+20)
+            var shift = setMag({x:targetX,y:targetY},this.player.size/2+this.calibre)
             var shiftstart = addVec(startpos,shift)
 
             // adj speed according to player velocity
@@ -104,7 +75,17 @@ class Cannon{
                 end:{x:startpos.x+move.x, y:startpos.y+move.y},
                 speed: adjspeed//this.speed
             }
-            return new Cannonball(data.start,data.end,data.speed,CONST.CANNONBALL_DIAMETER)
+            
+            //if this is not a bot
+            if (!this.player.EscapeRadius){
+                var temp = "YES"
+                var stub = new Cannonball(data.start,data.end,data.speed,true,this.calibre,temp)
+                console.log("Player ",this.player.id," fired: ",this.calibre,stub.diameter)
+            }
+            else{
+                var stub = new Cannonball(data.start,data.end,data.speed,true,this.calibre)
+            }            
+            return stub//CONST.CANNONBALL_DIAMETER)
         }
     }
 
@@ -118,15 +99,18 @@ class Cannon{
 }
 
 class Cannonball{
-    constructor(start,end,speed, shotByPlayer=true,ballsize = CONST.CANNONBALL_DIAMETER){
+    constructor(start,end,speed, shotByPlayer=true,calibre,temp){
         this.pos = {x:start.x,y:start.y};
         this.start = start;
         this.end = end;
         this.speed = speed; // dist per heartbeat
         this.delta = this.calcDelta()
         this.done = false;
-        this.diameter = ballsize;
+        this.diameter = calibre ;
         this.shotByPlayer = shotByPlayer
+        if (temp == "YES"){
+            console.log("YES:", this.diameter)
+        }
     }
     //checks whether the ball's euclidian distance from a player is less than the two radius combined.
     contactcheck(players, turret_array){
