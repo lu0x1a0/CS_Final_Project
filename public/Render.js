@@ -17,6 +17,9 @@ class Render {
         this.turretrender = new TurretRender()
         this.turretrender.preload()
 
+        this.eventrender = new EventRender()
+        this.eventrender.preload()
+
         // Sounds
         this.soundrender = new SoundRender()
         this.soundrender.preload()
@@ -66,6 +69,9 @@ class Render {
         this.gamemaprender.display(this.frameNo)
         this.treasurerender.display(this.frameNo)
         this.turretrender.display()
+
+        // Event render
+        this.eventrender.display(state.deadlist)
 
 
         for (var i in state.playerlist) {

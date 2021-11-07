@@ -4,11 +4,11 @@ class TreasureRender {
 
     preload() {
         this.frames_treasure = []
-        this.frames_treasure[0] = loadImage('assets/imgs/img_treasure1.png');
-        this.frames_treasure[1] = loadImage('assets/imgs/img_treasure2.png');
-        this.frames_treasure[2] = loadImage('assets/imgs/img_treasure3.png');
-        this.frames_treasure[3] = loadImage('assets/imgs/img_treasure4.png');
-        this.frames_treasure[4] = loadImage('assets/imgs/img_treasure5.png');
+        this.frames_treasure[0] = loadImage('assets/imgs/img_treasure1.png')
+        this.frames_treasure[1] = loadImage('assets/imgs/img_treasure2.png')
+        this.frames_treasure[2] = loadImage('assets/imgs/img_treasure3.png')
+        this.frames_treasure[3] = loadImage('assets/imgs/img_treasure4.png')
+        this.frames_treasure[4] = loadImage('assets/imgs/img_treasure5.png')
     }
 
     first_load(gamemap) {

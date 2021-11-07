@@ -23,7 +23,6 @@ class GameMapRender {
         for (let i = 0; i < this.json_water.frames.length; i++) {
             let pos = this.json_water.frames[i].position
             let img = this.sheet_water.get(pos.x, pos.y, pos.w, pos.h)
-            console.log(img)
             this.frames_water.push(img)
         }
 
@@ -53,8 +52,6 @@ class GameMapRender {
     }
 
     preprocess_map() {
-
-        console.log("PREPROCESS")
 
         // Processes edge water blocks
         for (let x = 0; x < this.xlen; x++) {
@@ -106,11 +103,10 @@ class GameMapRender {
                         image(this.img_turret, x*this.tilesize, y*this.tilesize, this.tilesize, this.tilesize);
                         break;
                     case 'S':
-                        image(this.img_water, x*this.tilesize, y*this.tilesize, this.tilesize, this.tilesize);
+                        image(this.frames_water[Math.floor(frameNo/12) % this.frames_water.length], x*this.tilesize, y*this.tilesize, this.tilesize, this.tilesize);
                         break;
                     case ' ':
                         image(this.frames_water[Math.floor(frameNo/12) % this.frames_water.length], x*this.tilesize, y*this.tilesize, this.tilesize, this.tilesize);
-                        this.render_water_wall(x,y)
                         break;
                     case 'LU':
                         image(this.frames_water[Math.floor(frameNo/12) % this.frames_water.length], x*this.tilesize, y*this.tilesize, this.tilesize, this.tilesize);
@@ -150,10 +146,5 @@ class GameMapRender {
                 }
             }
         }
-    }
-
-    render_water_wall(x,y) {
-
-
     }
 }

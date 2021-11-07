@@ -21,7 +21,7 @@ CONST = {
 
     TURRET_FIRING_RANGE : 7,
     TURRET_HEALTH : 50,
-    TURRET_SIZE : 16,
+    TURRET_SIZE : 32,
 
     // Bot constants
     BOT_LOW_HEALTH : 50,

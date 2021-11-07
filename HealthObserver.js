@@ -11,8 +11,18 @@ class HealthObserver{
         //var treasure = this.playerlist[playerid].dropTreasure()
         // this.treasurehandler.addtreasure(treasure)
         var deathpos = this.playerlist[playerid].pos
+        var deathdir = this.playerlist[playerid].dir
         delete this.playerlist[playerid]
-        this.server.to(playerid).emit('dead', {coords : deathpos})
+
+        this.server.to(playerid).emit('dead', {
+            coords : deathpos,
+            dir : deathdir        
+        })
+        // Emit death coords/pos to all
+        this.server.sockets.emit('playerdeath', {
+            pos : deathpos,
+            dir : deathdir        
+        })
         
         // re-added disconnect to that player pressing key doesnt trigger server update,
         // bcos player already removed from json
