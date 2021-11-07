@@ -15,8 +15,6 @@ class Cannon{
         this.player = player
         
         this.basecalibre = CONST.CANNONBALL_DIAMETER
-        console.log("INIT CANNON")
-        console.log(this.basecalibre)
         this.calibre = this.basecalibre*this.calibremult
 
         this.basespeed = player.maxspeed*CONST.CANNON_SPEED_FACTOR 
@@ -49,10 +47,6 @@ class Cannon{
     }
     update(){
       this.pos = this.player.pos
-      //if (!this.basecalibre){
-      //    console.log("what the heck:",this.player.id)
-      //    console.log(this.basecalibre)
-      //}
     }
 
     fire(targetX,targetY){
@@ -75,17 +69,8 @@ class Cannon{
                 end:{x:startpos.x+move.x, y:startpos.y+move.y},
                 speed: adjspeed//this.speed
             }
-            
-            //if this is not a bot
-            if (!this.player.EscapeRadius){
-                var temp = "YES"
-                var stub = new Cannonball(data.start,data.end,data.speed,true,this.calibre,temp)
-                console.log("Player ",this.player.id," fired: ",this.calibre,stub.diameter)
-            }
-            else{
-                var stub = new Cannonball(data.start,data.end,data.speed,true,this.calibre)
-            }            
-            return stub//CONST.CANNONBALL_DIAMETER)
+                    
+            return new Cannonball(data.start,data.end,data.speed,true,this.calibre)
         }
     }
 
@@ -99,7 +84,7 @@ class Cannon{
 }
 
 class Cannonball{
-    constructor(start,end,speed, shotByPlayer=true,calibre,temp){
+    constructor(start,end,speed, shotByPlayer=true,calibre){
         this.pos = {x:start.x,y:start.y};
         this.start = start;
         this.end = end;
@@ -108,9 +93,6 @@ class Cannonball{
         this.done = false;
         this.diameter = calibre ;
         this.shotByPlayer = shotByPlayer
-        if (temp == "YES"){
-            console.log("YES:", this.diameter)
-        }
     }
     //checks whether the ball's euclidian distance from a player is less than the two radius combined.
     contactcheck(players, turret_array){
@@ -150,7 +132,6 @@ class Cannonball{
         if ( (mag(this.pos.x-this.start.x,this.pos.y-this.start.y)>=mag(this.end.x-this.start.x,this.end.y-this.start.y))
             ){
             this.done = true;
-            //console.log("done");
         }
     }
 }
