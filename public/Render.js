@@ -107,7 +107,7 @@ class Render {
         // Projectiles
         for (var i in state.projectilelist){
             var projectile = state.projectilelist[i]
-            cannonballshow(projectile.pos, projectile.diameter)
+            this.playerrender.cannonballshow(projectile.pos, projectile.diameter)
         }
 
         // Increase frameNo

@@ -6,7 +6,7 @@ class PlayerRender {
   preload() {
     // Images
     this.img_boat = loadImage('assets/imgs/img_boat.png');
-    this.img_water = loadImage('assets/imgs/img_water.png');
+    this.img_ball = loadImage('assets/imgs/img_ball.png');
   }
 
   load_player(playerJSON) {
@@ -98,12 +98,10 @@ class PlayerRender {
     this.cannon.showRange()
   };
 
-  // tryfire(){
-  //   if (this.cannon.checkclickinrange()){
-  //     // Fire SFX
-  //     this.sfx_cannon_fire.play();
-  //   }
-  // }
+  cannonballshow(pos,size) {
+    imageMode(CENTER)
+    image(this.img_ball, pos.x, pos.y, size, size)
+  }
 }
 
 function showship(dir,pos,img_boat,username,size,health,funcs,gold,OnTreasure,SpaceCounter,SpacePressed, invincible){
