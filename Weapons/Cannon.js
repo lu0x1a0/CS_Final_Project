@@ -23,6 +23,10 @@ class Cannon{
         this.baserange = rangestat.b*rangestat.framelife*this.speed // b is redundant because its set to 1
         this.range = this.baserange*this.rangemult
         
+        this.baseellipsestat = {
+            a :rangestat.a*rangestat.framelife*this.speed,
+            b :rangestat.b*rangestat.framelife*this.speed
+        }
         this.ellipsestat = {
             a :rangestat.a*rangestat.framelife*this.speed,
             b :rangestat.b*rangestat.framelife*this.speed

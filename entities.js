@@ -186,22 +186,23 @@ class Player{
                 //Remove Treasure coordinates
                 let encap = {x: Math.floor(this.pos.x/gamemap.tilesize), y: Math.floor(this.pos.y/gamemap.tilesize)};
                 let treasure = gamemap.treasurelist.get_treasure(encap)
-                gamemap.treasurelist.remove_treasure(encap)
+                if (treasure){
+                    gamemap.treasurelist.remove_treasure(encap)
 
-                this.gold += treasure.gold
+                    this.gold += treasure.gold
 
-                if (this.health + treasure.health >= CONST.PLAYER_HEALTH) {
-                  this.health = CONST.PLAYER_HEALTH
-                } else {
-                  this.health += treasure.health
+                    if (this.health + treasure.health >= CONST.PLAYER_HEALTH) {
+                      this.health = CONST.PLAYER_HEALTH
+                    } else {
+                      this.health += treasure.health
+                    }
+
+                    if (Weapons.hasOwnProperty(treasure.weaponID)){
+                        this.effects[treasure.weaponID] = new Weapons[treasure.weaponID](this)
+                    }
+
+                    soundmanager.add_sound("get_treasure", this.pos)
                 }
-
-                if (Weapons.hasOwnProperty(treasure.weaponID)){
-                    this.effects[treasure.weaponID] = new Weapons[treasure.weaponID](this)
-                }
-
-                soundmanager.add_sound("get_treasure", this.pos)
-
                 this.SpaceCounter = 0;
                 this.OnTreasure = false;
                 this.SpacePressed = false;
