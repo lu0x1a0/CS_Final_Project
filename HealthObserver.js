@@ -1,5 +1,6 @@
 // implement the observer pattern for players health
 const CONST = require('./Constants.js').CONST
+const {Weapons} = require('./Weapons/WeaponCollect.js')
 class HealthObserver{
     constructor(playerlist,server, monstat,gamemap){
         this.playerlist = playerlist
@@ -13,7 +14,14 @@ class HealthObserver{
         //var treasure = this.playerlist[playerid].dropTreasure()
         // this.treasurehandler.addtreasure(treasure)
         var deathpos = this.playerlist[playerid].pos
-        this.gamemap.treasurelist.add_death_treasure(deathpos,Math.floor(this.playerlist[playerid].gold*CONST.GOLD_PERCENT_DROP),0,0)
+        var keys = Object.keys(Weapons)
+        var weaponID = keys[Math.floor(Math.random()*keys.length)]
+        this.gamemap.treasurelist.add_death_treasure(
+            deathpos,
+            Math.floor(this.playerlist[playerid].gold*CONST.GOLD_PERCENT_DROP),
+            CONST.MAX_HEALTH_AMT/2,
+            weaponID
+        )
         delete this.playerlist[playerid]
         this.server.to(playerid).emit('dead', {coords : deathpos})
 

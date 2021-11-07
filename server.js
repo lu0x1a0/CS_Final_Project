@@ -142,7 +142,7 @@ function heartbeat() {
                 if (projectiles[key].done){
                     //projectiles.splice(key,1)
                     delete projectiles[key]
-                    console.log(hit.takeDamage(CONST.CANNONBALL_DAMAGE, soundmanager))
+                    hit.takeDamage(CONST.CANNONBALL_DAMAGE, soundmanager)
                     continue
                 }
             }
