@@ -34,8 +34,45 @@
     </div>
 
     <div id="death-menu" class="hidden">
+      <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+      <script>
+        function displayKill(){
+          var kill = document.getElementById("death-stat-kill")
+          var lead = document.getElementById("death-stat-lead")
+          var gold = document.getElementById("death-stat-gold")
+          kill.classList.remove("hidden")
+          lead.classList.add("hidden")
+          gold.classList.add("hidden")
+        }
+        function displayLead(){
+          var kill = document.getElementById("death-stat-kill")
+          var lead = document.getElementById("death-stat-lead")
+          var gold = document.getElementById("death-stat-gold")
+          kill.classList.add("hidden")
+          lead.classList.remove("hidden")
+          gold.classList.add("hidden")
+
+        }
+        function displayGold(){
+          var kill = document.getElementById("death-stat-kill")
+          var lead = document.getElementById("death-stat-lead")
+          var gold = document.getElementById("death-stat-gold")
+          kill.classList.add("hidden")
+          lead.classList.add("hidden")
+          gold.classList.remove("hidden")
+
+        }
+      </script>
       <h1>You suck big time</h1>
-      <div id="death-stat"></div>
+      <ul class="death-menu-nav">
+        <li class="death-menu-nav" id = "death-kill" onclick = "displayKill()">kill Trend</li>
+        <li class="death-menu-nav" id = "death-lead" onclick = "displayLead()">Leaderboard</li>
+        <li class="death-menu-nav" id = "death-gold" onclick = "displayGold()">Gold Trend</li>
+      </ul>
+      <div id="death-stat-kill" class = "hidden" style="width:100%;max-width:700px;max-height:400px"></div> 
+      <div id="death-stat-lead" class = ""></div>
+      <div id="death-stat-gold" class = "hidden" style="width:100%;max-width:700px;max-height:400px"></div> 
+
       <input type="button" id="retry-button" value="RETRY"/>
       <input type="button" id="mainmenu-button" value="MAIN MENU"/>
     </div>

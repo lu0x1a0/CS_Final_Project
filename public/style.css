@@ -108,8 +108,21 @@ html, body {
   list-style-type: none;
 }
 
-#death-stat{
+ul.death-menu-nav {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+li.death-menu-nav {
+  float: left;
+  display: block;
+  padding: 8px;
+  background-color: #dddddd;
+}
+
+#death-stat-lead{
   display: block;
   overflow-y: scroll;
-  max-height: 200px;
+  max-height: 400px;
 }
