@@ -95,9 +95,21 @@ html, body {
 
 #effects_table {
   position: fixed;
-  top: 10%;
+  top: 0%;
   left: 10%;
+  background: rgba(192, 192, 192, 0.4);
+  padding: 20px;
+  border-style:solid;
+  opacity: 0.9;
+  border-radius:25px;
+  
 } 
 #effects_list {
   list-style-type: none;
+}
+
+#death-stat{
+  display: block;
+  overflow-y: scroll;
+  max-height: 200px;
 }

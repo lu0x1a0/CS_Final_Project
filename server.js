@@ -59,53 +59,8 @@ var projectiles = {}
 var healthobserver = new HealthObserver(players, io, monitorstatistics,gamemap)//io.sockets)
 
 //------------------------------ JSON HELPER FUNCTIONS -------------------------------//
-effects2json = function(effects){
-    var ef = {}
-    for (var key in effects){
-        ef[key] = effects[key].period
-    }
-    return ef
-}
-playerslocjson = function(){
-    var l = []
-    //for(var i = 0; i<players.length; i++){
-    for (var i in players){
+const {playerslocjson,projectileslocjson} = require("./utils.js")
 
-        l.push({
-            username:players[i].username,
-            id:players[i].id,
-            pos:players[i].pos,
-            dir:players[i].dir,
-            health:players[i].health,
-            hitbox_size:players[i].hitbox_size,
-            size:players[i].size,
-            vel:players[i].vel,//for movable range purpose, need to be direct to each player id separately to avoid hack bots
-            gold:players[i].gold,
-            OnTreasure:players[i].OnTreasure,
-            SpaceCounter:players[i].SpaceCounter,
-            treasure_fish_time:players[i].treasure_fish_time,
-            SpacePressed:players[i].SpacePressed,
-            invincible:players[i].invincible,
-            cannon:players[i].cannon,
-            effects:effects2json(players[i].effects)
-        })
-    }
-
-    return l
-}
-projectileslocjson = function(){
-    var l = []
-    for (var key in projectiles) {
-        if (projectiles.hasOwnProperty(key)) {
-            l.push({
-                id:key,
-                pos:projectiles[key].pos,
-                diameter:projectiles[key].diameter
-            })
-        }
-    }
-    return l
-}
 
 //------------------------------ SERVER EVENTS -------------------------------//
 
@@ -148,8 +103,8 @@ function heartbeat() {
                 hit = projectiles[key].contactcheck(players, gamemap.turretlist.turret_array)
                 if (projectiles[key].done){
                     //projectiles.splice(key,1)
+                    hit.takeDamage(CONST.CANNONBALL_DAMAGE, soundmanager,projectiles[key].playerid)
                     delete projectiles[key]
-                    hit.takeDamage(CONST.CANNONBALL_DAMAGE, soundmanager)
                     continue
                 }
             }
@@ -180,8 +135,8 @@ function heartbeat() {
 
     io.sockets.emit('heartbeat', {
         t:Date.now(),
-        players:playerslocjson(),
-        projectiles:projectileslocjson(),
+        players:playerslocjson(players),
+        projectiles:projectileslocjson(projectiles),
         treasurelist:gamemap.treasurelist,
         turretlist:gamemap.turretlist,
         whirllist:gamemap.whirllist,
@@ -252,8 +207,8 @@ function newConnection(socket) {
             io.sockets.emit('client_start', {
                 gamemap:gamemap,
                 t:Date.now(),
-                players:playerslocjson(),
-                projectiles:projectileslocjson(),
+                players:playerslocjson(players),
+                projectiles:projectileslocjson(projectiles),
                 treasurelist:gamemap.treasurelist,
                 turretlist:gamemap.turretlist,
                 whirllist:gamemap.whirllist,

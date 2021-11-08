@@ -37,30 +37,30 @@ class GameMap {
     gridAroundAvail(cp){
         //cp : current position
         var avail = []
-        if ( (cp.x-1)>=0 && (cp.y-1)>=0 && this.map[cp.x-1][cp.y-1]=='W' ){
+        if ( (cp.x-1)>=0 && (cp.y-1)>=0 && this.map[cp.x-1][cp.y-1]==' ' ){
             avail.push({x:cp.x-1,y:cp.y-1})          
         }
-        if ( (cp.x-1)>=0  && this.map[cp.x-1][cp.y]=='W'){
+        if ( (cp.x-1)>=0  && this.map[cp.x-1][cp.y]==' '){
             avail.push({x:cp.x-1,y:cp.y})          
         }
-        if ( (cp.y-1)>=0  && this.map[cp.x][cp.y-1]=='W'){
+        if ( (cp.y-1)>=0  && this.map[cp.x][cp.y-1]==' '){
             avail.push({x:cp.x,y:cp.y-1})          
         }
         
-        if ( (cp.x+1)<this.xlen && (cp.y+1)<this.ylen && this.map[cp.x+1][cp.y+1]=='W'){
+        if ( (cp.x+1)<this.xlen && (cp.y+1)<this.ylen && this.map[cp.x+1][cp.y+1]==' '){
             avail.push({x:cp.x,y:cp.y+1})          
         }
-        if ( (cp.x+1)<this.xlen && this.map[cp.x+1][cp.y]=='W'){
+        if ( (cp.x+1)<this.xlen && this.map[cp.x+1][cp.y]==' '){
             avail.push({x:cp.x+1,y:cp.y})          
         }
-        if ( (cp.y+1)<this.ylen && this.map[cp.x][cp.y+1]=='W'){
+        if ( (cp.y+1)<this.ylen && this.map[cp.x][cp.y+1]==' '){
             avail.push({x:cp.x,y:cp.y+1})          
         }
 
-        if ( (cp.x+1)<this.xlen && (cp.y-1)>=0  && this.map[cp.x+1][cp.y-1]=='W'){
+        if ( (cp.x+1)<this.xlen && (cp.y-1)>=0  && this.map[cp.x+1][cp.y-1]==' '){
             avail.push({x:cp.x+1,y:cp.y})          
         }
-        if ( (cp.x-1)>=0 && (cp.y+1)<this.ylen  && this.map[cp.x-1][cp.y+1]=='W'){
+        if ( (cp.x-1)>=0 && (cp.y+1)<this.ylen  && this.map[cp.x-1][cp.y+1]==' '){
             avail.push({x:cp.x,y:cp.y+1})          
         }
         return avail
@@ -89,7 +89,7 @@ class GameMap {
             randy = Math.floor(Math.random()*this.ylen);
         }
 
-        // this.map[randx][randy] != 'W'
+        // this.map[randx][randy] != ' '
         return {x:randx, y:randy};
     }
 

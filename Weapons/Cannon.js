@@ -91,7 +91,7 @@ class Cannon{
 }
 
 class Cannonball{
-    constructor(start,end,speed, shotByPlayer=true,calibre){
+    constructor(start,end,speed, shotByPlayer=true,calibre,playerid){
         this.pos = {x:start.x,y:start.y};
         this.start = start;
         this.end = end;
@@ -100,6 +100,7 @@ class Cannonball{
         this.done = false;
         this.diameter = calibre ;
         this.shotByPlayer = shotByPlayer
+        this.playerid = playerid
     }
     //checks whether the ball's euclidian distance from a player is less than the two radius combined.
     contactcheck(players, turret_array){
