@@ -26,12 +26,15 @@ class HealthObserver{
             weaponID
         )
         if (this.playerlist.hasOwnProperty(idfrom)){    
-            this.playerlist[idfrom].gamestat['kill'] += 1;
+            //this.playerlist[idfrom].gamestat['kill'] += 1;
+            this.playerlist[idfrom].addkillstat()
         }
         this.server.to(playerid).emit('dead', {
             coords : deathpos,
             dir : deathdir,
-            players : playerslocjson(this.playerlist)       
+            players : playerslocjson(this.playerlist), 
+            goldstat: this.playerlist[playerid].gamestat.goldstat,
+            killstat: this.playerlist[playerid].gamestat.killstat,    
         })
         delete this.playerlist[playerid]
 

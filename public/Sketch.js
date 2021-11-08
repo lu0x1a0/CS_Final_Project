@@ -113,7 +113,6 @@ function startGame(usernameInput) {
 
   socket.on("playerdeath",
     function(data) {
-      console.log(data)
       state.add_death(data.pos, data.dir)
     }
   )
@@ -162,7 +161,9 @@ function showDeathMenu(data){
   effects_table.classList.add('hidden')
   deathMenu.classList.remove('hidden')
   
-  const deathstat = document.getElementById("death-stat")
+  const deathstat = document.getElementById("death-stat-lead")
+  const killstat = document.getElementById("death-stat-kill")
+  const goldstat = document.getElementById("death-stat-gold")
   deathstat.innerHTML = ""
 
   var players = data.players
@@ -182,6 +183,24 @@ function showDeathMenu(data){
   }
   goldlist += "</ol>"
   deathstat.innerHTML += goldlist
+  
+  //do charts
+  doChart(
+    "death-stat-gold",
+    {
+      x:data.goldstat.gold_time,
+      y:data.goldstat.gold_amount,
+    },
+    "Cumulative Gold"
+  )
+  doChart(
+    "death-stat-kill",
+    {
+      x:data.killstat.kill_time,
+      y:data.killstat.kill_amount,
+    },
+    "Cumulative Kills"
+  )
 
   retry.onclick = function(){
 
@@ -210,6 +229,26 @@ function showDeathMenu(data){
   }
 }
 
+function doChart(chart_id,rawdata,chart_title){
+    // plot the charts - gold
+  var xArray = rawdata.x//[50,60,70,80,90,100,110,120,130,140,150];
+  var yArray = rawdata.y//[7,8,8,9,9,9,10,11,14,14,15];
+  // Define Data
+  var data = [{
+    x: xArray,
+    y: yArray,
+    mode:"lines"
+  }];
+  // Define Layout
+  var layout = {
+    //xaxis: {range: [40, 160], title: ""},
+    //yaxis: {range: [5, 16], title: ""},  
+    xaxis: {showticklabels:false},
+    title: chart_title
+  };
+  // Display using Plotly
+  Plotly.newPlot(chart_id, data, layout);
+}
 function draw() {
 
   // Update volume

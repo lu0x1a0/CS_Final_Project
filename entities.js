@@ -38,13 +38,29 @@ class Player{
 
         this.effects = {}
 
+        var starttime = Date.now()
         this.gamestat = {
             kill: 0,
-            gold_time: [Date.now()],
-            gold_amount: [this.gold]
+            goldstat :{
+                gold_time: [starttime],
+                gold_amount: [this.gold],    
+            },
+            killstat :{
+                kill_time : [starttime],
+                kill_amount: [0]
+            }
         }
     }
-
+    addkillstat(){
+        this.gamestat.kill += 1;
+        this.gamestat.killstat.kill_amount.push(this.gamestat.kill)
+        this.gamestat.killstat.kill_time.push(Date.now())
+    }
+    addgoldstat(gold){
+        this.gold += gold
+        this.gamestat.goldstat.gold_time.push(Date.now())
+        this.gamestat.goldstat.gold_amount.push(this.gold)
+    }
     invincTick() {
         this.invinc_time++;
         if (this.invinc_time >= CONST.INVINCIBILITY_FRAMES) {
@@ -105,7 +121,7 @@ class Player{
             // side damage
         if ((absdiff> Math.PI/6 && absdiff < 5*Math.PI/6) || (absdiff2> Math.PI/6 && absdiff2 < 5*Math.PI/6) ) {
             //((absdiff>field && absdiff<(Math.PI-field)) || (absdiff2> field && absdiff2<(Math.PI-field)))
-            this.takeDamage(CONST.SIDE_DAMAGE_MULTIPLIER*speed, soundmanager)
+            this.takeDamage(CONST.SIDE_DAMAGE_MULTIPLIER*speed, soundmanager,collided.id)
         }
             // front or back damage
         else {
@@ -195,9 +211,7 @@ class Player{
                 if (treasure){
                     gamemap.treasurelist.remove_treasure(encap)
 
-                    this.gold += treasure.gold
-                    this.gamestat.gold_time.push(Date.now())
-                    this.gamestat.gold_amount.push(this.gold)
+                    this.addgoldstat(treasure.gold)
 
                     if (this.health + treasure.health >= CONST.PLAYER_HEALTH) {
                       this.health = CONST.PLAYER_HEALTH

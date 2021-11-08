@@ -77,7 +77,7 @@ class Cannon{
                 speed: adjspeed//this.speed
             }
                     
-            return new Cannonball(data.start,data.end,data.speed,true,this.calibre)
+            return new Cannonball(data.start,data.end,data.speed,true,this.calibre,this.player.id)
         }
     }
 
