@@ -107,3 +107,9 @@ html, body {
 #effects_list {
   list-style-type: none;
 }
+
+#death-stat{
+  display: block;
+  overflow-y: scroll;
+  max-height: 200px;
+}

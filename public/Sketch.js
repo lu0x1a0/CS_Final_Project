@@ -171,12 +171,17 @@ function showDeathMenu(data){
   players.sort(function (x, y) {
     return y.gold - x.gold
   })
+  
+  var goldlist = "<ol>"
   for (var i = 0; i<players.length;i++){
     if (players[i].id == socket.id){
-      deathstat.innerHTML = "You came " + i+"/"+ players.length + "!"
-      break;
+      deathstat.innerHTML = "You came " + (i+1) +"/"+ players.length + " with "+ players[i].gold +" gold!"
+      //break;
     }
+    goldlist += "<li>"+players[i].username+": "+ players[i].gold +"</li>"
   }
+  goldlist += "</ol>"
+  deathstat.innerHTML += goldlist
 
   retry.onclick = function(){
 

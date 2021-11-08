@@ -1,7 +1,7 @@
 // implement the observer pattern for players health
 const CONST = require('./Constants.js').CONST
 const {Weapons} = require('./Weapons/WeaponCollect.js')
-//const {playerslocjson} = require("./utils.js")
+const {playerslocjson} = require("./utils.js")
 class HealthObserver{
     constructor(playerlist,server, monstat,gamemap){
         this.playerlist = playerlist
@@ -31,7 +31,7 @@ class HealthObserver{
         this.server.to(playerid).emit('dead', {
             coords : deathpos,
             dir : deathdir,
-            players : this.playerlist//playerslocjson()       
+            players : playerslocjson(this.playerlist)       
         })
         delete this.playerlist[playerid]
 

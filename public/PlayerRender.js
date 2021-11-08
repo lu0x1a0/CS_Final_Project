@@ -101,13 +101,15 @@ class PlayerRender {
   showEffects(){
     const effects_list = document.getElementById("effects_list")
     if (Object.keys(this.effects).length){
-      effects_list.innerHTML = ''
       var l = ""
       for (var key in this.effects){
         l += "<li><h4>" + key + ": "+ Math.ceil(this.effects[key]/20) + "<\h4><\li> \n" //20 is the divisor for heartbeat interval
       }
       effects_list.innerHTML = l
-    }
+    } 
+    else if (effects_list.innerHTML){
+      effects_list.innerHTML = ''
+    } 
     //console.log(this.effects)
   }
 
