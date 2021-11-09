@@ -76,7 +76,7 @@ class Render {
         this.whirlrender.display()
 
         // Event render
-        this.eventrender.display(state.deadlist)
+        this.eventrender.display(state.animationlist)
 
 
         for (var i in state.playerlist) {
@@ -90,12 +90,14 @@ class Render {
                     this.playerrender.img_boat,
                     player.username,
                     player.size,
-                    player.health,[],
+                    player.health,
+                    [],
                     player.gold,
                     player.OnTreasure,
                     player.SpaceCounter,
-                    player.SpacePressed,
+                    player.treasure_fish_time,
                     player.invincible,
+                    player.hit,
                 )
             }
             else {
@@ -105,7 +107,7 @@ class Render {
                 this.playerrender.show()
 
                 // Sounds
-                this.soundrender.play_sounds(player.pos, state.eventlist)
+                this.soundrender.play_sounds(player.pos, state.soundlist)
             }
         }
 

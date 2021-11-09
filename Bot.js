@@ -143,6 +143,8 @@ class Bot extends entities.Player {
     }
 
     update(players,soundmanager,paths,costs,tupleval,index,Gmap, forbidden) {
+        this.hit = false
+
         this.cannon.update()
         if (!this.initialiseEscapePivots) {
             this.XBoundary = (Gmap.xlen/2) - 1

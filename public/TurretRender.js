@@ -4,6 +4,7 @@ class TurretRender {
 
     preload() {
         this.img_turret = loadImage('assets/imgs/img_turret.png');
+        this.img_turret_dead = loadImage('assets/imgs/img_turret_dead.png');
     }
 
     first_load(gamemap) {
@@ -17,10 +18,20 @@ class TurretRender {
     }
 
     display() {
-        imageMode(CORNER);
+        imageMode(CENTER);
         for (let turret of this.turret_array) {
-            // Turret
-            image(this.img_turret, turret.coords.x*this.tilesize, turret.coords.y*this.tilesize, this.tilesize, this.tilesize);
+            
+            // Tint if hit
+            if (turret.hit) {
+                tint(256, 0, 0, 160)
+            }
+
+            if (turret.alive) {
+                image(this.img_turret, turret.coords.x, turret.coords.y, this.tilesize, this.tilesize);
+            } else {
+                image(this.img_turret_dead, turret.coords.x, turret.coords.y, this.tilesize, this.tilesize);
+            }
+            noTint()
 
             // Health/repair bar
             if (turret.alive && turret.health < turret.max_health) {

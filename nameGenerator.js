@@ -60,6 +60,7 @@ module.exports = {
       " McNugget",
       " Knives",
       " Sparrow",
+      " Whatsisname",
 
     ]
 

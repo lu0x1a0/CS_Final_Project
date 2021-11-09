@@ -38,11 +38,11 @@ class HealthObserver{
         })
         delete this.playerlist[playerid]
 
-        // Emit death coords/pos to all
-        this.server.sockets.emit('playerdeath', {
-            pos : deathpos,
-            dir : deathdir        
-        })
+        // // Emit death coords/pos to all
+        // this.server.sockets.emit('playerdeath', {
+        //     pos : deathpos,
+        //     dir : deathdir        
+        // })
         
 
         // re-added disconnect to that player pressing key doesnt trigger server update,

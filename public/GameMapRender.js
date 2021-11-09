@@ -7,7 +7,6 @@ class GameMapRender {
         this.img_land = loadImage('assets/imgs/img_land.png');
         this.img_missing = loadImage('assets/imgs/img_missing.png');
         this.img_treasure_water = loadImage('assets/imgs/img_treasure_water.png');
-        this.img_turret = loadImage('assets/imgs/img_turret.png');
         this.img_water = loadImage('assets/imgs/img_water.png');
         
         // Water animation load
@@ -100,7 +99,6 @@ class GameMapRender {
                         break;
                     case 'T':
                         image(this.img_land, x*this.tilesize, y*this.tilesize, this.tilesize, this.tilesize);
-                        image(this.img_turret, x*this.tilesize, y*this.tilesize, this.tilesize, this.tilesize);
                         break;
                     case 'S':
                         image(this.frames_water[Math.floor(frameNo/12) % this.frames_water.length], x*this.tilesize, y*this.tilesize, this.tilesize, this.tilesize);

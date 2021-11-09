@@ -48,9 +48,9 @@ let index = obj[3]
 let forbidden = obj[4]
 
 
-// Initialize SoundManager
-const SoundManager = require("./SoundManager.js").SoundManager
-var soundmanager = new SoundManager()
+// Initialize EventManager
+const EventManager = require("./EventManager.js").EventManager
+var eventmanager = new EventManager()
 
 // List of all players and bots connected to the server
 var players = {}
@@ -73,17 +73,26 @@ setInterval(heartbeat, CONST.HEARTBEAT_INTERVAL)
 
 // RUNS EVERY SERVER-WIDE UPDATE
 function heartbeat() {
-    // update whirlpool position
+
+    // Update whirlpool position
     gamemap.whirllist.update(gamemap)
+
+    // Turrets fire/repair
+    var turret_cannonballs = gamemap.turretlist.fire_all(players)
+    for (var tID in turret_cannonballs) {
+        projectiles[tID+(new Date()).getTime()] =  turret_cannonballs[tID]
+        eventmanager.add_sound("cannon_fire", turret_cannonballs[tID].pos)
+    }
+    gamemap.turretlist.repair()
 
     for (var i in players){
         // checks that players[i] is not removed from the object by previous damages
         if (players[i]){
             var player = players[i]
-            players[i].updateTreasure(gamemap, soundmanager)
-            players[i].update(players, soundmanager,paths,costs,tupleval,index,gamemap,forbidden);
+            players[i].updateTreasure(gamemap, eventmanager)
+            players[i].update(players, eventmanager,paths,costs,tupleval,index,gamemap,forbidden);
             if (player.health > 0){
-                gamemap.player_move(player, soundmanager)
+                gamemap.player_move(player, eventmanager)
             }
         }
     }
@@ -103,12 +112,11 @@ function heartbeat() {
                 hit = projectiles[key].contactcheck(players, gamemap.turretlist.turret_array)
                 if (projectiles[key].done){
                     //projectiles.splice(key,1)
-                    hit.takeDamage(CONST.CANNONBALL_DAMAGE, soundmanager,projectiles[key].playerid)
+                    hit.takeDamage(CONST.CANNONBALL_DAMAGE, eventmanager,projectiles[key].playerid)
                     delete projectiles[key]
                     continue
                 }
             }
-
         }
     }
 
@@ -118,19 +126,11 @@ function heartbeat() {
     let BotCannonBalls = BotEntity.Bot.getCannonBalls()
     for (let id in BotCannonBalls) {
         projectiles[id+(new Date()).getTime()] = BotCannonBalls[id]
-        soundmanager.add_sound("cannon_fire", BotCannonBalls[id].pos)
+        eventmanager.add_sound("cannon_fire", BotCannonBalls[id].pos)
     }
 
     BotEntity.Bot.ResetCannonBalls()
 
-    // Turrets fire/repair
-    var turret_cannonballs = gamemap.turretlist.fire_all(players)
-    for (var tID in turret_cannonballs) {
-        projectiles[tID+(new Date()).getTime()] =  turret_cannonballs[tID]
-        soundmanager.add_sound("cannon_fire", turret_cannonballs[tID].pos)
-    }
-
-    gamemap.turretlist.repair()
     // Data we send to front end'
 
     io.sockets.emit('heartbeat', {
@@ -140,7 +140,8 @@ function heartbeat() {
         treasurelist:gamemap.treasurelist,
         turretlist:gamemap.turretlist,
         whirllist:gamemap.whirllist,
-        eventlist:soundmanager.pop_events(),
+        soundlist:eventmanager.pop_sounds(),
+        animationlist:eventmanager.pop_animations(),
     })
 
     //if (monitorstatistics['numships'] == 0) {
@@ -212,7 +213,8 @@ function newConnection(socket) {
                 treasurelist:gamemap.treasurelist,
                 turretlist:gamemap.turretlist,
                 whirllist:gamemap.whirllist,
-                eventlist:soundmanager.pop_events(),
+                soundlist:eventmanager.pop_sounds(),
+                animationlist:eventmanager.pop_animations(),
             })
         }
     )
@@ -252,7 +254,7 @@ function newConnection(socket) {
 
                 } else if (data.pressedkeycode ==="mouse"){
                     cannonball = player.fire(data.targetX,data.targetY)
-                    soundmanager.add_sound("cannon_fire", player.pos)
+                    eventmanager.add_sound("cannon_fire", player.pos)
                     if (cannonball){
                         // use playerid+current time stamp as id, might not safe from server attack with spamming io
                         projectiles[player.id+(new Date()).getTime()] = cannonball

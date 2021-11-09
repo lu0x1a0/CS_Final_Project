@@ -53,6 +53,7 @@ class TurretList {
 
     repair() {
         for (let turret of this.turret_array) {
+            turret.hit = false
             if (!turret.alive) {
                 turret.repair_time += 1
                 if (turret.repair_time >= turret.max_repair_time) {
@@ -74,6 +75,7 @@ class Turret {
         }
         this.tID = 't'+idno
         this.health = CONST.TURRET_HEALTH
+        this.hit = false
         this.max_health = CONST.TURRET_HEALTH
         this.size = CONST.TURRET_SIZE
 
@@ -84,6 +86,7 @@ class Turret {
 
     takeDamage(amt, soundmanager) {
         this.health -= amt
+        this.hit = true
         soundmanager.add_sound("damage", this.coords)
         if (this.health <= 0) {
             this.alive = false
