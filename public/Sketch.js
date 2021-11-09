@@ -19,7 +19,7 @@ function preload() {
 
 function setup() {
 
-  frameRate(60)
+  frameRate(20)
 
   createCanvas(windowWidth, windowHeight)
   imageMode(CENTER)
