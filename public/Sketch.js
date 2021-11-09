@@ -25,6 +25,7 @@ function setup() {
   imageMode(CENTER)
 
   render.setup()
+  showMainMenu()
 
   // Volume sliders
   music_slider = createSlider(0, 0.5, 0.0, 0.01)
@@ -160,7 +161,7 @@ function showDeathMenu(data){
   const deathMenu = document.getElementById('death-menu')
   effects_table.classList.add('hidden')
   deathMenu.classList.remove('hidden')
-  
+
   const deathstat = document.getElementById("death-stat-lead")
   const killstat = document.getElementById("death-stat-kill")
   const goldstat = document.getElementById("death-stat-gold")
@@ -172,7 +173,7 @@ function showDeathMenu(data){
   players.sort(function (x, y) {
     return y.gold - x.gold
   })
-  
+
   var goldlist = "<ol>"
   for (var i = 0; i<players.length;i++){
     if (players[i].id == socket.id){
@@ -183,7 +184,7 @@ function showDeathMenu(data){
   }
   goldlist += "</ol>"
   deathstat.innerHTML += goldlist
-  
+
   //do charts
   doChart(
     "death-stat-gold",
@@ -242,7 +243,7 @@ function doChart(chart_id,rawdata,chart_title){
   // Define Layout
   var layout = {
     //xaxis: {range: [40, 160], title: ""},
-    //yaxis: {range: [5, 16], title: ""},  
+    //yaxis: {range: [5, 16], title: ""},
     xaxis: {showticklabels:false},
     title: chart_title
   };
@@ -262,7 +263,7 @@ function draw() {
 
   }
   else {
-    background(255)
+    //background(255)
   }
 }
 

@@ -1,4 +1,5 @@
 //import the values from the home page
+/*
 var Username = document.getElementById('username-input');
 var button = document.getElementById('play-button');
 const playMenu = document.getElementById('home-page');
@@ -15,3 +16,4 @@ button.onclick = function(){
     startGame(Username.value)
 
 }
+*/

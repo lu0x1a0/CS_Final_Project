@@ -3,6 +3,8 @@ html, body {
   padding: 0;
   overflow: hidden;
   overscroll-behavior: none;
+  background-image: url("assets/imgs/img_water.png");
+  background-repeat: repeat;
 }
 
 
@@ -12,16 +14,29 @@ html, body {
 
 #home-page {
   position: fixed;
+}
+
+.center {
+  margin: 0;
+  top: 35%;
+  left: 50%;
+  position: absolute;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  text-align: center;
+  font-family: "Lucida Handwriting", cursive;
+}
+
+.scroll {
+  position: absolute;
   top: 50%;
   left: 50%;
   transform: translateY(-50%) translateX(-50%);
-  padding: 20px 30px;
-  background-color: blue;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  border-radius: 5px;
-  text-align: center;
+  background-image: url("assets/imgs/pixil-frame-0.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  height: 880px;
+  width: 693px;
 }
 
 
@@ -102,8 +117,8 @@ html, body {
   border-style:solid;
   opacity: 0.9;
   border-radius:25px;
-  
-} 
+
+}
 #effects_list {
   list-style-type: none;
 }
