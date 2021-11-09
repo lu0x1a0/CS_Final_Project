@@ -38,7 +38,7 @@ module.exports = {
             xlen : 32,
             ylen : 32,
             max_treasure : 8,
-            max_whirls : 4
+            max_whirls : 0
         },
 
         MapPiers : {
