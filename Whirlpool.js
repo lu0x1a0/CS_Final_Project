@@ -1,11 +1,27 @@
 const CONST = require('./Constants.js').CONST
+
+/**
+ *
+ *
+ * @class WhirlList : Handles the array of whirlpools' location and movement on the map
+ * @property whirl_coord_map : provide a quick map coordinate access of whether that coord has a whirlpool
+ * @property whirl_array     : handles the actual storage and updates of the whirlpools
+ * 
+ */
 class WhirlList{
-    constructor(gamemap,numwhirls = 1){
+    /**
+     * Creates an instance of WhirlList.
+     * Takes a gamemap and spawn a bunch of whirlpools at random locations
+     */
+    constructor(gamemap,numwhirls = 1){    
         this.whirl_coord_map = {}
         this.whirl_array = this.genWhirlpool(numwhirls,gamemap)
-        //console.log("----CONSTRUCT----")
-        //console.log(this.whirl_coord_map)
     }
+    /**
+     *
+     * For all the whirls spawn and store it with a coordinate and use that coord 
+     * as key in the whirl_coord_map
+     */
     genWhirlpool(numwhirls,gamemap){
         var list = []
         this.whirl_coord_map = {}
@@ -22,6 +38,10 @@ class WhirlList{
         }
         return list
     }
+    /**
+     *
+     * update all the whirls coordinate at each heartbeat
+     */
     update(gamemap){
         this.whirl_coord_map = {}
         for (var i = 0; i<this.whirl_array.length;i++){
@@ -34,9 +54,13 @@ class WhirlList{
                 this.whirl_coord_map[key] = [this.whirl_array[i]]
             }
         }
-        //console.log('---update---')
-        //console.log(this.whirl_coord_map)
     }
+    /**
+     *
+     * Try to move the whirl periodically. If the period is up, reset 
+     * the timer and try move the whirl to a valid location
+     * 
+     */
     trymove(whirl,gamemap){
         if (whirl.lastmovetick>0){
             whirl.lastmovetick -= 1
@@ -50,6 +74,10 @@ class WhirlList{
             return 1 //moved
         }
     }
+    /**
+     *
+     * return a random valid target location to move to
+     */
     movepos(avail_pos){
         if (avail_pos.length>0){
             var idx = Math.floor(Math.random()*avail_pos.length)
@@ -57,6 +85,10 @@ class WhirlList{
         } 
     }
 }
+/**
+ *
+ * JSON container for Whirl data
+ */
 class Whirl{
     constructor(location){
         this.loc = location
