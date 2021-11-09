@@ -24,7 +24,6 @@ class WhirlRender {
             push()
             translate((whirl.loc.x+0.5)*this.tilesize, (whirl.loc.y+0.5)*this.tilesize)
             rotate(this.angle)
-            tint(255, ((cos(this.angle)+2)/3)*255)
             image(this.img_whirl, 0,0, this.tilesize, this.tilesize);
             pop()
         }
