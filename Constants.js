@@ -41,8 +41,9 @@ CONST = {
     WEAPON_EFFECT_PERIOD : 20*20, // 20 Seconds
 
     // Treasure constants
-    GOLD_AMT : 10,
-    MAX_HEALTH_AMT: 20,
+    TREASURE_GOLD : 10,
+    TREASURE_BONUS_GOLD : 20,
+    TREASURE_HEALTH: 30,
     GOLD_HEALTH_CHANCE: 0.5,
     GOLD_PERCENT_DROP: 0.5,
 

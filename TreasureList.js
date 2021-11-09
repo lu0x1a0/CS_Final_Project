@@ -1,6 +1,7 @@
 const addVec = require("./utils.js").addVec
 const CONST = require('./Constants.js').CONST
 const Treasure = require('./Treasure.js')
+const {Weapons} = require('./Weapons/WeaponCollect.js')
 
 class TreasureList {
 
@@ -28,30 +29,69 @@ class TreasureList {
         for (let treasure of this.treasure_array) {
             if (treasure === coords) { double_treasure = true; }
         }
+
+        // Decide on the type of treasure (Gold, Health, Weapon)
+        var types = ['gold', 'health', 'weapon']
+        var type = types[Math.floor(Math.random()*types.length)]
+
         if (double_treasure == false) {
-          var gold = 0
-          var health = 0
-          if ( Math.random() >= CONST.GOLD_HEALTH_CHANCE ) {
-            gold = CONST.GOLD_AMT
-          } else {
-            health = CONST.MAX_HEALTH_AMT
-          }
-          let treasure = new Treasure(coords,gold,health,0)
+            var gold = CONST.TREASURE_GOLD
+            var health = 0
+            var weaponID = 0
+
+            switch (type) {
+                case 'gold':
+                    gold += CONST.TREASURE_BONUS_GOLD
+                    break
+                case 'health':
+                    health += CONST.TREASURE_HEALTH
+                    break
+                case 'weapon':
+                    var keys = Object.keys(Weapons)
+                    weaponID = keys[Math.floor(Math.random()*keys.length)]
+                    break
+            }
+
+          let treasure = new Treasure(type,coords,gold,health,weaponID)
           this.treasure_array.push(treasure)
         }
     }
 
-    add_death_treasure(coords,gold,health,weaponID) {
+    add_death_treasure(coords,gold) {
+
+        // Death treasures are like regular treasures, but with the killed players' gold
+        
+        // Convert to map coordinates
+        coords = {x: Math.floor(coords.x/this.tilesize),y: Math.floor(coords.y/this.tilesize)}
 
         // Treasure array will never contain duplicate treasures
         var double_treasure = false;
         for (let treasure of this.treasure_array) {
             if (treasure === coords) { double_treasure = true; }
         }
-        if (double_treasure == false) {
-          var mapCoords = {x: Math.floor(coords.x/this.tilesize),y: Math.floor(coords.y/this.tilesize)}
 
-          let treasure = new Treasure(mapCoords,gold,health,weaponID)
+        // Decide on the type of treasure (Gold, Health, Weapon)
+        var types = ['gold', 'health', 'weapon']
+        var type = types[Math.floor(Math.random()*types.length)]
+
+        if (double_treasure == false) {
+            var health = 0
+            var weaponID = 0
+
+            switch (type) {
+                case 'gold':
+                    gold += CONST.TREASURE_BONUS_GOLD
+                    break
+                case 'health':
+                    health += CONST.TREASURE_HEALTH
+                    break
+                case 'weapon':
+                    var keys = Object.keys(Weapons)
+                    weaponID = keys[Math.floor(Math.random()*keys.length)]
+                    break
+            }
+
+          let treasure = new Treasure(type,coords,gold,health,weaponID)
           this.treasure_array.push(treasure)
         }
     }
