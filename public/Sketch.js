@@ -39,8 +39,8 @@ function setup() {
 
   // https://pirategametestthingy.herokuapp.com/
   // http://localhost:5000
-  var addr = window.location.href
-  socket = io.connect(addr,{reconnection: false} )
+  //var addr = window.location.href
+  socket = io.connect("https://civil-glyph-331607.ts.r.appspot.com/",{reconnection: false} )
 
 }
 
