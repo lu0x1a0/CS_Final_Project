@@ -4,6 +4,12 @@ const TreasureList = require("./TreasureList.js").TreasureList
 const TurretList = require("./TownTurrets.js").TurretList
 const WhirlList = require('./Whirlpool.js').WhirlList
 
+/**
+ *
+ * Collective handler of all maptiles related events such as object movement 
+ * and object spawning.
+ * 
+ */
 class GameMap {
     constructor(map) {
 
@@ -65,7 +71,7 @@ class GameMap {
         }
         return avail
     }
-
+    // Picks the current valid spawn point for ships.
     get_spawn() {
         // Rotate which spawn we use
         this.whichSpawn ++
@@ -77,7 +83,11 @@ class GameMap {
         }
     }
 
-
+    /**
+     * creates a random coordinate that is allowed to spawn a treasure on 
+     * (only on water tiles)
+     *
+     */
     generate_treasure_coords() {
 
         var randx = Math.floor(Math.random()*this.xlen);
@@ -92,7 +102,11 @@ class GameMap {
         // this.map[randx][randy] != ' '
         return {x:randx, y:randy};
     }
-
+    /**
+     *  add treasures when the total avail treasure is low -
+     *  i.e. at the beginning of the game or when a lot of 
+     *  players have left or frequency of combat is low
+     */
     try_add_treasure() {
         
         if (this.treasurelist.treasure_array.length < this.max_treasure) {
@@ -100,7 +114,10 @@ class GameMap {
         }
 
     }
-
+    /**
+     *
+     * check whether a position (player's) coincide with that of the treasure
+     */
     is_on_treasure(pos) {
         for (let i = 0; i < this.treasurelist.treasure_array.length; i++) {
             let encap = {x: Math.floor(pos.x/this.tilesize), y: Math.floor(pos.y/this.tilesize)}
@@ -110,7 +127,11 @@ class GameMap {
         }
         return false
     }
-
+    /**
+     *
+     * move the given player according to its velocity and surroundings 
+     * (i.e. is the tile passable)
+     */
     player_move(player, soundmanager) {
 
         // Impassible tiles
@@ -153,12 +174,6 @@ class GameMap {
         if (key in this.whirllist.whirl_coord_map) {
             player.takeDamage(CONST.WHIRL_DAMAGE,soundmanager)
         }
-        //console.log("--------move--------")
-        //console.log({x:px,y:py})
-        //console.log(this.whirllist.whirl_coord_map)
-        //console.log("----------------")
-
-
     }
 
 }
