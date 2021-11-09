@@ -8,7 +8,7 @@ var dead = 0
 var state
 var render
 var socket
-var leaderboard
+//var leaderboard
 var div
 
 function preload() {
@@ -71,7 +71,7 @@ function startGame(usernameInput) {
       gameStarted = 1
       dead = 0
 
-      leaderboard = new Leaderboard()
+      //leaderboard = new Leaderboard()
 
       // Change music
       render.soundrender.stop_music_title()
@@ -136,16 +136,18 @@ function showMainMenu(){
   var button = document.getElementById('play-button')
   const playMenu = document.getElementById('home-page')
   const effects_table = document.getElementById('effects_table');
+  const leaderboard = document.getElementById('leaderboard');
   playMenu.classList.remove('hidden')
 
   // Play main menu music
   render.soundrender.start_music_title()
 
   effects_table.classList.add('hidden')
-
+  leaderboard.classList.add('hidden')
   //When the play button is clicked hide the homepage and generate the player with the given username
   button.onclick = function(){
       effects_table.classList.remove('hidden')
+      leaderboard.classList.remove('hidden')
       playMenu.classList.add('hidden')
       startGame(Username.value)
   }
@@ -158,8 +160,10 @@ function showDeathMenu(data){
   var retry = document.getElementById('retry-button')
   var mainmenu = document.getElementById('mainmenu-button')
   const effects_table = document.getElementById('effects_table');
+  const leaderboard = document.getElementById('leaderboard');
   const deathMenu = document.getElementById('death-menu')
   effects_table.classList.add('hidden')
+  leaderboard.classList.add('hidden')
   deathMenu.classList.remove('hidden')
 
   const deathstat = document.getElementById("death-stat-lead")
@@ -206,7 +210,7 @@ function showDeathMenu(data){
   retry.onclick = function(){
 
     // Clean up
-    leaderboard.delete()
+    //leaderboard.delete()
     gameStarted = 0
     render.soundrender.stop_music_dead()
 
@@ -219,7 +223,7 @@ function showDeathMenu(data){
   mainmenu.onclick = function(){
 
     // Clean up
-    leaderboard.delete()
+    //leaderboard.delete()
     gameStarted = 0
     dead = 0
     render.soundrender.stop_music_dead()
@@ -259,7 +263,7 @@ function draw() {
   if (gameStarted == 1 || dead) {
     render.render(state.get_state(), dead)
 
-    leaderboard.update(state.get_state())
+    //leaderboard.update(state.get_state())
 
   }
   else {
