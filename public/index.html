@@ -23,7 +23,8 @@
 
   <body>
 
-    <div id="home-page">
+    <div id="home-page" class="scroll ">
+      <div class= "center">
       <h1>Pirate.io</h1>
       <p>
         <br />
@@ -31,6 +32,7 @@
       </p>
       <input type="text" id="username-input" placeholder="Username" />
       <input type="button" id="play-button" value="PLAY"/>
+    </div>
     </div>
 
     <div id="death-menu" class="hidden">
@@ -69,9 +71,9 @@
         <li class="death-menu-nav" id = "death-lead" onclick = "displayLead()">Leaderboard</li>
         <li class="death-menu-nav" id = "death-gold" onclick = "displayGold()">Gold Trend</li>
       </ul>
-      <div id="death-stat-kill" class = "hidden" style="width:100%;max-width:700px;max-height:400px"></div> 
+      <div id="death-stat-kill" class = "hidden" style="width:100%;max-width:700px;max-height:400px"></div>
       <div id="death-stat-lead" class = ""></div>
-      <div id="death-stat-gold" class = "hidden" style="width:100%;max-width:700px;max-height:400px"></div> 
+      <div id="death-stat-gold" class = "hidden" style="width:100%;max-width:700px;max-height:400px"></div>
 
       <input type="button" id="retry-button" value="RETRY"/>
       <input type="button" id="mainmenu-button" value="MAIN MENU"/>
