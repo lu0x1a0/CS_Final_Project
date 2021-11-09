@@ -23,6 +23,7 @@ class PlayerRender {
     this.SpaceCounter = playerJSON.SpaceCounter
     this.treasure_fish_time = playerJSON.treasure_fish_time
     this.effects = playerJSON.effects
+    this.hit = playerJSON.hit
 
     this.cannon = new CannonRender(playerJSON.cannon, this)
   }
@@ -50,19 +51,17 @@ class PlayerRender {
       tint(255, 90)
     }
 
+    // Tint if hit
+    if (this.hit) {
+      tint(256, 0, 0, 160)
+    }
+
     image(this.img_boat,imgx*cos(-this.dir-PI)-imgy*sin(-this.dir-PI),imgx*sin(-this.dir-PI)+imgy*cos(-this.dir-PI));
     noTint()
     rotate(-this.dir-PI)
     //fill(255);
     //ellipse(this.pos.x, this.pos.y, this.size, this.size);
 
-    if (true) {
-      stroke(255, 0, 0);
-      strokeWeight(1);
-      rectMode(CENTER);
-      rect(this.pos.x, this.pos.y, this.hitbox_size, this.hitbox_size);
-      stroke(255,255,255);
-    }
     pop()
 
     fill(255);
@@ -119,14 +118,18 @@ class PlayerRender {
   }
 }
 
-function showship(dir,pos,img_boat,username,size,health,funcs,gold,OnTreasure,SpaceCounter,SpacePressed, invincible){
+function showship(dir,pos,img_boat,username,size,health,funcs,gold,OnTreasure,SpaceCounter,treasure_fish_time, invincible, hit){
   push()
   rotate(dir+PI)
   var imgx = pos.x //-40
   var imgy = pos.y //- 24
   imageMode(CENTER)
+  
   if (invincible) {
     tint(255, 90)
+  }
+  if (hit) {
+    tint(256, 0, 0, 160)
   }
   image(img_boat,imgx*cos(-dir-PI)-imgy*sin(-dir-PI),imgx*sin(-dir-PI)+imgy*cos(-dir-PI));
   rotate(-dir-PI)
@@ -157,9 +160,10 @@ function showship(dir,pos,img_boat,username,size,health,funcs,gold,OnTreasure,Sp
     fill(100,63)
     rect(pos.x-size/2, pos.y-size/2-30,size,10);
     fill(0, 0, 255)
-    rect(pos.x-size/2, pos.y-size/2-30,size*abs(SpaceCounter)/this.treasure_fish_time,10);
+    rect(pos.x-size/2, pos.y-size/2-30,size*abs(SpaceCounter)/treasure_fish_time,10);
   }
   pop()
+  
 
   for(f in funcs){
     funcs()

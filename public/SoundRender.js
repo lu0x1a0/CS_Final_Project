@@ -76,15 +76,15 @@ class SoundRender {
         this.sfx_vol = val
     }
 
-    play_sounds(shipPos, eventlist) {
+    play_sounds(shipPos, soundlist) {
 
-        for (let i=0; i<eventlist.length; i++) {
+        for (let i=0; i<soundlist.length; i++) {
 
-            var vol_factor = this.vol_factor(shipPos, eventlist[i].pos)
+            var vol_factor = this.vol_factor(shipPos, soundlist[i].pos)
 
             if (vol_factor > 0) {
 
-                switch (eventlist[i].type) {
+                switch (soundlist[i].type) {
                     case 'cannon_fire':
                         this.sfx_cannon_fire.volume(this.sfx_vol*vol_factor)
                         this.sfx_cannon_fire.play(/*0,1,this.sfx_vol*vol_factor*/)

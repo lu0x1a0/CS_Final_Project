@@ -8,8 +8,8 @@ class State {
         // this.first_server_timestamp = 0
 
         this.state_list = []
-        this.eventlist = []
-        this.deadlist = []
+        this.soundlist = []
+        this.animationlist = []
 
     }
 
@@ -30,20 +30,13 @@ class State {
         return this.first_server_timestamp + (Date.now() - this.game_start) - RENDER_DELAY
     }
 
-    add_death(pos, dir) {
-        this.deadlist.push({
-            pos : pos,
-            dir : dir,
-            frame : 0,
-        })
-    }
-
-    tick_deadlist() {
-        for (let i = this.deadlist.length-1; i >= 0; i--) {
-            this.deadlist[i].frame++
-            if (this.deadlist[i].frame > 200) { this.deadlist.splice(i,1) }
+    tick_animationlist() {
+        // Advances the frame count for animation list
+        for (let i = this.animationlist.length-1; i >= 0; i--) {
+            this.animationlist[i].frame++
+            if (this.animationlist[i].frame > 200) { this.animationlist.splice(i,1) }
         }
-        return this.deadlist
+        return this.animationlist
     }
 
     get_base_update() {
@@ -66,11 +59,11 @@ class State {
             projectilelist : newstatedata.projectiles,
             treasurelist : newstatedata.treasurelist,
             turretlist : newstatedata.turretlist,
-            deadlist : this.tick_deadlist(),
             whirllist: newstatedata.whirllist
         })
         
-        this.eventlist = this.eventlist.concat(newstatedata.eventlist)
+        this.soundlist = this.soundlist.concat(newstatedata.soundlist)
+        this.animationlist = this.animationlist.concat(newstatedata.animationlist)
 
         const base = this.get_base_update()
         if (base > 0) { this.state_list.splice(0, base) }
@@ -85,12 +78,14 @@ class State {
         // If base is most recent state, use it
         // Else interpolate
         if (base < 0) {
-            this.state_list[this.state_list.length - 1].eventlist = this.pop_sounds()
+            this.state_list[this.state_list.length - 1].soundlist = this.pop_sounds()
+            this.state_list[this.state_list.length - 1].animationlist = this.tick_animationlist()
             return this.state_list[this.state_list.length - 1]
         }
 
         else if (base === this.state_list.length - 1) {
-            this.state_list[base].eventlist = this.pop_sounds()
+            this.state_list[base].soundlist = this.pop_sounds()
+            this.state_list[base].animationlist = this.tick_animationlist()
             return this.state_list[base]
         }
 
@@ -99,7 +94,7 @@ class State {
             const next = this.state_list[base+1]
             const r = (server_time - base_update.t) / (next.t - base_update.t)
 
-            //print(base_update.eventlist)
+            //print(base_update.soundlist)
 
             return {
                 playerlist : interpolatePlayerList(base_update.playerlist, next.playerlist, r),
@@ -107,15 +102,15 @@ class State {
                 treasurelist : base_update.treasurelist,
                 turretlist : base_update.turretlist,
                 whirllist : base_update.whirllist,
-                eventlist : this.pop_sounds(),
-                deadlist : this.tick_deadlist(),
+                soundlist : this.pop_sounds(),
+                animationlist : this.tick_animationlist(),
             }
         }
     }
 
     pop_sounds() {
-        var popped = this.eventlist
-        this.eventlist = []
+        var popped = this.soundlist
+        this.soundlist = []
         return popped
     }
 
@@ -136,11 +131,17 @@ function interpolatePlayerList(pl1, pl2, ratio) {
 
                 Object.keys(pl2[j]).forEach(key => { interpolated[key] = pl2[j][key] })
 
+                // Position
                 interpolated.pos = {
                     x : pl1[i].pos.x + (pl2[j].pos.x - pl1[i].pos.x) * ratio,
                     y : pl1[i].pos.y + (pl2[j].pos.y - pl1[i].pos.y) * ratio
                 }
+                // Direction
                 interpolated.dir = interpolateDirection(pl1[i].dir, pl2[j].dir, ratio)
+                // Health
+                interpolated.health = pl1[i].health + (pl2[j].health - pl1[i].health) * ratio
+                // Space counter
+                interpolated.SpaceCounter = pl1[i].SpaceCounter + (pl2[j].SpaceCounter - pl1[i].SpaceCounter) * ratio
 
                 new_pl.push(interpolated)
                 continue
@@ -181,25 +182,25 @@ function interpolateProjectileList(pl1, pl2, ratio) {
 
 }
 
-function interpolateObject(object1, object2, ratio) {
-    if (!object2) {
-        return object1;
-    }
+// function interpolateObject(object1, object2, ratio) {
+//     if (!object2) {
+//         return object1;
+//     }
 
-    const interpolated = {};
-    Object.keys(object1).forEach(key => {
-        if (key === 'dir') {
-            interpolated[key] = interpolateDirection(object1[key], object2[key], ratio);
-        } else {
-            interpolated[key] = object1[key] + (object2[key] - object1[key]) * ratio;
-        }
-    });
-    return interpolated;
-}
+//     const interpolated = {};
+//     Object.keys(object1).forEach(key => {
+//         if (key === 'dir') {
+//             interpolated[key] = interpolateDirection(object1[key], object2[key], ratio);
+//         } else {
+//             interpolated[key] = object1[key] + (object2[key] - object1[key]) * ratio;
+//         }
+//     });
+//     return interpolated;
+// }
 
-function interpolateObjectArray(objects1, objects2, ratio) {
-    return objects1.map(o => interpolateObject(o, objects2.find(o2 => o.id === o2.id), ratio));
-}
+// function interpolateObjectArray(objects1, objects2, ratio) {
+//     return objects1.map(o => interpolateObject(o, objects2.find(o2 => o.id === o2.id), ratio));
+// }
 
 // Determines the best way to rotate (cw or ccw) when interpolating a direction.
 // For example, when rotating from -3 radians to +3 radians, we should really rotate from

@@ -26,6 +26,7 @@ class Player{
         this.hitbox_size = CONST.PLAYER_HITBOX_SIZE
         this.dim = {a:80/2,b:48/2} // to replace hitbox_size
         this.gold = CONST.PLAYER_START_GOLD;
+        this.hit = false
 
         this.invincible = true;
         this.invinc_time = 0;
@@ -69,7 +70,7 @@ class Player{
     }
 
 
-    collisionCheck(players,soundmanager){
+    collisionCheck(players,eventmanager){
 
         // we assume a circle/elliptical collision zone that pushes the player
         //for(var i = 0; i< players.length; i++){
@@ -82,12 +83,12 @@ class Player{
                 var dir_rad_2 = this.dim.a*this.dim.b/Math.sqrt( (this.dim.b*Math.cos(posangle-players[i].dir))**2+(this.dim.a*Math.sin(posangle-players[i].dir))**2  )
 
                 if (center_distance <= (dir_rad_1 + dir_rad_2)){
-                    this.onCollision(players[i],dir_rad_1,dir_rad_2,center_distance,posangle,soundmanager)
+                    this.onCollision(players[i],dir_rad_1,dir_rad_2,center_distance,posangle,eventmanager)
                 }
             }
         }
     }
-    onCollision(collided,this_dir_rad,collided_dir_rad,total_dist,collided_angle,soundmanager){
+    onCollision(collided,this_dir_rad,collided_dir_rad,total_dist,collided_angle,eventmanager){
         //first separate collided entities
         var shared_dist = -(total_dist -  this_dir_rad - collided_dir_rad)
 
@@ -109,10 +110,10 @@ class Player{
         //this.vel.x /= 2//collided.vel.x //+= collided.xacc*10
         //this.vel.y /= 2//collided.vel.x //+= collided.yacc*10
 
-        this.collisionDamage(collided,collided_angle,soundmanager)
+        this.collisionDamage(collided,collided_angle,eventmanager)
         //console.log(this,collided)
     }
-    collisionDamage(collided,angle,soundmanager){
+    collisionDamage(collided,angle,eventmanager){
         var altangle = Math.sign(angle)*(-1) *(2*Math.PI-Math.abs(angle))
         var speed = mag(this.vel.x-collided.vel.x,this.vel.y-collided.vel.y)
         // this takes damage
@@ -121,34 +122,40 @@ class Player{
             // side damage
         if ((absdiff> Math.PI/6 && absdiff < 5*Math.PI/6) || (absdiff2> Math.PI/6 && absdiff2 < 5*Math.PI/6) ) {
             //((absdiff>field && absdiff<(Math.PI-field)) || (absdiff2> field && absdiff2<(Math.PI-field)))
-            this.takeDamage(CONST.SIDE_DAMAGE_MULTIPLIER*speed, soundmanager,collided.id)
+            this.takeDamage(CONST.SIDE_DAMAGE_MULTIPLIER*speed, eventmanager,collided.id)
         }
             // front or back damage
         else {
-            this.takeDamage(CONST.FRONT_BACK_DAMAGE_MULTIPLIER*speed, soundmanager,collided.id)
+            this.takeDamage(CONST.FRONT_BACK_DAMAGE_MULTIPLIER*speed, eventmanager,collided.id)
         }
         // collided takes damage
         var absdiff = Math.abs(angle-collided.dir)
         var absdiff2 = Math.abs(altangle-collided.dir)
         if ( (absdiff> Math.PI/6 && absdiff < 5*Math.PI/6) || (absdiff2> Math.PI/6 && absdiff2 < 5*Math.PI/6) ) {
-            collided.takeDamage(CONST.SIDE_DAMAGE_MULTIPLIER*speed, soundmanager,this.id)
+            collided.takeDamage(CONST.SIDE_DAMAGE_MULTIPLIER*speed, eventmanager,this.id)
         } else {
-            collided.takeDamage(CONST.FRONT_BACK_DAMAGE_MULTIPLIER*speed, soundmanager,this.id)
+            collided.takeDamage(CONST.FRONT_BACK_DAMAGE_MULTIPLIER*speed, eventmanager,this.id)
         }
 
     }
 
-  takeDamage(damage, soundmanager,idfrom){
-        if (!this.invincible) {
+    takeDamage(damage, eventmanager,idfrom){
+        if (!this.invincible && !this.hit) {
             if (this.health > 0){
                 this.health -=damage
                 if (this.health <= 0){
-                    soundmanager.add_sound("death", this.pos)
+                    eventmanager.add_sound("death", this.pos)
+                    eventmanager.add_animation({
+                        type: "death",
+                        pos: this.pos,
+                        dir: this.dir,
+                        frame: 0,
+                    })
                     this.healthobserver.playerDied(this.id,idfrom)
-                    //
                     return "dead"
                 } else {
-                    soundmanager.add_sound("damage", this.pos)
+                    this.hit = true
+                    eventmanager.add_sound("damage", this.pos)
                 }
             }
         }
@@ -172,10 +179,14 @@ class Player{
             treasure_fish_time : CONST.TREASURE_FISH_TIME,
             cannon : this.cannon.toJSON(),
             invincible : this.invincible,
+            hit : this.hit,
         }
     }
 
-    update(players, soundmanager,paths,costs,tupleval,index,Gmap,forbidden,projectiles) {
+    update(players, eventmanager,paths,costs,tupleval,index,Gmap,forbidden,projectiles) {
+
+        this.hit = false
+
         // Called on every heartbeat
         //check whether to remove effect
         var effectdone = 1
@@ -199,10 +210,10 @@ class Player{
         }
         this.cannon.update()
 
-        this.collisionCheck(players,soundmanager)
+        this.collisionCheck(players,eventmanager)
     };
 
-    updateTreasure(gamemap, soundmanager) {
+    updateTreasure(gamemap, eventmanager) {
         if (this.OnTreasure && this.SpacePressed) {
             if (this.SpaceCounter == CONST.TREASURE_FISH_TIME) {
                 //Remove Treasure coordinates
@@ -223,7 +234,12 @@ class Player{
                         this.effects[treasure.weaponID] = new Weapons[treasure.weaponID](this)
                     }
 
-                    soundmanager.add_sound("get_treasure", this.pos)
+                    eventmanager.add_sound("get_treasure", this.pos)
+                    eventmanager.add_animation({
+                        type: "get_treasure",
+                        pos: this.pos,
+                        frame: 0,
+                    })
                 }
                 this.SpaceCounter = 0;
                 this.OnTreasure = false;

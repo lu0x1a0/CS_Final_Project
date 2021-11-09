@@ -25,6 +25,7 @@ playerslocjson = function(players){
             treasure_fish_time:players[i].treasure_fish_time,
             SpacePressed:players[i].SpacePressed,
             invincible:players[i].invincible,
+            hit:players[i].hit,
             cannon:players[i].cannon,
             effects:effects2json(players[i].effects)
         })

@@ -111,11 +111,11 @@ function startGame(usernameInput) {
     }
   )
 
-  socket.on("playerdeath",
-    function(data) {
-      state.add_death(data.pos, data.dir)
-    }
-  )
+  // socket.on("playerdeath",
+  //   function(data) {
+  //     state.add_death(data.pos, data.dir)
+  //   }
+  // )
 
 }
 
