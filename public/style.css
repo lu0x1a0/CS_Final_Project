@@ -18,13 +18,15 @@ html, body {
 
 .center {
   margin: 0;
-  top: 35%;
+  top: 40%;
   left: 50%;
   position: absolute;
   -ms-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
   text-align: center;
   font-family: "Lucida Handwriting", cursive;
+  font-size: 20px;
+
 }
 
 .scroll {
@@ -39,9 +41,12 @@ html, body {
   width: 693px;
 }
 
-
 #home-page p {
   margin-bottom: 0;
+}
+
+#home-page h1 {
+  font-size: 80px;
 }
 
 #home-page input {
@@ -52,6 +57,9 @@ html, body {
   margin-bottom: 5px;
   padding: 3px;
   text-align: center;
+  display: block;
+  margin-right: auto;
+  margin-left: auto;
 }
 
 #home-page input:hover {
