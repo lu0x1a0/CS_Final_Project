@@ -235,8 +235,16 @@ class Player{
                     }
 
                     eventmanager.add_sound("get_treasure", this.pos)
+
+                    // Obtain type of treasure
+                    var treasure_type = treasure.type
+                    if (treasure_type == 'weapon') {
+                        treasure_type = treasure.weaponID
+                    }
+
                     eventmanager.add_animation({
                         type: "get_treasure",
+                        treasure_type: treasure_type,
                         pos: this.pos,
                         frame: 0,
                     })

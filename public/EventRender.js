@@ -11,6 +11,11 @@ class EventRender {
       this.frames_death[3] = loadImage('assets/imgs/img_boat_death4.png')
 
       this.img_get_treasure = loadImage('assets/imgs/img_get_treasure.png')
+      this.icon_ball = loadImage('assets/icon/ball.png')
+      this.icon_gold = loadImage('assets/icon/gold.png')
+      this.icon_health = loadImage('assets/icon/health.png')
+      this.icon_range = loadImage('assets/icon/range.png')
+      this.icon_speed = loadImage('assets/icon/speed.png')
     }
 
     display(animationlist) {
@@ -23,7 +28,18 @@ class EventRender {
                 case 'get_treasure':
                     if (animationlist[i].frame > 56) { break }
                     tint(255, 128)
-                    image(this.img_get_treasure, animationlist[i].pos.x, animationlist[i].pos.y, 16*(animationlist[i].frame/4+1), 16*(animationlist[i].frame/4+1))
+
+                    if (animationlist[i].treasure_type == 'gold') {
+                        image(this.icon_gold, animationlist[i].pos.x, animationlist[i].pos.y, 16*(animationlist[i].frame/4+1), 16*(animationlist[i].frame/4+1))
+                    } else if (animationlist[i].treasure_type == 'health') {
+                        image(this.icon_health, animationlist[i].pos.x, animationlist[i].pos.y, 16*(animationlist[i].frame/4+1), 16*(animationlist[i].frame/4+1))
+                    } else if (animationlist[i].treasure_type == 'LargeBall') {
+                        image(this.icon_ball, animationlist[i].pos.x, animationlist[i].pos.y, 16*(animationlist[i].frame/4+1), 16*(animationlist[i].frame/4+1))
+                    } else if (animationlist[i].treasure_type == 'LargeRange') {
+                        image(this.icon_range, animationlist[i].pos.x, animationlist[i].pos.y, 16*(animationlist[i].frame/4+1), 16*(animationlist[i].frame/4+1))
+                    } else if (animationlist[i].treasure_type == 'FastSpeed') {
+                        image(this.icon_speed, animationlist[i].pos.x, animationlist[i].pos.y, 16*(animationlist[i].frame/4+1), 16*(animationlist[i].frame/4+1))
+                    }
                     noTint()
                     break
 

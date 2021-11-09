@@ -17,13 +17,9 @@ class HealthObserver{
         var deathpos = this.playerlist[playerid].pos
         var deathdir = this.playerlist[playerid].dir
         
-        var keys = Object.keys(Weapons)
-        var weaponID = keys[Math.floor(Math.random()*keys.length)]
         this.gamemap.treasurelist.add_death_treasure(
             deathpos,
             Math.floor(this.playerlist[playerid].gold*CONST.GOLD_PERCENT_DROP),
-            CONST.MAX_HEALTH_AMT/2,
-            weaponID
         )
         if (this.playerlist.hasOwnProperty(idfrom)){    
             //this.playerlist[idfrom].gamestat['kill'] += 1;
