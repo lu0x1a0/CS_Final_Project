@@ -2,6 +2,7 @@ const CONST = require('./Constants.js').CONST
 const addVec = require("./utils.js").addVec
 const TreasureList = require("./TreasureList.js").TreasureList
 const TurretList = require("./TownTurrets.js").TurretList
+const StationList = require("./Stations.js").StationList
 const WhirlList = require('./Whirlpool.js').WhirlList
 
 /**
@@ -26,6 +27,7 @@ class GameMap {
         // Initialize
         this.treasurelist = new TreasureList(this)
         this.turretlist = new TurretList(this)
+        this.stationlist = new StationList(this)
         this.whirllist =  new WhirlList(this,map.max_whirls)
 
         // Initialize spawn positions
@@ -135,7 +137,7 @@ class GameMap {
     player_move(player, soundmanager) {
 
         // Impassible tiles
-        var impassible = ['L', 'T']
+        var impassible = ['L', 'T', 'H']
 
         var new_pos = addVec(player.pos, player.vel)//p5.Vector.add(pos, vel)
 

@@ -59,7 +59,7 @@ class GameMapRender {
                 if (this.map[x][y] != ' ' || x == 0 || y == 0 || x == this.xlen || y == this.ylen) { continue }
 
                 // Rendering depends on walls above, below, left and right
-                var isWall = ['L', 'T']
+                var isWall = ['L', 'T', 'H']
 
                 var left = isWall.includes(this.map[x-1][y])
                 var right = isWall.includes(this.map[x+1][y])
@@ -98,6 +98,9 @@ class GameMapRender {
                         image(this.img_land, x*this.tilesize, y*this.tilesize, this.tilesize, this.tilesize);
                         break;
                     case 'T':
+                        image(this.img_land, x*this.tilesize, y*this.tilesize, this.tilesize, this.tilesize);
+                        break;
+                    case 'H':
                         image(this.img_land, x*this.tilesize, y*this.tilesize, this.tilesize, this.tilesize);
                         break;
                     case 'S':

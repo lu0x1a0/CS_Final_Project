@@ -1,3 +1,5 @@
+//const e = require("cors");
+
 class PlayerRender {
   constructor(){
     this.username = ""
@@ -7,6 +9,7 @@ class PlayerRender {
     // Images
     this.img_boat = loadImage('assets/imgs/img_boat.png');
     this.img_ball = loadImage('assets/imgs/img_ball.png');
+    this.img_health = loadImage('assets/imgs/img_health.png');
   }
 
   load_player(playerJSON) {
@@ -112,9 +115,13 @@ class PlayerRender {
     //console.log(this.effects)
   }
 
-  cannonballshow(pos,size) {
+  cannonballshow(ball) {
     imageMode(CENTER)
-    image(this.img_ball, pos.x, pos.y, size, size)
+    if (ball.id[0] == 'h') {
+      image(this.img_health, ball.pos.x, ball.pos.y, ball.diameter, ball.diameter)
+    } else {
+      image(this.img_ball, ball.pos.x, ball.pos.y, ball.diameter, ball.diameter)
+    }
   }
 }
 
