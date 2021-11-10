@@ -36,6 +36,10 @@ class SoundRender {
         this.sfx_get_treasure = new Howl({
             src:'assets/sfx/sfx_get_treasure.mp3',
         })
+
+        this.sfx_heal = new Howl({
+            src:'assets/sfx/sfx_heal.mp3',
+        })
     }
 
     start_music_title() {
@@ -100,6 +104,10 @@ class SoundRender {
                     case 'death':
                         this.sfx_death.volume(this.sfx_vol*vol_factor)
                         this.sfx_death.play(/*0,1,this.sfx_vol*vol_factor*/)
+                        break;
+                    case 'heal':
+                        this.sfx_heal.volume(this.sfx_vol*vol_factor)
+                        this.sfx_heal.play(/*0,1,this.sfx_vol*vol_factor*/)
                         break;
                     default:
                         break;

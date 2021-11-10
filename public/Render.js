@@ -17,6 +17,9 @@ class Render {
         this.turretrender = new TurretRender()
         this.turretrender.preload()
 
+        this.stationrender = new StationRender()
+        this.stationrender.preload()
+
         this.eventrender = new EventRender()
         this.eventrender.preload()
 
@@ -42,6 +45,7 @@ class Render {
         this.soundrender.set_tilesize(gamemap.tilesize)
         this.treasurerender.first_load(gamemap)
         this.turretrender.first_load(gamemap)
+        this.stationrender.first_load(gamemap)
         this.whirlrender.first_load(gamemap)
     }
 
@@ -67,12 +71,14 @@ class Render {
         // Loading map-based render
         this.treasurerender.load_treasure(state.treasurelist)
         this.turretrender.load_turrets(state.turretlist)
+        this.stationrender.load_stations(state.stationlist)
         this.whirlrender.load_whirl(state.whirllist)
         
         // Map-based render
         this.gamemaprender.display(this.frameNo)
         this.treasurerender.display(this.frameNo)
         this.turretrender.display()
+        this.stationrender.display()
         this.whirlrender.display()
 
         // Event render
@@ -114,7 +120,7 @@ class Render {
         // Projectiles
         for (var i in state.projectilelist){
             var projectile = state.projectilelist[i]
-            this.playerrender.cannonballshow(projectile.pos, projectile.diameter)
+            this.playerrender.cannonballshow(projectile)
         }
 
         // Increase frameNo

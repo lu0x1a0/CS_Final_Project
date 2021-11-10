@@ -103,7 +103,7 @@ class Cannonball{
         this.playerid = playerid
     }
     //checks whether the ball's euclidian distance from a player is less than the two radius combined.
-    contactcheck(players, turret_array){
+    contactcheck(players, turret_array, station_array){
         //for(var i = 0; i < players.length;i++){
         for (var i in players){
             //if the distance between two points are less than two collision circle - contact.
@@ -121,6 +121,18 @@ class Cannonball{
                 if (mag(turret_coords.x-this.pos.x,turret_coords.y-this.pos.y)<(CONST.TURRET_SIZE/2+this.diameter) ){
                     this.done = true
                     return turret_array[i]
+                }
+            }
+        }
+
+        // Also check for station hits
+        if (this.shotByPlayer) {
+            for (var i in station_array){
+                var station_coords = station_array[i].coords
+                //if the distance between two points are less than two collision circle - contact.
+                if (mag(station_coords.x-this.pos.x,station_coords.y-this.pos.y)<(CONST.STATION_SIZE/2+this.diameter) ){
+                    this.done = true
+                    return station_array[i]
                 }
             }
         }

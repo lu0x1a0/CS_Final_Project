@@ -166,7 +166,7 @@ class Player{
      * On death notifies HealthObserver to remove this ship from game. 
      */
     takeDamage(damage, eventmanager,idfrom){
-        if (!this.invincible && !this.hit) {
+        if (!this.invincible) {
             if (this.health > 0){
                 this.health -=damage
                 if (this.health <= 0){
@@ -186,6 +186,14 @@ class Player{
             }
         }
     }
+
+    heal(amt, eventmanager){
+        if (!this.invincible) {
+            this.health = Math.min(CONST.PLAYER_HEALTH, this.health+amt)
+            eventmanager.add_sound("heal", this.pos)
+        }
+    }
+
     /**
      *
      * handles the ship's weapon effect countdown, invincibility countdown,
