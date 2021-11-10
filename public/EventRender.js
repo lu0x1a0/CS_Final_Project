@@ -18,9 +18,16 @@ class EventRender {
       this.icon_speed = loadImage('assets/icon/speed.png')
     }
 
-    display(animationlist) {
+    display(center, viewdistance, animationlist) {
         for (let i = 0; i < animationlist.length; i++) {
             
+            // Don't render if out of view
+            if (Math.floor(animationlist[i].pos.x/this.tilesize) > center.x + viewdistance
+                || Math.floor(animationlist[i].pos.x/this.tilesize) < center.x - viewdistance
+                || Math.floor(animationlist[i].pos.y/this.tilesize) > center.y + viewdistance
+                || Math.floor(animationlist[i].pos.y/this.tilesize) < center.y - viewdistance)  { continue }
+
+
             switch (animationlist[i].type) {
                 case 'death':
                     this.show_ship_death(animationlist[i].pos, animationlist[i].dir, animationlist[i].frame)

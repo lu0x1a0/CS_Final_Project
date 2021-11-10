@@ -73,11 +73,11 @@ class Render {
                 }
             }
             centertile = {x: Math.floor(player.pos.x/this.tilesize),y: Math.floor(player.pos.y/this.tilesize)}
-            //centerpoint = player.pos
+            centerpoint = player.pos
             translate(-player.pos.x, -player.pos.y)
         } else {
             centertile = {x: Math.floor(dead.x/this.tilesize),y: Math.floor(dead.y/this.tilesize)}
-            //centerpoint = dead
+            centerpoint = dead
             translate(-dead.x, -dead.y)
         }
 
@@ -95,8 +95,18 @@ class Render {
         this.whirlrender.display(centertile, this.VIEWDISTANCE)
 
         // Event render
-        this.eventrender.display(state.animationlist)
+        this.eventrender.display(centertile, this.VIEWDISTANCE, state.animationlist)
 
+        // Render border
+        fill(color(0,0,0))
+        // Left
+        rect(centerpoint.x-(this.VIEWDISTANCE+1)*this.tilesize, centerpoint.y-(this.VIEWDISTANCE+1)*this.tilesize, this.tilesize, 2*(this.VIEWDISTANCE+1)*this.tilesize)
+        // Right
+        rect(centerpoint.x+(this.VIEWDISTANCE)*this.tilesize, centerpoint.y-(this.VIEWDISTANCE+1)*this.tilesize, this.tilesize, 2*(this.VIEWDISTANCE+1)*this.tilesize)
+        // Up
+        rect(centerpoint.x-(this.VIEWDISTANCE+1)*this.tilesize, centerpoint.y-(this.VIEWDISTANCE+1)*this.tilesize, 2*(this.VIEWDISTANCE+1)*this.tilesize, this.tilesize)
+        // Down
+        rect(centerpoint.x-(this.VIEWDISTANCE+1)*this.tilesize, centerpoint.y+(this.VIEWDISTANCE)*this.tilesize, 2*(this.VIEWDISTANCE+1)*this.tilesize, this.tilesize)
 
         // Rendering players
         for (var i in state.playerlist) {

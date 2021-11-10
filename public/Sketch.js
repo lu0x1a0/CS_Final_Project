@@ -35,7 +35,7 @@ function setup() {
   sfx_slider.position(10, 30)
 
   // Render distance slider
-  render_slider = createSlider(1, 24, 16, 1)
+  render_slider = createSlider(1, 20, 16, 1)
   render_slider.position(10, 50)
 
   // Start title theme
