@@ -14,13 +14,20 @@ class WhirlRender {
     }
 
     load_whirl(whirllist) {
-        // Load from a TreasureList
+        // Load from a WhirlList
         this.whirl_array = whirllist.whirl_array;
     }
 
-    display() {
+    display(center, viewdistance) {
         imageMode(CENTER);
         for (let whirl of this.whirl_array) {
+
+            // Don't render if out of view
+            if (whirl.loc.x > center.x + viewdistance
+                || whirl.loc.x < center.x - viewdistance
+                || whirl.loc.y > center.y + viewdistance
+                || whirl.loc.y < center.y - viewdistance)  { continue }
+
             push()
             translate((whirl.loc.x+0.5)*this.tilesize, (whirl.loc.y+0.5)*this.tilesize)
             rotate(this.angle)
