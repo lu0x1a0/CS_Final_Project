@@ -4,6 +4,7 @@ class Render {
 
         this.id
         this.frameNo = 0
+        this.VIEWDISTANCE = 1
 
         this.playerrender = new PlayerRender()
         this.playerrender.preload()
@@ -40,7 +41,13 @@ class Render {
         this.id = id
     }
 
+    set_viewdistance(val) {
+        this.VIEWDISTANCE = val
+    }
+
     load_gamemap(gamemap) {
+        this.tilesize = gamemap.tilesize
+
         this.gamemaprender.load_map(gamemap)
         this.soundrender.set_tilesize(gamemap.tilesize)
         this.treasurerender.first_load(gamemap)
@@ -55,6 +62,9 @@ class Render {
         background(0)
         translate(width / 2, height / 2)
 
+        var centertile
+        var centerpoint
+
         if (!dead) {
             for (var i in state.playerlist) {
                 if (state.playerlist[i].id == this.id) {
@@ -62,11 +72,14 @@ class Render {
                     continue
                 }
             }
+            centertile = {x: Math.floor(player.pos.x/this.tilesize),y: Math.floor(player.pos.y/this.tilesize)}
+            //centerpoint = player.pos
             translate(-player.pos.x, -player.pos.y)
         } else {
+            centertile = {x: Math.floor(dead.x/this.tilesize),y: Math.floor(dead.y/this.tilesize)}
+            //centerpoint = dead
             translate(-dead.x, -dead.y)
         }
-
 
         // Loading map-based render
         this.treasurerender.load_treasure(state.treasurelist)
@@ -75,21 +88,30 @@ class Render {
         this.whirlrender.load_whirl(state.whirllist)
         
         // Map-based render
-        this.gamemaprender.display(this.frameNo)
-        this.treasurerender.display(this.frameNo)
-        this.turretrender.display()
-        this.stationrender.display()
-        this.whirlrender.display()
+        this.gamemaprender.display(centertile, this.VIEWDISTANCE, this.frameNo)
+        this.treasurerender.display(centertile, this.VIEWDISTANCE, this.frameNo)
+        this.turretrender.display(centertile, this.VIEWDISTANCE)
+        this.stationrender.display(centertile, this.VIEWDISTANCE)
+        this.whirlrender.display(centertile, this.VIEWDISTANCE)
 
         // Event render
         this.eventrender.display(state.animationlist)
 
 
+        // Rendering players
         for (var i in state.playerlist) {
             var player = state.playerlist[i]
 
             if (player.id !== this.id) {
                 // Other players
+
+                
+                // Don't render if out of view
+                if (Math.floor(player.pos.x/this.tilesize) > centertile.x + this.VIEWDISTANCE
+                    || Math.floor(player.pos.x/this.tilesize) < centertile.x - this.VIEWDISTANCE
+                    || Math.floor(player.pos.y/this.tilesize) > centertile.y + this.VIEWDISTANCE
+                    || Math.floor(player.pos.y/this.tilesize) < centertile.y - this.VIEWDISTANCE)  { continue }
+
                 showship(
                     player.dir,
                     player.pos,
@@ -117,9 +139,16 @@ class Render {
             }
         }
 
-        // Projectiles
+        // Rendering projectiles
         for (var i in state.projectilelist){
             var projectile = state.projectilelist[i]
+
+            // Don't render if out of view
+            if (Math.floor(projectile.pos.x/this.tilesize) > centertile.x + this.VIEWDISTANCE
+                || Math.floor(projectile.pos.x/this.tilesize) < centertile.x - this.VIEWDISTANCE
+                || Math.floor(projectile.pos.y/this.tilesize) > centertile.y + this.VIEWDISTANCE
+                || Math.floor(projectile.pos.y/this.tilesize) < centertile.y - this.VIEWDISTANCE)  { continue }
+
             this.playerrender.cannonballshow(projectile)
         }
 

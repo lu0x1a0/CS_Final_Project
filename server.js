@@ -37,7 +37,7 @@ io.sockets.on('connection',newConnection)
 
 // Initialize GameMap -- MAP SELECTION NOT IMPLEMENTED
 const GameMap = require("./GameMap.js").GameMap
-var gamemap = new GameMap(Maps.MapSquare)
+var gamemap = new GameMap(Maps.MapHuge)
 
 let obj = Path.Generation(gamemap.map)
 
@@ -75,7 +75,7 @@ setInterval(heartbeat, CONST.HEARTBEAT_INTERVAL)
 function heartbeat() {
 
     // Update whirlpool position
-    //gamemap.whirllist.update(gamemap)
+    gamemap.whirllist.update(gamemap)
 
     // Turrets fire/repair
     var turret_cannonballs = gamemap.turretlist.fire_all(players)

@@ -87,12 +87,14 @@ class GameMapRender {
         }
     }
 
-    display(frameNo) {
+    display(center, viewdistance, frameNo) {
     
         imageMode(CORNER);
         // Display background map
-        for (let x = 0; x < this.xlen; x++) {
-            for (let y = 0; y < this.ylen; y++) {
+
+        for (let x = Math.max(0, center.x-viewdistance); x < Math.min(this.xlen, center.x+viewdistance+1); x++) {
+            for (let y = Math.max(0, center.y-viewdistance); y < Math.min(this.ylen, center.y+viewdistance+1); y++) {
+                
                 switch (this.map[x][y]) {
                     case 'L':
                         image(this.img_land, x*this.tilesize, y*this.tilesize, this.tilesize, this.tilesize);

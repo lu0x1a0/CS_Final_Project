@@ -17,9 +17,16 @@ class TurretRender {
         this.turret_array = turretlist.turret_array;
     }
 
-    display() {
+    display(center, viewdistance) {
         imageMode(CENTER);
+
         for (let turret of this.turret_array) {
+
+            // Don't render if out of view
+            if (Math.floor(turret.coords.x/this.tilesize) > center.x + viewdistance
+             || Math.floor(turret.coords.x/this.tilesize) < center.x - viewdistance
+             || Math.floor(turret.coords.y/this.tilesize) > center.y + viewdistance
+             || Math.floor(turret.coords.y/this.tilesize) < center.y - viewdistance) { continue }
             
             // Tint if hit
             if (turret.hit) {

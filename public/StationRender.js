@@ -17,10 +17,16 @@ class StationRender {
         this.station_array = stationlist.station_array;
     }
 
-    display() {
+    display(center, viewdistance) {
         imageMode(CENTER);
         for (let station of this.station_array) {
             
+            // Don't render if out of view
+            if (Math.floor(station.coords.x/this.tilesize) > center.x + viewdistance
+                || Math.floor(station.coords.x/this.tilesize) < center.x - viewdistance
+                || Math.floor(station.coords.y/this.tilesize) > center.y + viewdistance
+                || Math.floor(station.coords.y/this.tilesize) < center.y - viewdistance)  { continue }
+
             // Tint if hit
             if (station.hit) {
                 tint(256, 0, 0, 160)
