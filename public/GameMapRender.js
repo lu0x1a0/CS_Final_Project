@@ -59,7 +59,7 @@ class GameMapRender {
                 if (this.map[x][y] != ' ' || x == 0 || y == 0 || x == this.xlen || y == this.ylen) { continue }
 
                 // Rendering depends on walls above, below, left and right
-                var isWall = ['L', 'T']
+                var isWall = ['L', 'T', 'H']
 
                 var left = isWall.includes(this.map[x-1][y])
                 var right = isWall.includes(this.map[x+1][y])
@@ -87,17 +87,22 @@ class GameMapRender {
         }
     }
 
-    display(frameNo) {
+    display(center, viewdistance, frameNo) {
     
         imageMode(CORNER);
         // Display background map
-        for (let x = 0; x < this.xlen; x++) {
-            for (let y = 0; y < this.ylen; y++) {
+
+        for (let x = Math.max(0, center.x-viewdistance); x < Math.min(this.xlen, center.x+viewdistance+1); x++) {
+            for (let y = Math.max(0, center.y-viewdistance); y < Math.min(this.ylen, center.y+viewdistance+1); y++) {
+                
                 switch (this.map[x][y]) {
                     case 'L':
                         image(this.img_land, x*this.tilesize, y*this.tilesize, this.tilesize, this.tilesize);
                         break;
                     case 'T':
+                        image(this.img_land, x*this.tilesize, y*this.tilesize, this.tilesize, this.tilesize);
+                        break;
+                    case 'H':
                         image(this.img_land, x*this.tilesize, y*this.tilesize, this.tilesize, this.tilesize);
                         break;
                     case 'S':

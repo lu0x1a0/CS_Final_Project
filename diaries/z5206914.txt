@@ -1,0 +1,252 @@
+Arkie Owen
+z5206914
+Tutorial: Tues 4pm (Song)
+
+Week 1:
+
+    14/09/2021
+
+    - Formed group with Mitch, Prem, Sean, Shuwan
+    - Decided to pursue pirate.io game
+    - Discussed with Song
+    - Divided roles
+    - Submitted form
+    - Agreed to meet Sunday
+
+    19/09/2021
+
+    - Team meeting
+    - Affirmed that we will pursue pirate.io game
+    - Decided to begin with user stories, divided up user stories to write
+
+Week 2:
+
+    21/09/2021
+    
+    - Tutorial team meeting
+    - Game dividing Objectives into Epics (w/ team)
+    - Writing User Stories and Acceptance Criteria for Novel Objectives 1.-3.
+    - Assigned systems diagram with Mitchell
+
+    26/09/2021
+
+    - Team meeting
+    - Ported user stories to Jira
+    - Edited/formatted/organized stories under epics and into sprints
+    - Divided up report writing
+
+Week 3:
+
+    27/09/2021
+
+    - Wrote full project proposal report description with images
+    - Wrote project proposal report objectives
+
+    28/09/2021
+
+    - Filled in missing user stories
+    - Team meeting
+    - Finalised project proposal
+    - Edited/finalised user stories
+    - Copied user stories to project proposal
+
+    01/10/21
+
+    - Team meeting
+    - Organised Sprint 1
+
+    03/10/21
+
+    - Created GameMap.js
+    - Allowed GameMap.js to display images to users
+
+Week 4:
+
+    04/10/21
+
+    - Upgraded GameMap.js to be able to load maps as backgrounds
+    - Added collision physics to Land tiles
+
+    05/10/21
+
+    - Improved collision physics using corner detection
+    - Changed tilesize to 32
+    - Added Sunken Treasure spawning
+
+    06/10/21
+
+    - Began composing main music theme
+    - Discussed potential rollback with Scrum Master Mitch
+    - Meeting and UML creation
+    - Front/back end responsibility discussion
+
+    07/10/21
+
+    - Continued composing main music theme
+
+    08/10/21
+
+    - Created GameMapRender.js
+    - Split up GameMap between front end and backend
+    - Map creation and movement physics now occur in back end
+    - Rendering now occurs from front end
+    - Created MapFiles.js
+    - Split up map data between MapFiles and GameMap
+    - Continued composing main music theme
+
+    09/10/21
+
+    - Continued composing main music theme
+
+    10/10/21
+
+    - Split up treasure_array from GameMap into TreasureList and TreasureRender
+    - Added spawn points for individual game maps
+    - Changed player creation process so that backend is created first
+
+Week 5:
+
+    12/10/21
+
+    - Fixed image rendering uniformity
+    - Fixed collision physics
+    - Fixed Sunken Treasure pickup bug
+    - Added Sunken Treasure spawn loop
+    - Presented material to Song
+    - Planned Sprint 2 with the group
+
+    13/10/21
+
+    - Rolled back faulty version
+    - Created backend constants file
+    - Added in main music theme
+    - Added main music volume slider
+    - Big refactor of Player.js and Cannon.js into PlayerRender.js and CannonRender.js
+
+    14/10/21
+
+    - Added in cannon fire SFX
+    - Added in collect treasure SFX
+    - Added SFX firing
+    - Refactored PlayerRender.js into class system
+    - Minor changes to Constants file usage
+
+    15/10/21
+
+    - Added Town Turrets
+
+    17/10/21
+
+    - Began composing defeat music
+
+Week 6:
+
+    18/10/21
+
+    - Added invincibility for ships when they begin the game
+
+    20/10/21
+
+    - Added SoundManager.js (backend) and SoundRender.js (frontend) which now handle all sounds
+    - Other players' shots can now be heard
+    - Other players' treasure collecting can now be heard
+    - Sounds are quieter when they are further away
+
+    21/10/21
+
+    - Completed work creating new sound effects
+
+    24/10/21
+
+    - Gave turrets health
+    - Gave turrets hitboxes
+
+Week 7:
+
+    25/10/21
+
+    - Gave turrets health bars
+    - Implemented multiple spawn points
+
+    26/10/21
+
+    - Tweaked game parameters
+    - Sourced sprites
+
+    27/10/21
+
+    - Enormous refactor of visual rendering to de-couple frame rate and client-side rendering
+    - Implementation of lag buffer of 100ms
+    - Implementation of linear interpolating FPS
+    - Minor comment changes
+    - Added more pirate names
+    - Worked on main menu theme
+
+    29/10/21
+
+    - Added death music
+    - Added simplified death cutscene by modifying draw()
+    - Added death menu
+    - Death menu now allows players to retry with same username
+    - Death menu now allows players to go to title screen
+
+    31/10/21
+
+    - HUGE day of bug fixing
+    - Double movement bug fixed - all movement now in server.js
+    - Diagonal movement crash fixed
+    - Bot init changed to use spawn points
+    - Set default music to 0
+    - Treasure farm bug fixed by changing implementation of onTreasure to update on update()
+    - Ramming mechanics removed position altering which can cause out-of-bounds crashes
+    - Refactored SoundRender.js to use howler.js instead of p5.js (because p5.js sound is total garbage)
+
+Week 8:
+
+    2/11/21
+
+    - Added animations for water tile
+    - Large asset file restructure
+    - Group presentation 2
+    - Retrospective B
+
+    3/11/21
+
+    - Added main music theme
+    - Improved water tile animations
+    - Added dynamic land rendering
+
+    5/11/21
+
+    - Added town turret sprite
+
+    7/11/21
+
+    - Added death animation
+    - Added cannonball sprite
+    - Fixed visual glitches
+
+Week 9:
+
+    9/11/21
+
+    - Sourced and created icons
+    - Added extra interpolations for smoother rendering
+    - Added damage-taking animation for players and turrets
+    - Added dead turret tile
+    - Refactored SoundManager into EventManager
+    - Added treasure collect animation
+    - Fixed display error where other players' fishing wasn't showing up
+    - Improved treasure spawning
+    - Added unique treasure animations
+
+    10/11/21
+
+    - Added Stations
+    - Station sprite, dead sprite, health bullet sprite
+    - Heal sound effect implemented
+    - Added rough render distance feature
+
+    11/11/21
+
+    - Smoothed render distance feature

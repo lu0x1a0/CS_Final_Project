@@ -8,6 +8,16 @@ const {Weapons} = require('./Weapons/WeaponCollect.js')
 
 const {Cannon} = require('./Weapons/Cannon.js')
 
+/**
+ *
+ *
+ * @class Player 
+ * Declared for each ship,
+ * Handles Player input (wasd adds acceleration)
+ * Handles Player Damage logic
+ * Maintains the ship's status at each heartbeat
+ * keeps a record of statistics that will be displayed at endgame.
+ */
 class Player{
     constructor(id,username, x, y, dir, healthobserver){
         this.pos = {x:x, y:y};
@@ -52,16 +62,32 @@ class Player{
             }
         }
     }
+    /**
+     *
+     * Called everytime the player killed another 
+     * ship and timestamps it for later
+     * 
+     */
     addkillstat(){
         this.gamestat.kill += 1;
         this.gamestat.killstat.kill_amount.push(this.gamestat.kill)
         this.gamestat.killstat.kill_time.push(Date.now())
     }
+    /**
+     *  
+     * Called everytime the player collects a treasure 
+     * and timestamps it for later
+     */
     addgoldstat(gold){
         this.gold += gold
         this.gamestat.goldstat.gold_time.push(Date.now())
         this.gamestat.goldstat.gold_amount.push(this.gold)
     }
+    /**
+     *
+     * a tick function that limits how long the player 
+     * stays invincible, used at start of game to avoid instant death.
+     */
     invincTick() {
         this.invinc_time++;
         if (this.invinc_time >= CONST.INVINCIBILITY_FRAMES) {
@@ -69,7 +95,10 @@ class Player{
         }
     }
 
-
+    /**
+     *  
+     * check whether this ship and any other ship's elliptical collision region is intersecting.
+     */
     collisionCheck(players,eventmanager){
 
         // we assume a circle/elliptical collision zone that pushes the player
@@ -88,31 +117,25 @@ class Player{
             }
         }
     }
+    /**
+     * handles collision logic including push back and collision damage.
+     * this is called for each ship in collision as the separation/addition 
+     * of speed to position is handled in gamemap
+     * 
+     */
     onCollision(collided,this_dir_rad,collided_dir_rad,total_dist,collided_angle,eventmanager){
-        //first separate collided entities
-        var shared_dist = -(total_dist -  this_dir_rad - collided_dir_rad)
-
-        // collided.pos.x += Math.ceil(shared_dist)*Math.cos(collided_angle)
-        // collided.pos.y += Math.ceil(shared_dist)*Math.sin(collided_angle)
-        // this.pos.x += Math.ceil(shared_dist)*Math.cos(collided_angle+Math.PI)
-        // this.pos.y += Math.ceil(shared_dist)*Math.sin(collided_angle+Math.PI)
-
         ////pass forward momentum
         collided.vel.x = CONST.PLAYER_MAX_SPEED*Math.cos(collided_angle)
         collided.vel.y = CONST.PLAYER_MAX_SPEED*Math.cos(collided_angle)
-
-        //collided.vel.x = this.vel.x*3.5 //0.9 //xacc*10
-        //collided.vel.y = this.vel.y*3.5 //0.9 //yacc*10
-        //collided.pos.x += this.vel.x*5//xacc*10
-        //collided.pos.y += this.vel.y*5//yacc*10
-        //
-        //// receives momentum
-        //this.vel.x /= 2//collided.vel.x //+= collided.xacc*10
-        //this.vel.y /= 2//collided.vel.x //+= collided.yacc*10
-
         this.collisionDamage(collided,collided_angle,eventmanager)
-        //console.log(this,collided)
     }
+    /**
+     * 
+     * assign collision damage to this ship and the ship which 
+     * this ship collided with, with the adjusted angle penalty. 
+     * (angle of collision for each ship dictates how much damage is received)
+     * (more on the side, less on the front and rear)
+     */
     collisionDamage(collided,angle,eventmanager){
         var altangle = Math.sign(angle)*(-1) *(2*Math.PI-Math.abs(angle))
         var speed = mag(this.vel.x-collided.vel.x,this.vel.y-collided.vel.y)
@@ -138,9 +161,12 @@ class Player{
         }
 
     }
-
+    /**
+     * let this ship to take damage, and add audiovisual event to the front end.
+     * On death notifies HealthObserver to remove this ship from game. 
+     */
     takeDamage(damage, eventmanager,idfrom){
-        if (!this.invincible && !this.hit) {
+        if (!this.invincible) {
             if (this.health > 0){
                 this.health -=damage
                 if (this.health <= 0){
@@ -161,28 +187,18 @@ class Player{
         }
     }
 
-    endGame(){
-
-    }
-    dropTreasure(){
-      //rip drop treasure
-    }
-    toJSON() {
-        return {
-            pos : this.pos,
-            dir : this.dir,
-            size : this.size,
-            username : this.username,
-            health : this.health,
-            hitbox_size : this.hitbox_size,
-            gold : this.gold,
-            treasure_fish_time : CONST.TREASURE_FISH_TIME,
-            cannon : this.cannon.toJSON(),
-            invincible : this.invincible,
-            hit : this.hit,
+    heal(amt, eventmanager){
+        if (!this.invincible) {
+            this.health = Math.min(CONST.PLAYER_HEALTH, this.health+amt)
+            eventmanager.add_sound("heal", this.pos)
         }
     }
 
+    /**
+     *
+     * handles the ship's weapon effect countdown, invincibility countdown,
+     * and changes this ship's velocity every heartbeat/frame update.
+     */
     update(players, eventmanager,paths,costs,tupleval,index,Gmap,forbidden,projectiles) {
 
         this.hit = false
@@ -212,7 +228,14 @@ class Player{
 
         this.collisionCheck(players,eventmanager)
     };
-
+    /**
+     *
+     * Called inside heartbeat along with this.update,
+     * checks for conditions for treasure fishng and whether 
+     * that treasure can be collected. Once collected, remove treasure 
+     * from gamemap (param) add corresponding treasures to the player 
+     * (including weapons, health and gold) 
+     */
     updateTreasure(gamemap, eventmanager) {
         if (this.OnTreasure && this.SpacePressed) {
             if (this.SpaceCounter == CONST.TREASURE_FISH_TIME) {
@@ -257,11 +280,11 @@ class Player{
             }
         }
     }
-
+    // simple update on internal attributes whether this is on a treasure.
     updateOnTreasure(x) {
         this.OnTreasure = x
     }
-
+    // simple update on internal attributes of whether user pressed onto space, called in server.js
     updateSpacePressed(x) {
         this.SpacePressed = x
     }
@@ -275,6 +298,7 @@ class Player{
         if ( this.pos.x <= 0) { this.pos.x = 0; }
 
     }
+    // wrapper for player's cannon's fire function
     fire(targetX,targetY){
         return this.cannon.fire(targetX, targetY)
     }

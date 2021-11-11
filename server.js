@@ -37,7 +37,7 @@ io.sockets.on('connection',newConnection)
 
 // Initialize GameMap -- MAP SELECTION NOT IMPLEMENTED
 const GameMap = require("./GameMap.js").GameMap
-var gamemap = new GameMap(Maps.MapSquare)
+var gamemap = new GameMap(Maps.MapHuge)
 
 let obj = Path.Generation(gamemap.map)
 
@@ -75,7 +75,7 @@ setInterval(heartbeat, CONST.HEARTBEAT_INTERVAL)
 function heartbeat() {
 
     // Update whirlpool position
-    //gamemap.whirllist.update(gamemap)
+    gamemap.whirllist.update(gamemap)
 
     // Turrets fire/repair
     var turret_cannonballs = gamemap.turretlist.fire_all(players)
@@ -84,6 +84,14 @@ function heartbeat() {
         eventmanager.add_sound("cannon_fire", turret_cannonballs[tID].pos)
     }
     gamemap.turretlist.repair()
+
+    // Stations fire/repair
+    var station_bullets = gamemap.stationlist.fire_all(players)
+    for (var hID in station_bullets) {
+        projectiles[hID+(new Date()).getTime()] =  station_bullets[hID]
+        eventmanager.add_sound("cannon_fire", station_bullets[hID].pos)
+    }
+    gamemap.stationlist.repair()
 
     for (var i in players){
         // checks that players[i] is not removed from the object by previous damages
@@ -109,10 +117,14 @@ function heartbeat() {
                 delete projectiles[key]
                 continue
             }else{
-                hit = projectiles[key].contactcheck(players, gamemap.turretlist.turret_array)
+                hit = projectiles[key].contactcheck(players, gamemap.turretlist.turret_array, gamemap.stationlist.station_array)
                 if (projectiles[key].done){
                     //projectiles.splice(key,1)
-                    hit.takeDamage(CONST.CANNONBALL_DAMAGE, eventmanager,projectiles[key].playerid)
+                    if (key[0] == 'h') {
+                        hit.heal(CONST.STATION_HEAL, eventmanager)
+                    } else {
+                        hit.takeDamage(CONST.CANNONBALL_DAMAGE, eventmanager,projectiles[key].playerid)
+                    }
                     delete projectiles[key]
                     continue
                 }
@@ -139,6 +151,7 @@ function heartbeat() {
         projectiles:projectileslocjson(projectiles),
         treasurelist:gamemap.treasurelist,
         turretlist:gamemap.turretlist,
+        stationlist:gamemap.stationlist,
         whirllist:gamemap.whirllist,
         soundlist:eventmanager.pop_sounds(),
         animationlist:eventmanager.pop_animations(),
@@ -212,6 +225,7 @@ function newConnection(socket) {
                 projectiles:projectileslocjson(projectiles),
                 treasurelist:gamemap.treasurelist,
                 turretlist:gamemap.turretlist,
+                stationlist:gamemap.stationlist,
                 whirllist:gamemap.whirllist,
                 soundlist:eventmanager.pop_sounds(),
                 animationlist:eventmanager.pop_animations(),

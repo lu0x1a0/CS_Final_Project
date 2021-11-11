@@ -59,6 +59,7 @@ class State {
             projectilelist : newstatedata.projectiles,
             treasurelist : newstatedata.treasurelist,
             turretlist : newstatedata.turretlist,
+            stationlist : newstatedata.stationlist,
             whirllist: newstatedata.whirllist
         })
         
@@ -101,6 +102,7 @@ class State {
                 projectilelist : interpolateProjectileList(base_update.projectilelist, next.projectilelist, r),
                 treasurelist : base_update.treasurelist,
                 turretlist : base_update.turretlist,
+                stationlist : base_update.stationlist,
                 whirllist : base_update.whirllist,
                 soundlist : this.pop_sounds(),
                 animationlist : this.tick_animationlist(),
