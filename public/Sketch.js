@@ -39,8 +39,9 @@ function setup() {
 
   // https://pirategametestthingy.herokuapp.com/
   // http://localhost:5000
-  //var addr = window.location.href
-  socket = io.connect("https://civil-glyph-331607.ts.r.appspot.com/",{reconnection: false} )
+  //"https://civil-glyph-331607.ts.r.appspot.com/"
+  var addr = window.location.href
+  socket = io.connect(addr,{reconnection: false} )
 
 }
 
@@ -264,6 +265,12 @@ function draw() {
     render.render(state.get_state(), dead)
 
     //leaderboard.update(state.get_state())
+    var l = ""
+    const leaderboard_Display = document.getElementById("leaderboardDisplay")
+
+      l += "<tr><td>" + "this will be for a name" + ": "+ "test" + "</td></tr>"
+      console.log(l)
+      leaderboard_Display.innerHTML = l
 
   }
   else {

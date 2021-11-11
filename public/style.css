@@ -41,6 +41,30 @@ html, body {
   width: 693px;
 }
 
+
+.leaderboardCenter {
+  margin: 0;
+  top: 100px;
+  left: 40%;
+  position: absolute;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  text-align: left;
+  font-family: "Lucida Handwriting", cursive;
+  font-size: 10px;
+}
+
+
+.leaderboardScroll {
+  position: absolute;
+  transform: translateY(-50%) translateX(-50%);
+  background-image: url("assets/imgs/img_leaderboardScroll.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  height: 490px;
+  width: 315px;
+}
+
 #home-page p {
   margin-bottom: 0;
 }
@@ -102,13 +126,9 @@ html, body {
 
 #leaderboard {
   position: fixed;
-  top: 50%;
-  left: 50%;
-  background: rgba(192, 192, 192, 0.4);
-  padding: 20px;
-  border-style:solid;
+  top: calc(490px/2);
+  right: calc(-315px/2);
   opacity: 0.9;
-  border-radius:25px;
 }
 
 #effects_table {
@@ -125,6 +145,7 @@ html, body {
 #effects_list {
   list-style-type: none;
 }
+
 
 ul.death-menu-nav {
   list-style-type: none;
