@@ -90,9 +90,13 @@ class ArrayKeyedMap extends Map {
     }
     
     toKey(array) {
-      return JSON.stringify(array);
+        if (typeof(array) == 'string') {
+            return array
+        }
+        return JSON.stringify(array);
     }
 }
+
 
 function FloydWarshall(path,cost) {
     for(let k = 0; k < path.length; ++k) {
@@ -136,7 +140,7 @@ function FloodAlgorithm(index,tuplelist,map) {
 */
   
 
-function Generation(map) {
+function Generation(map,mapfile) {
     let tuplelist = []
     let TurretListQ = []
     let LandListQ = []
@@ -247,12 +251,12 @@ function Generation(map) {
     for (let [key, value] of graph) {
         for (let i = 0; i < value.length; i++) {
             if (TurretLevelVal.has(value[i])) {
-                cost[tupleVal.get(key)][tupleVal.get(value[i])] = CONST.COST_INIT_PENALTY - TurretLevelVal.get(value[i])*CONST.TURRET_LOSING_RATE
+                cost[tupleVal.get(key)][tupleVal.get(value[i])] = CONST.MAP_TURRET_STARTING_VALUE - TurretLevelVal.get(value[i])*CONST.TURRET_LOSING_RATE
             } 
             else if (LandLevelVal.has(value[i])) {
                 cost[tupleVal.get(key)][tupleVal.get(value[i])] = CONST.LAND_COST_INIT_PENATY - LandLevelVal.get(value[i])*CONST.LAND_LOSING_RATE
             } else {
-                cost[tupleVal.get(key)][tupleVal.get(value[i])] = CONST.COST_INIT_VALUE
+                cost[tupleVal.get(key)][tupleVal.get(value[i])] = CONST. MAP_INIT_VALUE
             }
         }
     }
@@ -268,10 +272,92 @@ function Generation(map) {
     }
 
     FloydWarshall(path,cost)
+    //https://stackoverflow.com/questions/29085197/how-do-you-json-stringify-an-es6-map
+    function replacer(key, value) {
+        if(value instanceof Map) {
+          return {
+            dataType: 'Map',
+            value: Array.from(value.entries()), // or with spread: value: [...value]
+          };
+        } else {
+          return value;
+        }
+      }
+
+    function stringifyMap(myMap) {
+        function selfIterator(map) {
+            return Array.from(map).reduce((acc, [key, value]) => {
+                if (value instanceof Map) {
+                    acc[key] = selfIterator(value);
+                } else {
+                    acc[key] = value;
+                }
+                return acc;
+            }, {})
+        }
+    
+        const res = selfIterator(myMap)
+        return JSON.stringify(res);
+    }
+
+    function reviver(key, value) {
+        if(typeof value === 'object' && value !== null) {
+          if (value.dataType === 'Map') {
+            return new Map(value.value);
+          }
+        }
+        return value;
+    }
+
+    //Or any other Map
+    if (mapfile != 'MapHuge') {
+        console.log("this??")
+        let obj = {
+            'path' : JSON.stringify(path), 
+            'cost' : JSON.stringify(cost),
+            'tupleVal' : stringifyMap(tupleVal),
+            'index' : JSON.stringify(index, replacer),
+            'ForbiddenVals' : stringifyMap(ForbiddenVals)
+        }
+    
+        let fs = require('fs'),
+            JSONObj = JSON.stringify(obj);
+            
+        let str = "./JSON/" + mapfile + ".json";
+        fs.writeFileSync(str, JSONObj)
+    } else {
+        let obj = {
+            'path' : JSON.stringify(path), 
+        }
+
+        let obj1 = {
+            'cost' : JSON.stringify(cost),
+        }
+        let obj2 = {
+            'tupleVal' : stringifyMap(tupleVal),
+            'index' : JSON.stringify(index, replacer),
+            'ForbiddenVals' : stringifyMap(ForbiddenVals)
+        }
+
+        let fs = require('fs'),
+            JSONObj = JSON.stringify(obj),
+            JSONObj1 = JSON.stringify(obj1),
+            JSONObj2 = JSON.stringify(obj2);
+            
+        let str = "./JSON/" + mapfile + "path" + ".json";
+        let str1 = "./JSON/" + mapfile + "cost" + ".json";
+        let str2 = "./JSON/" + mapfile + "other" + ".json";
+
+        fs.writeFileSync(str, JSONObj)
+        fs.writeFileSync(str1, JSONObj1)
+        fs.writeFileSync(str2, JSONObj2)
+
+    }
+
     return [path, cost, tupleVal, index, ForbiddenVals]
 }
 
-
 module.exports = {
     Generation,
+    ArrayKeyedMap : ArrayKeyedMap,
 };
