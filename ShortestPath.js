@@ -37,35 +37,35 @@ function ComputeAdjacentVertex(V,map) {
     var AV = [];
     //Check Map Dimensions 
 
-    if (IndexCheck([V[0]-1,V[1]+1],map) && map[V[0]-1][V[1]+1] != 'L' && map[V[0]-1][V[1]+1] != 'T') {
+    if (IndexCheck([V[0]-1,V[1]+1],map) && map[V[0]-1][V[1]+1] != 'L' && map[V[0]-1][V[1]+1] != 'T' && map[V[0]-1][V[1]+1] != 'H') {
         AV.push([V[0]-1,V[1]+1])
     }
 
-    if (IndexCheck([V[0]-1,V[1]-1],map) && map[V[0]-1][V[1]-1] != 'L' && map[V[0]-1][V[1]-1] != 'T') {
+    if (IndexCheck([V[0]-1,V[1]-1],map) && map[V[0]-1][V[1]-1] != 'L' && map[V[0]-1][V[1]-1] != 'T' && map[V[0]-1][V[1]-1] != 'H') {
         AV.push([V[0]-1,V[1]-1])
     }
 
-    if (IndexCheck([V[0]+1,V[1]+1],map) && map[V[0]+1][V[1]+1] != 'L' && map[V[0]+1][V[1]+1] != 'T') {
+    if (IndexCheck([V[0]+1,V[1]+1],map) && map[V[0]+1][V[1]+1] != 'L' && map[V[0]+1][V[1]+1] != 'T'  && map[V[0]+1][V[1]+1] != 'H') {
         AV.push([V[0]+1,V[1]+1])
     }
     
-    if (IndexCheck([V[0]+1,V[1]-1],map) && map[V[0]+1][V[1]-1] != 'L' &&  map[V[0]+1][V[1]-1] != 'T') {
+    if (IndexCheck([V[0]+1,V[1]-1],map) && map[V[0]+1][V[1]-1] != 'L' &&  map[V[0]+1][V[1]-1] != 'T' &&  map[V[0]+1][V[1]-1] != 'H') {
         AV.push([V[0]+1,V[1]-1])
     }
 
-    if (IndexCheck([V[0],V[1]-1],map) && map[V[0]][V[1]-1] != 'L' &&  map[V[0]][V[1]-1] != 'T') {
+    if (IndexCheck([V[0],V[1]-1],map) && map[V[0]][V[1]-1] != 'L' &&  map[V[0]][V[1]-1] != 'T' &&  map[V[0]][V[1]-1] != 'H') {
         AV.push([V[0],V[1]-1])
     }
 
-    if (IndexCheck([V[0],V[1]+1],map) && map[V[0]][V[1]+1] != 'L' && map[V[0]][V[1]+1] != 'T') {
+    if (IndexCheck([V[0],V[1]+1],map) && map[V[0]][V[1]+1] != 'L' && map[V[0]][V[1]+1] != 'T' && map[V[0]][V[1]+1] != 'H') {
         AV.push([V[0],V[1]+1])
     }
 
-    if (IndexCheck([V[0]+1,V[1]],map) && map[V[0]+1][V[1]] != 'L' && map[V[0]+1][V[1]] != 'T') {
+    if (IndexCheck([V[0]+1,V[1]],map) && map[V[0]+1][V[1]] != 'L' && map[V[0]+1][V[1]] != 'T'  && map[V[0]+1][V[1]] != 'H') {
         AV.push([V[0]+1,V[1]])
         }
 
-    if (IndexCheck([V[0]-1,V[1]],map) && map[V[0]-1][V[1]] != 'L' && map[V[0]-1][V[1]] != 'T' ) {
+    if (IndexCheck([V[0]-1,V[1]],map) && map[V[0]-1][V[1]] != 'L' && map[V[0]-1][V[1]] != 'T' && map[V[0]-1][V[1]] != 'H' ) {
         AV.push([V[0]-1,V[1]])
     }
     AV = shuffle(AV)
@@ -272,6 +272,14 @@ function Generation(map,mapfile) {
     }
 
     FloydWarshall(path,cost)
+
+    //Round everything to 2dp - reduce file size
+    for (let i = 0; i < cost.length; ++i) {
+        for (let j = 0; j < cost[i].length; ++j) {
+            cost[i][j] = Math.round(cost[i][j]*100)/100
+        }
+    }
+
     //https://stackoverflow.com/questions/29085197/how-do-you-json-stringify-an-es6-map
     function replacer(key, value) {
         if(value instanceof Map) {

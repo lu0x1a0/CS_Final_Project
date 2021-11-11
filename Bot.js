@@ -102,7 +102,7 @@ class Bot extends entities.Player {
        this.EscapePivTicks = 0
        this.ShootingTicks = 0
        this.Shoot = true;
-       this.EscapeRadius = CONST.ESCAPE_RADIUS
+       this.EscapeRadius = CONST.BOT_ESCAPE_RADIUS
 
        this.topright = []
        this.topleft = []
@@ -126,7 +126,7 @@ class Bot extends entities.Player {
 
     EscapeTick(Gmap, forbidden) {
         this.EscapePivTicks++;
-        if (this.EscapePivTicks >= CONST.UPDATE_ESCAPEPIVOTS) {
+        if (this.EscapePivTicks >= CONST.BOT_ESCAPEPIVOT_UPDATE) {
             this.EscapePivTicks = 0
             this.GeneratePivots(Gmap, forbidden)
         }
@@ -135,7 +135,7 @@ class Bot extends entities.Player {
     ShootingTick() {
         if (!this.shoot) {
             this.ShootingTicks += 1
-            if (this.ShootingTicks >= CONST.SHOOTING) {
+            if (this.ShootingTicks >= CONST.BOT_SHOOTING_RATE) {
                 this.shoot = true
                 this.ShootingTicks = 0
             }
@@ -169,56 +169,19 @@ class Bot extends entities.Player {
         return newplayers
     }
     /*
-        Retrieve Treasure checks if each player is some constant magnitude away
-        from the nearest treasure to the bot. And checks if each player is
-        some cost value away from the bot too. If the player is within
-        the radius of the bot but not within the radius of the treasure then
-        depending on the health of the player we decide if we should go for
-        the treasure or not. If it is above 70 we should go for the player.
-        If it is below 70, but the nearest players health is smaller than the
-        bots health then we should go for the player as there is a greater reward
-        in killing the player, if it is less than 70 and the nearest players health
-        is greater than the bots health by some fixed constant then we should
-        opt to get the treasure. If the health is less than 40, if there are no nearest
-        players near the bot by some fixed radius from the treasure and bot then it
-        is assumed to be safe to go, but if there happens to be a player nearby
-        we don't go as we need to be more concerned with the bot survival.
-
-        Conditions to implement:
-
-        Need to decide on some constants:
-            -> How far should each player be from the nearest treasure for the bot?
-            -> How far should each player be from the nearest bot? -> This will later be decided as the radial length for escaping.
-
-        Const - PlayerTreasureDist
-        Const - PlayerBotDist  // This helps us know if we are in a safe space or not. If we are then we will place a hover pivot in this area.
-        Let X = NearestPlayerToUs
-        Let X1 = NearestPlayerToTreasure
-        Let Y = OurPosition
-        let Z = TreasurePosition
-
-        Firstly, check if the ship is already on the treasure. If it is this.onTreasure and this.spacePressed should be 1.
-        Then UpdateTreasure will automatically increment everythng. Once the treasure is removed (It will not be in the
-        treasure map) what happens next will depend on the health of the bot and the condition of the nearest player.
-
-        if (bothealth < 40) {
-            if abs(X-Y) < PlayerBotDist then we go to our escape pivot.  (Dont go to the treasure)
-            if abs(X-Y) > PlayerBotDist and abs(X-Z) > PlayerTreasureDist then go towards the treasure.
-        } else {
-            if (40 < bothealth < 70) {
-                if abs(X-Y) < PlayerBotDist but C*BotHealth < PlayerHealth  then we should go for the treasure.
-                i
-            } else { // bothealth > 70
-
-            }
-        }
-
-        Need to finish designing conditionals.
-
-    TreasureRetrievalQuest(player,paths,costs,tupleval,index,Gmap) {
-
-    }
+        How should update treasure work? 
+        1. It will increment via the entity functions. UpdateTreasure() will be called in regards to bot. 
+        2. In Bot File we will need to code up how it recognises that it is on the treasure, using this.onTreasure
+        3. GoToTreasure() function will essentially keep going towards the nearest treasure until its matrix coordinates align. 
+           If it does then this.SpacePressed and this.OnTreasure is true. 
+        4. this.SpaceCount will increment according to the UpdateTreasure() function. 
+        5. However, in any place the bot decides to move or shoot, which is specificallly 
+            in DecisionHandler() , this.SpacePressed and this.OnTreasure will be false. 
+            in Shooting(), this.SpacePressed will also be false. 
     */
+
+    
+    
     Escape(Gmap,min) {
         //Runs away from the nearest if and only if
         //Generate all angles
@@ -259,21 +222,6 @@ class Bot extends entities.Player {
 
 
     //Can be from any location
-    NearestPlayerObj(newplayers,costs,tupleval,from,tilesize) {
-        let x = MapX(newplayers[0].pos.x,tilesize)
-        let y = MapY(newplayers[0].pos.y,tilesize)
-        let min = [x,y]
-        let player = newplayers[0]
-        for (let i = 1; i < newplayers.length; ++i) {
-            x = MapX(newplayers[i].pos.x,tilesize)
-            y = MapY(newplayers[i].pos.y,tilesize)
-            if (costs[tupleval.get([x,y])][tupleval.get(from)] < costs[tupleval.get(min)][tupleval.get(from)]) {
-                min = [x,y]
-                player = newplayers[i]
-            }
-        }
-        return player
-    }
 
     NearestPlayer(newplayers,costs,tupleval,from,tilesize) {
         let x = MapX(newplayers[0].pos.x,tilesize)
@@ -325,6 +273,8 @@ class Bot extends entities.Player {
 
     Shooting(x,y) {
         if (this.shoot) {
+            this.updateSpacePressed = false
+            this.SpaceCounter = 0
             let cannonball = this.fire(x-this.pos.x,y-this.pos.y)
             //console.log("----------shooting--------")
             //console.log(cannonball)
@@ -339,44 +289,137 @@ class Bot extends entities.Player {
             this.shoot = false;
         }
     }
+    /*
+    Conditions
+        UpdateBot explanation
+        1. Check if there are no other ships in the map. 
+           If there isnt check if you are onTreasure, if not GoToTreasure().
+        
+        2. Check if you are onTreasure().
+
+        Find NEAREST PLAYER.
+
+        3. Check if the nearest player is within X distance from you, if not GoToTreasure()
+
+        3. Check if my health is below a certain threshold, if it is and the nearest player is within my danger or escape radius zone
+           if it is I run away to a random pivot.
+
+        4. Check if my health is below another certain threshold, if the nearest player is within my shoot radius then I maintain a certain
+           distance from that player yet I make sure to shoot at that player.
+        
+        5. Check if my health is above a certain threshold, be very aggressive and go to the nearest player. Shoot and Ram them. 
+
+    */
+    //Gives the coordinate of the nearest treasure
+    NearestPlayerObj(newplayers,costs,tupleval,from,tilesize) {
+        let x = MapX(newplayers[0].pos.x,tilesize)
+        let y = MapY(newplayers[0].pos.y,tilesize)
+        let min = [x,y]
+        let player = newplayers[0]
+        for (let i = 1; i < newplayers.length; ++i) {
+            x = MapX(newplayers[i].pos.x,tilesize)
+            y = MapY(newplayers[i].pos.y,tilesize)
+            if (costs[tupleval.get([x,y])][tupleval.get(from)] <= costs[tupleval.get(min)][tupleval.get(from)]) {
+                min = [x,y]
+                player = newplayers[i]
+            }
+        }
+        return player
+    }
+
+    GoToTreasure(paths,costs,tupleval,index,Gmap,from) {
+        let treasure = this.NearestTreasure(costs,tupleval,from,Gmap)
+        //Check if treasure is in the same coordinate as bot
+        const util = require('util');
+        let coord = [treasure.x,treasure.y]
+        if (util.isDeepStrictEqual(coord,from)) {
+            //Bot is on the same spot as the treasure. 
+            this.OnTreasure = true
+            this.SpacePressed = true
+            this.SpaceCounter = 1
+            this.xacc = 0
+            this.yacc = 0
+            this.vel.x = 0
+            this.vel.y = 0
+            console.log("On treasure")
+            return //Dont need to do anything if we are already here.
+        } //else if we are not we keep going to the same place
+        console.log("from : " + from)
+        console.log("treasure coord : " + [treasure.x,treasure.y])
+        let indx = index.get(paths[tupleval.get([treasure.x,treasure.y])][tupleval.get(from)])
+        console.log("indx : " + indx)
+        this.DecisionHandler(from, indx, Gmap.map)
+        return
+    }
+
+    NearestTreasure(costs,tupleval,from,Gmap) {
+        let treasure = Gmap.treasurelist.treasure_array[0]
+        let x = treasure.x
+        let y = treasure.y 
+        let min = [x,y]
+        for (let i = 1; i < Gmap.treasurelist.treasure_array.length; ++i) {
+            let temp = Gmap.treasurelist.treasure_array[i]
+            x = temp.x
+            y = temp.y 
+            if (costs[tupleval.get([x,y])][tupleval.get(from)] <= costs[tupleval.get(min)][tupleval.get(from)]) {
+                min = [x,y]
+                treasure = temp
+            }
+        }
+        return treasure
+    }
 
     updateBot(players,paths,costs,tupleval,index,Gmap) {
+        console.log(this.SpaceCounter)
+        console.log(this.SpacePressed)
+        console.log(this.OnTreasure)
+
         let tilesize = Gmap.tilesize
         let BotX = MapX(this.pos.x, tilesize)
         let BotY = MapY(this.pos.y, tilesize)
         var start = [BotX,BotY]
         let newplayers = this.PlayersList(players)
         if (newplayers.length == 0) {
-            let indx = this.Escape(Gmap,[])
-            indx = index.get(paths[tupleval.get(indx)][tupleval.get(start)])
-            this.DecisionHandler(start, indx, Gmap.map)
+            if (!this.OnTreasure) {
+                this.GoToTreasure(paths,costs,tupleval,index,Gmap,start)
+            } 
             return
         }
-        let min = this.NearestPlayer(newplayers,costs,tupleval,start,tilesize)
+
         let closestplayer = this.NearestPlayerObj(newplayers,costs,tupleval,start,tilesize)
+        let min = [MapX(closestplayer.pos.x,tilesize), MapY(closestplayer.pos.y,tilesize)]
+
+        let DirectionVector = [cos(this.dir),sin(this.dir)]
+        let PlayerDirection = [closestplayer.pos.x - this.pos.x, closestplayer.pos.y - this.pos.y]
+        let theta =  Angle(DirectionVector,PlayerDirection)
+        let threshold = this.cannon.ellipserange(theta)
+        let magnitude = mag(PlayerDirection[0], PlayerDirection[1])
+
+        if (magnitude >= CONST.BOT_NEARBY_RADIUS) {
+            if (!this.OnTreasure) {
+                this.GoToTreasure(paths,costs,tupleval,index,Gmap,start)
+            } 
+            return
+        }
+
         if (this.health <= CONST.BOT_LOW_HEALTH) {
             //if min < then the radius, just hover
             let indx = this.Escape(Gmap,min)
             if (indx.length != 0) {
                 indx = index.get(paths[tupleval.get(indx)][tupleval.get(start)])
                 this.DecisionHandler(start, indx, Gmap.map)
-                this.Shooting(closestplayer.pos.x, closestplayer.pos.y)
+                if (magnitude < threshold + 100) {
+                    this.Shooting(closestplayer.pos.x, closestplayer.pos.y)
+                }
             }
         }
         else if (this.health >= CONST.BOT_RAM_CONDITION) {
             let end = index.get(paths[tupleval.get(min)][tupleval.get(start)])
             this.DecisionHandler(start, end, Gmap.map)
-            this.Shooting(closestplayer.pos.x, closestplayer.pos.y)
+            if (magnitude < threshold + 100) {
+                this.Shooting(closestplayer.pos.x, closestplayer.pos.y)
+            }
         } else {
-            //it means in between check the distance between each other
-            //If the distance bewteen the nearest ship and the bot is greater
-            //then the shooting range, then we keep following.
-            let DirectionVector = [cos(this.dir),sin(this.dir)]
-            let PlayerDirection = [closestplayer.pos.x - this.pos.x, closestplayer.pos.y - this.pos.y]
-            let theta =  Angle(DirectionVector,PlayerDirection)
-            let threshold = this.cannon.ellipserange(theta)
-            let magnitude = mag(PlayerDirection[0], PlayerDirection[1])
-
             if (magnitude > threshold) {
                 let end = index.get(paths[tupleval.get(min)][tupleval.get(start)])
                 this.DecisionHandler(start, end, Gmap.map)
@@ -387,6 +430,11 @@ class Bot extends entities.Player {
     }
 
     DecisionHandler(Start,DecisionIndex) {
+
+        this.OnTreasure = false
+        this.updateSpacePressed = false
+        this.SpaceCounter = 0
+
         let i = Start[0] - DecisionIndex[0]
         let j = Start[1] - DecisionIndex[1]
         if (i <= -1 ) {

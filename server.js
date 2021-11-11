@@ -111,14 +111,14 @@ function Initialise() {
     console.log("Ran???")
 }
 
-Initialise()
+//Initialise()
 
 let pathstr = "path.json"
 let coststr = "cost.json"
 let otherstr = "other.json"
 
 let fs = require('fs')
-let MapFiles = 'MapHuge' //Just have to change this now
+let MapFiles = 'MapSquare' //Just have to change this now
 
 if (MapFiles == 'MapHuge') {
     var gamemap = new GameMap(Maps.MapHuge)
@@ -166,7 +166,6 @@ if (MapFiles == 'MapHuge') {
     index = obj[3]
     forbidden = obj[4]
 }
-
 
 // Initialize EventManager
 const EventManager = require("./EventManager.js").EventManager
