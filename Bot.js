@@ -224,7 +224,8 @@ class Bot extends entities.Player {
         //Generate all angles
 
         if (min.length == 0) {
-            let minCoord =  rand(this.RandomPivots)
+            shuffle(this.RandomPivots)
+            let minCoord = this.RandomPivots[0]
             return minCoord
         }
 
