@@ -11,10 +11,19 @@ class SoundRender {
             src:'assets/mus/title_music.mp3',
             loop: true,
         })
+
         this.music_main = new Howl({
             src:'assets/mus/main_music.mp3',
             loop: true,
         })
+
+        if (Math.random() < 0.02) {
+            this.music_main = new Howl({
+                src:'assets/mus/special_music.mp3',
+                loop: true,
+            })
+        }
+
         this.music_dead = new Howl({
             src:'assets/mus/dead_music.mp3',
             loop: true,
