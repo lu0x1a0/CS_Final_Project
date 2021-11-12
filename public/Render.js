@@ -4,7 +4,7 @@ class Render {
 
         this.id
         this.frameNo = 0
-        this.VIEWDISTANCE = 1
+        this.VIEWDISTANCE = 16
 
         this.playerrender = new PlayerRender()
         this.playerrender.preload()
