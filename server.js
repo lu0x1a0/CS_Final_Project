@@ -18,7 +18,7 @@ let K_D = 68
 let K_Space = 32
 
 //process.env.PORT is used for heroku to connect when running locally use LocalHost:5000
-var PORT = 8080;
+var PORT = 8080 || 5000;
 
 var express = require("express")
 //import express from 'express'
@@ -37,7 +37,7 @@ io.sockets.on('connection',newConnection)
 
 // Initialize GameMap -- MAP SELECTION NOT IMPLEMENTED
 const GameMap = require("./GameMap.js").GameMap
-var gamemap = new GameMap(Maps.MapHuge)
+var gamemap = new GameMap(Maps.MapSquare)
 
 let obj = Path.Generation(gamemap.map)
 

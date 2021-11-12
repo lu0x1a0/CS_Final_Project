@@ -7,13 +7,16 @@ var dead = 0
 
 var state
 var render
+let musicIcon
+let soundFxIcon
 var socket
-//var leaderboard
-var div
+var leaderBoard_update_counter = 100
 
 function preload() {
   state = new State()
   render = new Render()
+  musicIcon = loadImage('/assets/icon/gold.png');
+  soundFxIcon = loadImage('/assets/icon/volume.png');
 }
 
 
@@ -27,16 +30,18 @@ function setup() {
   render.setup()
   showMainMenu()
 
+
+
   // Volume sliders
   music_slider = createSlider(0, 0.5, 0.0, 0.01)
   music_slider.position(10, 10)
 
   sfx_slider = createSlider(0, 1.0, 0.4, 0.01)
-  sfx_slider.position(10, 30)
+  sfx_slider.position(10, 50)
 
   // Render distance slider
   render_slider = createSlider(1, 20, 16, 1)
-  render_slider.position(10, 50)
+  render_slider.position(10, 100)
 
   // Start title theme
   render.soundrender.start_music_title()
@@ -75,8 +80,6 @@ function startGame(usernameInput) {
 
       gameStarted = 1
       dead = 0
-
-      //leaderboard = new Leaderboard()
 
       // Change music
       render.soundrender.stop_music_title()
@@ -140,18 +143,15 @@ function showMainMenu(){
   var Username = document.getElementById('username-input')
   var button = document.getElementById('play-button')
   const playMenu = document.getElementById('home-page')
-  const effects_table = document.getElementById('effects_table');
   const leaderboard = document.getElementById('leaderboard');
   playMenu.classList.remove('hidden')
 
   // Play main menu music
   render.soundrender.start_music_title()
 
-  effects_table.classList.add('hidden')
   leaderboard.classList.add('hidden')
   //When the play button is clicked hide the homepage and generate the player with the given username
   button.onclick = function(){
-      effects_table.classList.remove('hidden')
       leaderboard.classList.remove('hidden')
       playMenu.classList.add('hidden')
       startGame(Username.value)
@@ -164,10 +164,8 @@ function showDeathMenu(data){
   var Username = document.getElementById('username-input')
   var retry = document.getElementById('retry-button')
   var mainmenu = document.getElementById('mainmenu-button')
-  const effects_table = document.getElementById('effects_table');
   const leaderboard = document.getElementById('leaderboard');
   const deathMenu = document.getElementById('death-menu')
-  effects_table.classList.add('hidden')
   leaderboard.classList.add('hidden')
   deathMenu.classList.remove('hidden')
 
@@ -220,7 +218,7 @@ function showDeathMenu(data){
     render.soundrender.stop_music_dead()
 
     // Swap menus
-    effects_table.classList.remove('hidden')
+    leaderboard.classList.remove('hidden')
 
     deathMenu.classList.add('hidden')
     startGame(Username.value)
@@ -269,14 +267,24 @@ function draw() {
   if (gameStarted == 1 || dead) {
     render.render(state.get_state(), dead)
 
-    //leaderboard.update(state.get_state())
-    var l = ""
-    const leaderboard_Display = document.getElementById("leaderboardDisplay")
+      if (leaderBoard_update_counter >= 80) {
+        leaderBoard_update_counter = 0
+        const leaderboard_Display = document.getElementById("leaderboardDisplay")
 
-      l += "<tr><td>" + "this will be for a name" + ": "+ "test" + "</td></tr>"
-      console.log(l)
-      leaderboard_Display.innerHTML = l
+          var players = state.get_state().playerlist
+          players.sort(function (x, y) {
+            return y.gold - x.gold
+          })
 
+          var table = ""
+          for (var i = 0; i < players.length ; i++ ) {
+            if (i >= 5) { break }
+            table = table + "<tr><td>" + players[i].gold +"</td><td>" + " - "+ "</td><td>" + players[i].username.substring(0, 15) + "</td></tr>"
+          }
+          leaderboard_Display.innerHTML = table
+        } else {
+          leaderBoard_update_counter++;
+        }
   }
   else {
     //background(255)

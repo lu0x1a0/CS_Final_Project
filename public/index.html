@@ -4,7 +4,6 @@
     <link rel="stylesheet" href="style.css">
     <meta charset="UTF-8">
     <script language="javascript" type="text/javascript" src="https://cdn.jsdelivr.net/npm/p5@1.4.0/lib/p5.min.js"></script>
-    <script language="javascript" type="text/javascript" src="Leaderboard.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js" integrity="sha512-6+YN/9o9BWrk6wSfGxQGpt3EUK6XeHi6yeHV+TYD2GR0Sj/cggRpXr1BrAQf0as6XslxomMUxXp2vIl+fv0QRA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script language="javascript" type="text/javascript" src="CannonRender.js"></script>
     <script language="javascript" type="text/javascript" src="GameMapRender.js"></script>
@@ -30,18 +29,16 @@
       <p>Use the WASD keys to accelerate.</p>
       <p>Use the mouse to shoot.</p>
       <p>When over a sunken treasure hold space to collect it.</p>
-
-
       <p></p>
       <p></p>
-
-
-
 
       <input type="text" id="username-input" placeholder="Username" />
       <input type="button" id="play-button" value="PLAY"/>
     </div>
     </div>
+
+
+
 
     <div id="death-menu" class="hidden">
       <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
@@ -87,21 +84,32 @@
       <input type="button" id="mainmenu-button" value="MAIN MENU"/>
     </div>
 
-    <div id = "effects_table" class="hidden">
-      <h2>Active Boosts:</h2>
-    </div>
-
 
     <div id = "leaderboard" class="hidden leaderboardScroll ">
-      <div class= "leaderboardCenter">
+      <div class= "leaderboardText">
         <h2>Leaderboard:</h2>
         <table id = "leaderboardDisplay"> </table>
+      </div>
+      <div class= "boostsText">
         <h2>Boosts:</h2>
-        <ul id = "effects_list"></ul>
+        <table id = "boostDisplay"> </table>
+      </div>
+      <div class= "goldText">
         <h2>Gold:</h2>
+        <table id = "goldDisplay"> </table>
       </div>
     </div>
 
+    <div id = "volumeButtons">
+      <div id="music-position">
+        <input type="button" id="music-button" value="" class="buttonMusic"/>
+      </div>
+      <div id="speaker-position">
+        <input type="button" id="speaker-button" value="" class="buttonSpeaker"/>
+      </div>
+
+
+    </div>
 
 
   </body>

@@ -42,26 +42,74 @@ html, body {
 }
 
 
-.leaderboardCenter {
-  margin: 0;
+.leaderboardText {
+  position: fixed;
   top: 100px;
-  left: 40%;
-  position: absolute;
+  left: 45%;
   -ms-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
   text-align: left;
   font-family: "Lucida Handwriting", cursive;
-  font-size: 10px;
+  font-size: 16px;
+}
+
+#leaderboardDisplay {
+  list-style-type: none;
+  position: fixed;
+  width: 200px;
+}
+
+#boostDisplay {
+  list-style-type: none;
+  position: fixed;
+  width: 150px;
+}
+
+#goldDisplay {
+  list-style-type: none;
+  position: fixed;
+  width: 150px;
+  font-size: 25px;
+}
+
+
+.boostsText {
+  position: fixed;
+  top: 300px;
+  left: 35%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  text-align: left;
+  font-family: "Lucida Handwriting", cursive;
+  font-size: 16px;
+}
+
+.goldText {
+  position: fixed;
+  top: 460px;
+  left: 100px;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  text-align: left;
+  font-family: "Lucida Handwriting", cursive;
+  font-size: 16px;
+}
+
+.table {
+  margin: 15px 0;
+  border: 1px solid black;
+  table-layout: fixed;
+  width: 100%; /* must have this set */
 }
 
 
 .leaderboardScroll {
   position: absolute;
   transform: translateY(-50%) translateX(-50%);
-  background-image: url("assets/imgs/img_leaderboardScroll.png");
+  background-image: url("assets/imgs/img_status_scroll.png");
   background-size: contain;
   background-repeat: no-repeat;
-  height: 490px;
+  height: 605px;
   width: 315px;
 }
 
@@ -126,22 +174,11 @@ html, body {
 
 #leaderboard {
   position: fixed;
-  top: calc(490px/2);
+  top: calc(605px/2);
   right: calc(-315px/2);
   opacity: 0.9;
 }
 
-#effects_table {
-  position: fixed;
-  top: 0%;
-  left: 10%;
-  background: rgba(192, 192, 192, 0.4);
-  padding: 20px;
-  border-style:solid;
-  opacity: 0.9;
-  border-radius:25px;
-
-}
 #effects_list {
   list-style-type: none;
 }
@@ -164,4 +201,35 @@ li.death-menu-nav {
   display: block;
   overflow-y: scroll;
   max-height: 400px;
+}
+
+#volumeButtons{
+  position: fixed;
+  width: 500px;
+  height: 200px;
+}
+
+#music-position{
+  position:fixed;
+  left:150px;
+  top:6px;
+}
+
+#speaker-position{
+  position:fixed;
+  left:150px;
+  top:46px;
+}
+.buttonMusic {
+    border: none;
+    width:32px;
+    height:32px;
+    background: url('/assets/icon/note.png') no-repeat top left;
+}
+
+.buttonSpeaker {
+    border: none;
+    width:32px;
+    height:32px;
+    background: url('/assets/icon/speaker.png') no-repeat top left;
 }
