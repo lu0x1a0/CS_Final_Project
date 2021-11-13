@@ -102,7 +102,15 @@ function LargeRange(player){
     )
 }
 
-//function InvinceArmor(){}
+function InvinceArmor(player,period = CONST.WEAPON_EFFECT_PERIOD){
+    return new TimedAmplifiedEffect(
+        player, 
+        "invincible",
+        false,
+        true, 
+        period
+    )
+}
 
 
 module.exports = {
@@ -110,6 +118,6 @@ module.exports = {
         LargeBall:LargeBall,
         LargeRange:LargeRange,
         FastSpeed:FastSpeed,
-
+        InvinceArmor:InvinceArmor
     }
 }

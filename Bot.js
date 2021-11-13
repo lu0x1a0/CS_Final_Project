@@ -143,6 +143,15 @@ class Bot extends entities.Player {
     }
 
     update(players,soundmanager,paths,costs,tupleval,index,Gmap, forbidden) {
+        // Called on every heartbeat
+        //check whether to remove effect
+        var effectdone = 1
+        for (var key in this.effects) {
+            if ( effectdone === this.effects[key].countdown()){
+                delete this.effects[key]
+            }
+        }
+
         this.hit = false
 
         this.cannon.update()
@@ -152,7 +161,7 @@ class Bot extends entities.Player {
             this.GeneratePivots(Gmap, forbidden)
             this.initialiseEscapePivots = true
         }
-        this.invincTick()
+        //this.invincTick()
         this.EscapeTick(Gmap, forbidden)
         this.ShootingTick()
         this.updateBot(players,paths,costs,tupleval,index,Gmap)

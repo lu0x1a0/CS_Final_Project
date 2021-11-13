@@ -38,8 +38,7 @@ class Player{
         this.gold = CONST.PLAYER_START_GOLD;
         this.hit = false
 
-        this.invincible = true;
-        this.invinc_time = 0;
+        this.invincible = false;
 
         this.treasure_fish_time = CONST.TREASURE_FISH_TIME
         this.SpaceCounter = 0
@@ -48,6 +47,8 @@ class Player{
         this.healthobserver = healthobserver
 
         this.effects = {}
+        this.effects["InvinceArmor"] = new Weapons["InvinceArmor"](this,CONST.INVINCIBILITY_FRAMES)
+
 
         var starttime = Date.now()
         this.gamestat = {
@@ -82,17 +83,6 @@ class Player{
         this.gold += gold
         this.gamestat.goldstat.gold_time.push(Date.now())
         this.gamestat.goldstat.gold_amount.push(this.gold)
-    }
-    /**
-     *
-     * a tick function that limits how long the player 
-     * stays invincible, used at start of game to avoid instant death.
-     */
-    invincTick() {
-        this.invinc_time++;
-        if (this.invinc_time >= CONST.INVINCIBILITY_FRAMES) {
-            this.invincible = false;
-        }
     }
 
     /**
@@ -213,7 +203,7 @@ class Player{
         }
         
         // Tick invincibility
-        this.invincTick()
+        // this.invincTick()
         // Determine if we are on treasure
         this.updateOnTreasure(Gmap.is_on_treasure(this.pos))
 
