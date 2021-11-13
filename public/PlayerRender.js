@@ -102,7 +102,7 @@ class PlayerRender {
     this.showGoldOnScroll()
   };
 
-
+  // tabulate active effects on player
   showEffects(){
     const effects_list = document.getElementById("boostDisplay")
     if (Object.keys(this.effects).length){
@@ -141,7 +141,7 @@ class PlayerRender {
     }
   }
 }
-
+// used to show enemy ship on the screen
 function showship(dir,pos,img_boat,username,size,health,funcs,gold,OnTreasure,SpaceCounter,treasure_fish_time, invincible, hit){
   push()
   rotate(dir+PI)

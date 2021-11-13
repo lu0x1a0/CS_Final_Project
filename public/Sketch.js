@@ -121,12 +121,6 @@ function startGame(usernameInput) {
     }
   )
 
-  // socket.on("playerdeath",
-  //   function(data) {
-  //     state.add_death(data.pos, data.dir)
-  //   }
-  // )
-
 }
 
 
@@ -159,7 +153,7 @@ function showMainMenu(){
   }
 }
 
-
+// contains statistics, charts, and retry buttons
 function showDeathMenu(data){
 
   var Username = document.getElementById('username-input')
@@ -237,7 +231,7 @@ function showDeathMenu(data){
     showMainMenu()
   }
 }
-
+// takes input time statistics and produce a corresponding plotly graph
 function doChart(chart_id,rawdata,chart_title){
     // plot the charts - gold
   var xArray = rawdata.x//[50,60,70,80,90,100,110,120,130,140,150];
