@@ -45,7 +45,7 @@ CONST = {
     TURRET_REPAIR_TIME : 20*5,
     STATION_FRAME_FREQ : 20*3.2,
     STATION_REPAIR_TIME : 20*12,
-    WHIRLMOVETICK : 2000/(1000/20), //2 seconds, 
+    WHIRLMOVETICK : 2000/(1000/20), //2 seconds,
     WEAPON_EFFECT_PERIOD : 20*20, // 20 Seconds
 
     // Treasure constants
@@ -66,7 +66,7 @@ CONST = {
     BOT_ESCAPEPIVOT_UPDATE : 200,
     BOT_ESCAPE_RADIUS : 500,
     BOT_SHOOTING_RATE : 50,
-    BOT_NEARBY_RADIUS : 500, //IDK what nearby radius should really be 
+    BOT_NEARBY_RADIUS : 500, //IDK what nearby radius should really be
 
     MAP_INIT_VALUE: 1,
     TURRET_LOSING_RATE: 0.09,

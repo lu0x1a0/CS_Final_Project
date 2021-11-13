@@ -18,7 +18,8 @@ let K_D = 68
 let K_Space = 32
 
 //process.env.PORT is used for heroku to connect when running locally use LocalHost:5000
-var PORT = process.env.PORT || 5000
+//8080 for google
+var PORT = 5000;
 
 var express = require("express")
 //import express from 'express'

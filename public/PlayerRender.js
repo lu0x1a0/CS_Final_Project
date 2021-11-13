@@ -99,20 +99,37 @@ class PlayerRender {
 
     this.cannon.showRange()
     this.showEffects()
+    this.showGoldOnScroll()
   };
+
+
   showEffects(){
-    const effects_list = document.getElementById("effects_list")
+    const effects_list = document.getElementById("boostDisplay")
     if (Object.keys(this.effects).length){
       var l = ""
       for (var key in this.effects){
-        l += "<li><h4>" + key + ": "+ Math.ceil(this.effects[key]/20) + "<\h4><\li> \n" //20 is the divisor for heartbeat interval
+        var icon = ""
+        if (key == 'LargeRange') {
+          icon = "<img src=/assets/icon/range.png height=25 width=25></img>"
+        } else if (key == 'FastSpeed') {
+          icon = "<img src=/assets/icon/speed.png height=25 width=25></img>"
+        }else if (key == 'LargeBall') {
+          icon = "<img src=/assets/icon/ball.png height=25 width=25></img>"
+        }
+        l += "<tr><td>" + icon +"</td><td>" + key + "</td><td>"+ Math.ceil(this.effects[key]/20) + "</td></tr>" //20 is the divisor for heartbeat interval
       }
       effects_list.innerHTML = l
-    } 
+    }
     else if (effects_list.innerHTML){
       effects_list.innerHTML = ''
-    } 
-    //console.log(this.effects)
+    }
+  }
+
+  showGoldOnScroll(){
+    const gold_display = document.getElementById("goldDisplay")
+      var icon = "<img src=/assets/icon/gold.png height=25 width=25></img>"
+      var l = "<tr><td>" + icon +  "</td><td>"+ this.gold + "</td></tr>" //20 is the divisor for heartbeat interval
+      gold_display.innerHTML = l
   }
 
   cannonballshow(ball) {
@@ -131,7 +148,7 @@ function showship(dir,pos,img_boat,username,size,health,funcs,gold,OnTreasure,Sp
   var imgx = pos.x //-40
   var imgy = pos.y //- 24
   imageMode(CENTER)
-  
+
   if (invincible) {
     tint(255, 90)
   }
@@ -170,7 +187,7 @@ function showship(dir,pos,img_boat,username,size,health,funcs,gold,OnTreasure,Sp
     rect(pos.x-size/2, pos.y-size/2-30,size*abs(SpaceCounter)/treasure_fish_time,10);
   }
   pop()
-  
+
 
   for(f in funcs){
     funcs()
