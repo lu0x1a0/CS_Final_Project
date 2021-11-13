@@ -213,6 +213,7 @@ function heartbeat() {
     }
     gamemap.stationlist.repair()
 
+    // loop through players and update their velocity, position and fishing status
     for (var i in players){
         // checks that players[i] is not removed from the object by previous damages
         if (players[i]){
@@ -224,11 +225,12 @@ function heartbeat() {
             }
         }
     }
-
+    
+    // populate the map when number of players are low.
     if (monitorstatistics['numships'] <= CONST.MAX_BOTS_ONSERVER) {
         InitialiseBot(gamemap)
     }
-
+    // parse projectile movements and deal the correspond damage when necessary
     for (var key in projectiles) {
         if (projectiles.hasOwnProperty(key)) {
             projectiles[key].update()
@@ -263,7 +265,7 @@ function heartbeat() {
 
     BotEntity.Bot.ResetCannonBalls()
 
-    // Data we send to front end'
+    // Data we send to front end
 
     io.sockets.emit('heartbeat', {
         t:Date.now(),
@@ -277,13 +279,9 @@ function heartbeat() {
         animationlist:eventmanager.pop_animations(),
     })
 
-    //if (monitorstatistics['numships'] == 0) {
-    //    InitialiseBot(gamemap)
-    //    monitorstatistics['numships'] += 1
-    //}
-
 }
 
+// add bot ship to the game
 botIdx = 0
 function InitialiseBot(gamemap) {
     console.log("A New Bot is being added")
@@ -300,7 +298,7 @@ function InitialiseBot(gamemap) {
 
 
 
-// RUNS WHEN A NEW CONNECTION JOINS
+// RUNS WHEN A NEW CONNECTION/webpage JOINS
 function newConnection(socket) {
     console.log("new connection " + socket.id)
 
@@ -381,7 +379,8 @@ function newConnection(socket) {
             }
         }
     )
-
+    // change acceleration to zero when the player released wasd if they 
+    //  arnt already accelerating in opposite direction
     socket.on('updatereleased',
         function(data){
             var player
@@ -408,19 +407,11 @@ function newConnection(socket) {
         }
     )
 
-
+    // called when clientside initiated disconnect
     socket.on("disconnect", (reason) => {
-        //console.log("--------------------reason-------------------")
-        //console.log(reason)
         var id = socket.id
         delete players[id]
-        //for (var i = 0; i < players.length; i++ ) {
-        //  if (id == players[i].id) {
-        //    players.splice(i,1)
-        //    break
-        //  }
-        //}
-
+        monitorstatistics['numships'] -= 1
       }
     )
 }

@@ -1,3 +1,5 @@
+// *json function chooses the necessary infor that front end need for rendering.
+// this filters cycling reference of objects inside the actual class.
 effects2json = function(effects){
     var ef = {}
     for (var key in effects){
@@ -46,6 +48,7 @@ projectileslocjson = function(projectiles){
     }
     return l
 }
+//some other miscellaneous functions needed to do general calculation with object position vectors
 module.exports = {
     mag: function (x,y){
         return Math.sqrt(x**2+y**2)

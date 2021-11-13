@@ -75,7 +75,7 @@ wk7 25-31/Oct -
     26-31:
         - heaps of bug fixes and changed range display API to ellipse.
         
-wk8 - 
+wk8 - 01-07/Nov
     03/Nov - 
         - made the frontend to call socket.io api wrt the browser window link so 
           we dont have to repeatedly change the hardcode link when deploying on cloud.
@@ -88,7 +88,7 @@ wk8 -
     07/Nov - 
         - started working on statistics, refactored all the 
           backend-frontend json function.
-wk9 - 
+wk9 - 08-14/Nov
     08/Nov -
         - got death statistic display working on the front end with plotly.js
     09/Nov -
@@ -98,4 +98,5 @@ wk9 -
           virtual machine on virtualbox.
         - Forbid cannonball to cause self damage to player and made
           the starting position closer
-        - Added invincibility armour backend
+        - Added invincibility armour backend and refactored start up invince into it.
+    
