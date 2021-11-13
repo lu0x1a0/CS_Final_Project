@@ -299,15 +299,6 @@ function InitialiseBot(gamemap) {
 }
 
 
-// This shit is never called cos HealthObserver does the work...
-//
-// function playerDeath(id){
-//     // Emit death coords
-//     console.log("players[id].pos  ", players[id].pos)
-//     io.sockets.emit('dead', {coords : players[id].pos})
-//     console.log("dead and emit")
-// }
-
 
 // RUNS WHEN A NEW CONNECTION JOINS
 function newConnection(socket) {
@@ -357,16 +348,6 @@ function newConnection(socket) {
     socket.on('updatepressed',
         function(data) {
             var player
-
-            //console.log('-----------------updatepressed-----------------------')
-            //console.log(data)
-            //console.log(player)
-            //console.log(players)
-            //for (var i = 0; i < players.length; i++ ) {
-            //    if (socket.id == players[i].id) {
-            //        player = players[i]
-            //    }
-            //}
 
             player = players[socket.id]
             if (player) {
