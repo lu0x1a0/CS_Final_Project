@@ -61,6 +61,9 @@ class TreasureList {
 
         // Death treasures are like regular treasures, but with the killed players' gold
         
+        // Don't add death treasure if we are past the dead treasure limit
+        if (this.treasure_array.length >= CONST.DEATH_TREASURE_FACTOR*this.max_treasure) { return }
+
         // Convert to map coordinates
         coords = {x: Math.floor(coords.x/this.tilesize),y: Math.floor(coords.y/this.tilesize)}
 

@@ -250,3 +250,8 @@ Week 9:
     11/11/21
 
     - Smoothed render distance feature
+
+    12/11/21
+
+    - Removed render slider
+    - Added hard treasure limit
