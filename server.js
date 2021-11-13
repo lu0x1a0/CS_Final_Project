@@ -119,7 +119,7 @@ let coststr = "cost.json"
 let otherstr = "other.json"
 
 let fs = require('fs')
-let MapFiles = 'MapSquare' //Just have to change this now
+let MapFiles = 'MapHuge' //Just have to change this now
 
 if (MapFiles == 'MapHuge') {
     var gamemap = new GameMap(Maps.MapHuge)
@@ -391,7 +391,7 @@ function newConnection(socket) {
                     eventmanager.add_sound("cannon_fire", player.pos)
                     if (cannonball){
                         // use playerid+current time stamp as id, might not safe from server attack with spamming io
-                        projectiles[player.id+(new Date()).getTime()] = cannonball
+                        projectiles['p'+player.id+(new Date()).getTime()] = cannonball
                     }
                     player.SpaceCounter = 0
                 } else if (data.pressedkeycode === K_Space) {
