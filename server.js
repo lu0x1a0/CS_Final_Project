@@ -18,7 +18,8 @@ let K_D = 68
 let K_Space = 32
 
 //process.env.PORT is used for heroku to connect when running locally use LocalHost:5000
-var PORT = 8080 || 5000;
+//8080 for google
+var PORT = 5000;
 
 var express = require("express")
 //import express from 'express'
@@ -36,17 +37,136 @@ io.sockets.on('connection',newConnection)
 //------------------------------ BACKEND SETUP -------------------------------//
 
 // Initialize GameMap -- MAP SELECTION NOT IMPLEMENTED
+function reviver(key, value) {
+    if(typeof value === 'object' && value !== null) {
+      if (value.dataType === 'Map') {
+        return new Map(value.value);
+      }
+    }
+    return value;
+}
+
+function PathParse(data) {
+    let data1 = JSON.parse(data)
+    let path = JSON.parse(data1.path)
+    return path
+}
+
+function CostParse(data) {
+    let data1 = JSON.parse(data)
+    let cost = JSON.parse(data1.cost)
+    return cost
+}
+
+function OtherParse(data) {
+    function* entries(obj) {
+        for (let key in obj)
+            yield [key, obj[key]];
+    }
+    let data1 = JSON.parse(data)
+
+    let tupleVal = JSON.parse(data1.tupleVal)
+    let tupleValx= new Path.ArrayKeyedMap(Object.entries(tupleVal))
+
+    let index = JSON.parse(data1.index, reviver)
+
+    let ForbiddenVals = JSON.parse(data1.ForbiddenVals)
+    let ForbiddenValsx = new Path.ArrayKeyedMap(entries(ForbiddenVals))
+
+    return [tupleValx, index, ForbiddenValsx]
+}
+
+function Parse(data) {
+    function* entries(obj) {
+        for (let key in obj)
+            yield [key, obj[key]];
+    }
+    let data1 = JSON.parse(data)
+    let path = JSON.parse(data1.path)
+    let cost = JSON.parse(data1.cost)
+
+    let tupleVal = JSON.parse(data1.tupleVal)
+    let tupleValx= new Path.ArrayKeyedMap(Object.entries(tupleVal))
+
+    let index = JSON.parse(data1.index, reviver)
+
+    let ForbiddenVals = JSON.parse(data1.ForbiddenVals)
+    let ForbiddenValsx = new Path.ArrayKeyedMap(entries(ForbiddenVals))
+
+    return [path, cost, tupleValx, index, ForbiddenValsx]
+}
+
 const GameMap = require("./GameMap.js").GameMap
-var gamemap = new GameMap(Maps.MapSquare)
 
-let obj = Path.Generation(gamemap.map)
+function Initialise() {
+    let gamemap1 = new GameMap(Maps.MapSquare)
+    let gamemap2 = new GameMap(Maps.MapRocky)
+    let gamemap3 = new GameMap(Maps.MapPiers)
+    let gamemap4 = new GameMap(Maps.MapHuge)
 
-let paths = obj[0]
-let costs = obj[1]
-let tupleval = obj[2]
-let index = obj[3]
-let forbidden = obj[4]
+    Path.Generation(gamemap1.map, "MapSquare")
+    Path.Generation(gamemap2.map, "MapRocky")
+    Path.Generation(gamemap3.map, "MapPiers")
+    Path.Generation(gamemap4.map, "MapHuge")
+    //
+    console.log("Ran???")
+}
 
+//Initialise()
+
+let pathstr = "path.json"
+let coststr = "cost.json"
+let otherstr = "other.json"
+
+let fs = require('fs')
+let MapFiles = 'MapSquare' //Just have to change this now
+
+if (MapFiles == 'MapHuge') {
+    var gamemap = new GameMap(Maps.MapHuge)
+} else if (MapFiles == 'MapSquare') {
+    var gamemap = new GameMap(Maps.MapSquare)
+} else if (MapFiles == 'MapPiers') {
+    var gamemap = new GameMap(Maps.MapPiers)
+} else if (MapFiles == 'MapRocky') {
+    var gamemap = new GameMap(Maps.MapRocky)
+}
+
+let paths;
+let costs;
+let tupleval;
+let index;
+let forbidden;
+
+if (MapFiles == 'MapHuge') {
+    let str = "./JSON/" + MapFiles + pathstr
+    let str1 = "./JSON/" + MapFiles + coststr
+    let str2 = "./JSON/" + MapFiles + otherstr
+
+    let data = fs.readFileSync(str, "utf8")
+    let data1 = fs.readFileSync(str1, "utf8")
+    let data2 = fs.readFileSync(str2, "utf8")
+
+    let obj = PathParse(data)
+    let obj1 = CostParse(data1)
+    let obj2 = OtherParse(data2)
+
+    paths = obj
+    costs = obj1
+    tupleval = obj2[0]
+    index = obj2[1]
+    forbidden = obj2[2]
+
+} else {
+    //MapFiles = "MapHuge"
+    let str = "./JSON/" + MapFiles + ".json";
+    let data = fs.readFileSync(str, "utf8")
+    let obj = Parse(data)
+    paths = obj[0]
+    costs = obj[1]
+    tupleval = obj[2]
+    index = obj[3]
+    forbidden = obj[4]
+}
 
 // Initialize EventManager
 const EventManager = require("./EventManager.js").EventManager

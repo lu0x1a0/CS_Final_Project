@@ -239,6 +239,7 @@ class Player{
     updateTreasure(gamemap, eventmanager) {
         if (this.OnTreasure && this.SpacePressed) {
             if (this.SpaceCounter == CONST.TREASURE_FISH_TIME) {
+                console.log("TREASURE RECIEVED")
                 //Remove Treasure coordinates
                 let encap = {x: Math.floor(this.pos.x/gamemap.tilesize), y: Math.floor(this.pos.y/gamemap.tilesize)};
                 let treasure = gamemap.treasurelist.get_treasure(encap)
