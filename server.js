@@ -2,7 +2,7 @@
 //pirate server.
 
 
-const entities = require('./entities.js')
+const entities = require('./Player.js')
 const BotEntity = require('./Bot.js')
 const CONST = require('./Constants.js').CONST
 const Maps = require('./MapFiles.js').Maps

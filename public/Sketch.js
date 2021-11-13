@@ -179,8 +179,11 @@ function showDeathMenu(data){
   var Username = document.getElementById('username-input')
   var retry = document.getElementById('retry-button')
   var mainmenu = document.getElementById('mainmenu-button')
+  var creditReturn = document.getElementById('credit-return-button')
+  var goToCredits = document.getElementById('credit-button')
   const leaderboard = document.getElementById('leaderboard');
   const deathMenu = document.getElementById('death-menu')
+  const credits = document.getElementById('credits')
   leaderboard.classList.add('hidden')
   deathMenu.classList.remove('hidden')
 
@@ -223,6 +226,15 @@ function showDeathMenu(data){
     },
     "Cumulative Kills"
   )
+
+  goToCredits.onclick = function() {
+    credits.classList.remove('hidden')
+    deathMenu.classList.add('hidden')
+  }
+  creditReturn.onclick = function() {
+    credits.classList.add('hidden')
+    deathMenu.classList.remove('hidden')
+  }
 
   retry.onclick = function(){
 

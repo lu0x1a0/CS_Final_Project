@@ -3,7 +3,7 @@ html, body {
   padding: 0;
   overflow: hidden;
   overscroll-behavior: none;
-  background-image: url("assets/imgs/img_water.png");
+  background-image: url("assets/imgs/img_waterBackground.png");
   background-repeat: repeat;
 }
 
@@ -84,6 +84,17 @@ html, body {
   width: 591px;
 }
 
+.scrollCredits {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateY(-50%) translateX(-50%);
+  background-image: url("assets/imgs/img_scrollCredits.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  height: 920px;
+  width: 591px;
+}
 
 
 .leaderboardText {

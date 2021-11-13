@@ -1,4 +1,4 @@
-const entities = require('./entities.js')
+const entities = require('./Player.js')
 const mag = require("./utils.js").mag
 const addVec = require("./utils.js").addVec
 const setMag = require("./utils.js").setMag
