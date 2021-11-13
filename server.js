@@ -223,7 +223,7 @@ function heartbeat() {
             }
         }
     }
-    
+
     // populate the map when number of players are low.
     if (monitorstatistics['numships'] <= CONST.MAX_BOTS_ONSERVER) {
         InitialiseBot(gamemap)
@@ -294,12 +294,8 @@ function InitialiseBot(gamemap) {
 }
 
 
-<<<<<<< HEAD
-// RUNS WHEN A NEW CONNECTION JOINS
-=======
 
 // RUNS WHEN A NEW CONNECTION/webpage JOINS
->>>>>>> main
 function newConnection(socket) {
 
     // Generate a new player and add them to the list of players when first connecting
@@ -344,10 +340,7 @@ function newConnection(socket) {
         function(data) {
             var player
 
-<<<<<<< HEAD
 
-=======
->>>>>>> main
             player = players[socket.id]
             if (player) {
                 if (data.pressedkeycode ===K_W){
@@ -381,7 +374,7 @@ function newConnection(socket) {
             }
         }
     )
-    // change acceleration to zero when the player released wasd if they 
+    // change acceleration to zero when the player released wasd if they
     //  arnt already accelerating in opposite direction
     socket.on('updatereleased',
         function(data){
@@ -411,10 +404,8 @@ function newConnection(socket) {
     socket.on("disconnect", (reason) => {
         var id = socket.id
         delete players[id]
-<<<<<<< HEAD
-=======
+
         monitorstatistics['numships'] -= 1
->>>>>>> main
       }
     )
 }

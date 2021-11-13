@@ -49,20 +49,6 @@ class HealthObserver{
         })
         delete this.playerlist[playerid]
 
-<<<<<<< HEAD
-        // // Emit death coords/pos to all
-        // this.server.sockets.emit('playerdeath', {
-        //     pos : deathpos,
-        //     dir : deathdir
-        // })
-
-
-        // re-added disconnect to that player pressing key doesnt trigger server update,
-        // bcos player already removed from json
-       // this.server.to(playerid).disconnectSockets(true)
-
-=======
->>>>>>> main
         this.monitorstatistics['numships'] -= 1
     }
 
