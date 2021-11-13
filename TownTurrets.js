@@ -94,6 +94,10 @@ class Turret {
         }
     }
 
+    heal(amt, eventmanager){
+        this.health = Math.min(CONST.TURRET_HEALTH, this.health+amt)
+        eventmanager.add_sound("heal", this.pos)
+    }
 
 
     nearest_player(players) {
