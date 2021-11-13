@@ -3,7 +3,7 @@ html, body {
   padding: 0;
   overflow: hidden;
   overscroll-behavior: none;
-  background-image: url("assets/imgs/img_water.png");
+  background-image: url("assets/imgs/img_waterBackground.png");
   background-repeat: repeat;
 }
 
@@ -16,9 +16,39 @@ html, body {
   position: fixed;
 }
 
+#tutorial {
+  position: fixed;
+}
+
 .center {
   margin: 0;
   top: 40%;
+  left: 50%;
+  position: absolute;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  text-align: center;
+  font-family: "Lucida Handwriting", cursive;
+  font-size: 20px;
+
+}
+
+
+.centerReturnButton {
+  margin: 0;
+  top: 730px;
+  left: 50%;
+  position: absolute;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  text-align: center;
+  font-family: "Lucida Handwriting", cursive;
+  font-size: 20px;
+
+}
+.centerDeathMenu {
+  margin: 0;
+  top: 45%;
   left: 50%;
   position: absolute;
   -ms-transform: translate(-50%, -50%);
@@ -39,6 +69,31 @@ html, body {
   background-repeat: no-repeat;
   height: 880px;
   width: 693px;
+}
+
+
+.scrollTutorial {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateY(-50%) translateX(-50%);
+  background-image: url("assets/imgs/img_scrollTutorial.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  height: 920px;
+  width: 591px;
+}
+
+.scrollCredits {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateY(-50%) translateX(-50%);
+  background-image: url("assets/imgs/img_scrollCredits.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  height: 920px;
+  width: 591px;
 }
 
 
@@ -144,12 +199,7 @@ html, body {
   top: 50%;
   left: 50%;
   transform: translateY(-50%) translateX(-50%);
-  padding: 20px 30px;
-  background-color: blue;
-  display: flex;
-  flex-direction: column;
   align-items: center;
-  border-radius: 5px;
   text-align: center;
 }
 
@@ -189,6 +239,7 @@ ul.death-menu-nav {
   margin: 0;
   padding: 0;
   overflow: hidden;
+  align-items: center;
 }
 li.death-menu-nav {
   float: left;

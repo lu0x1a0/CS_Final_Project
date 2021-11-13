@@ -137,8 +137,11 @@ function showMainMenu(){
   //import the values from the home page
   var Username = document.getElementById('username-input')
   var button = document.getElementById('play-button')
+  var buttonTutorial = document.getElementById('tutorial-button')
+  var backToMainMenu = document.getElementById('back-to-mainmenu-button')
   const playMenu = document.getElementById('home-page')
   const leaderboard = document.getElementById('leaderboard');
+  const tutorial = document.getElementById('tutorial');
   playMenu.classList.remove('hidden')
 
   // Play main menu music
@@ -146,6 +149,18 @@ function showMainMenu(){
 
   leaderboard.classList.add('hidden')
   //When the play button is clicked hide the homepage and generate the player with the given username
+
+  buttonTutorial.onclick = function() {
+    playMenu.classList.add('hidden')
+    tutorial.classList.remove('hidden')
+  }
+
+  backToMainMenu.onclick = function() {
+    playMenu.classList.remove('hidden')
+    tutorial.classList.add('hidden')
+  }
+
+
   button.onclick = function(){
       leaderboard.classList.remove('hidden')
       playMenu.classList.add('hidden')
@@ -159,8 +174,11 @@ function showDeathMenu(data){
   var Username = document.getElementById('username-input')
   var retry = document.getElementById('retry-button')
   var mainmenu = document.getElementById('mainmenu-button')
+  var creditReturn = document.getElementById('credit-return-button')
+  var goToCredits = document.getElementById('credit-button')
   const leaderboard = document.getElementById('leaderboard');
   const deathMenu = document.getElementById('death-menu')
+  const credits = document.getElementById('credits')
   leaderboard.classList.add('hidden')
   deathMenu.classList.remove('hidden')
 
@@ -170,7 +188,6 @@ function showDeathMenu(data){
   deathstat.innerHTML = ""
 
   var players = data.players
-  console.log(players)
 
   players.sort(function (x, y) {
     return y.gold - x.gold
@@ -204,6 +221,15 @@ function showDeathMenu(data){
     },
     "Cumulative Kills"
   )
+
+  goToCredits.onclick = function() {
+    credits.classList.remove('hidden')
+    deathMenu.classList.add('hidden')
+  }
+  creditReturn.onclick = function() {
+    credits.classList.add('hidden')
+    deathMenu.classList.remove('hidden')
+  }
 
   retry.onclick = function(){
 

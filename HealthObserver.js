@@ -6,7 +6,7 @@ const {playerslocjson} = require("./utils.js")
  *
  *
  * @class HealthObserver
- * monitors death events of players and when notified, boot them 
+ * monitors death events of players and when notified, boot them
  * from the game and send them statistics.
  */
 class HealthObserver{
@@ -18,7 +18,7 @@ class HealthObserver{
         this.gamemap = gamemap
     }
     /**
-     *  
+     *
      * called by player inside entities when that player died.
      * - tallies kill statistics for players[idfrom]
      * - add treasure onto the map
@@ -27,24 +27,25 @@ class HealthObserver{
      * @memberof HealthObserver
      */
     playerDied(playerid,idfrom){
-        console.log('playerdied: ',playerid)
+        //var treasure = this.playerlist[playerid].dropTreasure()
+        // this.treasurehandler.addtreasure(treasure)
         var deathpos = this.playerlist[playerid].pos
         var deathdir = this.playerlist[playerid].dir
-        
+
         this.gamemap.treasurelist.add_death_treasure(
             deathpos,
             Math.floor(this.playerlist[playerid].gold*CONST.GOLD_PERCENT_DROP),
         )
-        if (this.playerlist.hasOwnProperty(idfrom)){    
+        if (this.playerlist.hasOwnProperty(idfrom)){
             //this.playerlist[idfrom].gamestat['kill'] += 1;
             this.playerlist[idfrom].addkillstat()
         }
         this.server.to(playerid).emit('dead', {
             coords : deathpos,
             dir : deathdir,
-            players : playerslocjson(this.playerlist), 
+            players : playerslocjson(this.playerlist),
             goldstat: this.playerlist[playerid].gamestat.goldstat,
-            killstat: this.playerlist[playerid].gamestat.killstat,    
+            killstat: this.playerlist[playerid].gamestat.killstat,
         })
         delete this.playerlist[playerid]
 

@@ -1,4 +1,4 @@
-const entities = require('./entities.js')
+const entities = require('./Player.js')
 const mag = require("./utils.js").mag
 const addVec = require("./utils.js").addVec
 const setMag = require("./utils.js").setMag
@@ -178,19 +178,19 @@ class Bot extends entities.Player {
         return newplayers
     }
     /*
-        How should update treasure work? 
-        1. It will increment via the entity functions. UpdateTreasure() will be called in regards to bot. 
+        How should update treasure work?
+        1. It will increment via the entity functions. UpdateTreasure() will be called in regards to bot.
         2. In Bot File we will need to code up how it recognises that it is on the treasure, using this.onTreasure
-        3. GoToTreasure() function will essentially keep going towards the nearest treasure until its matrix coordinates align. 
-           If it does then this.SpacePressed and this.OnTreasure is true. 
-        4. this.SpaceCount will increment according to the UpdateTreasure() function. 
-        5. However, in any place the bot decides to move or shoot, which is specificallly 
-            in DecisionHandler() , this.SpacePressed and this.OnTreasure will be false. 
-            in Shooting(), this.SpacePressed will also be false. 
+        3. GoToTreasure() function will essentially keep going towards the nearest treasure until its matrix coordinates align.
+           If it does then this.SpacePressed and this.OnTreasure is true.
+        4. this.SpaceCount will increment according to the UpdateTreasure() function.
+        5. However, in any place the bot decides to move or shoot, which is specificallly
+            in DecisionHandler() , this.SpacePressed and this.OnTreasure will be false.
+            in Shooting(), this.SpacePressed will also be false.
     */
 
-    
-    
+
+
     Escape(Gmap,min) {
         //Runs away from the nearest if and only if
         //Generate all angles
@@ -205,7 +205,6 @@ class Bot extends entities.Player {
         let ClosestPlayer = min
         if (this.BotMinCoord.length != 0) {
             if (this.BotMinCoord[0] == BotCoord[0] && this.BotMinCoord[1] == BotCoord[1]) {
-                //console.log("FOUND")
                 let index = this.RandomPivots.indexOf(this.BotMinCoord);
                 if (index > -1) {
                     this.RandomPivots.splice(index, 1);
@@ -285,14 +284,9 @@ class Bot extends entities.Player {
             this.updateSpacePressed = false
             this.SpaceCounter = 0
             let cannonball = this.fire(x-this.pos.x,y-this.pos.y)
-            //console.log("----------shooting--------")
-            //console.log(cannonball)
-            //console.log(this.pos.x,this.pos.y)
-            //console.log(this.cannon.pos.x,this.cannon.pos.y)
             if (cannonball){
                 // use playerid+current time stamp as id, might not safe from server attack with spamming io
                 Bot.CannonBalls[this.id] = cannonball
-                //console.log("server : " + server)
                 //server.UpdateProjectiles.UpdateProjectiles(this.id, cannonball)
             }
             this.shoot = false;
@@ -301,9 +295,9 @@ class Bot extends entities.Player {
     /*
     Conditions
         UpdateBot explanation
-        1. Check if there are no other ships in the map. 
+        1. Check if there are no other ships in the map.
            If there isnt check if you are onTreasure, if not GoToTreasure().
-        
+
         2. Check if you are onTreasure().
 
         Find NEAREST PLAYER.
@@ -315,8 +309,8 @@ class Bot extends entities.Player {
 
         4. Check if my health is below another certain threshold, if the nearest player is within my shoot radius then I maintain a certain
            distance from that player yet I make sure to shoot at that player.
-        
-        5. Check if my health is above a certain threshold, be very aggressive and go to the nearest player. Shoot and Ram them. 
+
+        5. Check if my health is above a certain threshold, be very aggressive and go to the nearest player. Shoot and Ram them.
 
     */
     //Gives the coordinate of the nearest treasure
@@ -342,7 +336,7 @@ class Bot extends entities.Player {
         const util = require('util');
         let coord = [treasure.x,treasure.y]
         if (util.isDeepStrictEqual(coord,from)) {
-            //Bot is on the same spot as the treasure. 
+            //Bot is on the same spot as the treasure.
             this.OnTreasure = true
             this.SpacePressed = true
             this.SpaceCounter = 1
@@ -350,13 +344,9 @@ class Bot extends entities.Player {
             this.yacc = 0
             this.vel.x = 0
             this.vel.y = 0
-            console.log("On treasure")
             return //Dont need to do anything if we are already here.
         } //else if we are not we keep going to the same place
-        console.log("from : " + from)
-        console.log("treasure coord : " + [treasure.x,treasure.y])
         let indx = index.get(paths[tupleval.get([treasure.x,treasure.y])][tupleval.get(from)])
-        console.log("indx : " + indx)
         this.DecisionHandler(from, indx, Gmap.map)
         return
     }
@@ -364,12 +354,12 @@ class Bot extends entities.Player {
     NearestTreasure(costs,tupleval,from,Gmap) {
         let treasure = Gmap.treasurelist.treasure_array[0]
         let x = treasure.x
-        let y = treasure.y 
+        let y = treasure.y
         let min = [x,y]
         for (let i = 1; i < Gmap.treasurelist.treasure_array.length; ++i) {
             let temp = Gmap.treasurelist.treasure_array[i]
             x = temp.x
-            y = temp.y 
+            y = temp.y
             if (costs[tupleval.get([x,y])][tupleval.get(from)] <= costs[tupleval.get(min)][tupleval.get(from)]) {
                 min = [x,y]
                 treasure = temp
@@ -379,9 +369,6 @@ class Bot extends entities.Player {
     }
 
     updateBot(players,paths,costs,tupleval,index,Gmap) {
-        console.log(this.SpaceCounter)
-        console.log(this.SpacePressed)
-        console.log(this.OnTreasure)
 
         let tilesize = Gmap.tilesize
         let BotX = MapX(this.pos.x, tilesize)
@@ -391,7 +378,7 @@ class Bot extends entities.Player {
         if (newplayers.length == 0) {
             if (!this.OnTreasure) {
                 this.GoToTreasure(paths,costs,tupleval,index,Gmap,start)
-            } 
+            }
             return
         }
 
@@ -407,7 +394,7 @@ class Bot extends entities.Player {
         if (magnitude >= CONST.BOT_NEARBY_RADIUS) {
             if (!this.OnTreasure) {
                 this.GoToTreasure(paths,costs,tupleval,index,Gmap,start)
-            } 
+            }
             return
         }
 

@@ -25,7 +25,6 @@ module.exports = {
     const firstName = [
       "Pirate",
       "Grape",
-      "Black",
       "Red",
       "o'",
       "Wet",
@@ -44,6 +43,7 @@ module.exports = {
       "Crab",
       "Spike",
       "Dagger",
+      "Song",
     ]
     const lastName = [
       "",
@@ -61,7 +61,7 @@ module.exports = {
       " Knives",
       " Sparrow",
       " Whatsisname",
-
+      "Fang",
     ]
 
     var selectedRank = rank[Math.floor(Math.random() * rank.length)]

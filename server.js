@@ -2,7 +2,7 @@
 //pirate server.
 
 
-const entities = require('./entities.js')
+const entities = require('./Player.js')
 const BotEntity = require('./Bot.js')
 const CONST = require('./Constants.js').CONST
 const Maps = require('./MapFiles.js').Maps
@@ -108,8 +108,6 @@ function Initialise() {
     Path.Generation(gamemap2.map, "MapRocky")
     Path.Generation(gamemap3.map, "MapPiers")
     Path.Generation(gamemap4.map, "MapHuge")
-    //
-    console.log("Ran???")
 }
 
 //Initialise()
@@ -225,7 +223,7 @@ function heartbeat() {
             }
         }
     }
-    
+
     // populate the map when number of players are low.
     if (monitorstatistics['numships'] <= CONST.MAX_BOTS_ONSERVER) {
         InitialiseBot(gamemap)
@@ -284,7 +282,6 @@ function heartbeat() {
 // add bot ship to the game
 botIdx = 0
 function InitialiseBot(gamemap) {
-    console.log("A New Bot is being added")
     //What sort of data do the bots have?
 
     var position = gamemap.get_spawn()
@@ -300,14 +297,12 @@ function InitialiseBot(gamemap) {
 
 // RUNS WHEN A NEW CONNECTION/webpage JOINS
 function newConnection(socket) {
-    console.log("new connection " + socket.id)
 
     // Generate a new player and add them to the list of players when first connecting
     // Also send gamemap
     socket.on('start',
         function(data) {
 
-            //console.log(data)
             if (monitorstatistics['numships'] == 0) {
                 InitialiseBot(gamemap)
             }
@@ -323,8 +318,6 @@ function newConnection(socket) {
             players[player.id] = player
 
             monitorstatistics['numships'] += 1
-            //console.log("-----------start---------------")
-            //console.log(players)
 
             // Send gamemap and player spawn on start
             io.sockets.emit('client_start', {
@@ -347,11 +340,13 @@ function newConnection(socket) {
         function(data) {
             var player
 
+
             player = players[socket.id]
             if (player) {
                 if (data.pressedkeycode ===K_W){
                     player.yacc = -CONST.PLAYER_ACCELERATION
-                    //console.log(player.xacc)
+                    player.updateSpacePressed(false)
+                    player.SpaceCounter = 0
                 } else if (data.pressedkeycode ===K_A){
                     player.xacc = -CONST.PLAYER_ACCELERATION
                     player.updateSpacePressed(false)
@@ -379,7 +374,7 @@ function newConnection(socket) {
             }
         }
     )
-    // change acceleration to zero when the player released wasd if they 
+    // change acceleration to zero when the player released wasd if they
     //  arnt already accelerating in opposite direction
     socket.on('updatereleased',
         function(data){
@@ -402,8 +397,6 @@ function newConnection(socket) {
                     player.SpaceCounter = 0
                 }
             }
-            //console.log('-----------------updatereleased-----------------------')
-            //console.log(data)
         }
     )
 
@@ -411,6 +404,7 @@ function newConnection(socket) {
     socket.on("disconnect", (reason) => {
         var id = socket.id
         delete players[id]
+
         monitorstatistics['numships'] -= 1
       }
     )
