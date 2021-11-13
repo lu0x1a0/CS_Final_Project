@@ -62,7 +62,9 @@ class Cannon{
             this.angle = Math.atan2(targetY,targetX)
             var startpos = {x:this.pos.x,y:this.pos.y}
             // move slightly off player's collision zone so the ball doesn't hit the player
-            var shift = setMag({x:targetX,y:targetY},this.player.size/2+this.calibre)
+            //var shift = setMag({x:targetX,y:targetY},this.player.size/2+this.calibre)
+            var shift = setMag({x:targetX,y:targetY},this.calibre/2)
+            
             var shiftstart = addVec(startpos,shift)
 
             // adj speed according to player velocity
@@ -107,7 +109,8 @@ class Cannonball{
         //for(var i = 0; i < players.length;i++){
         for (var i in players){
             //if the distance between two points are less than two collision circle - contact.
-            if (mag(players[i].pos.x-this.pos.x,players[i].pos.y-this.pos.y)<(players[i].size/2+this.diameter) ){
+            if (mag(players[i].pos.x-this.pos.x,players[i].pos.y-this.pos.y)<(players[i].size/2+this.diameter) &&
+                players[i].id !== this.playerid){
                 this.done = true
                 return players[i]
             }
