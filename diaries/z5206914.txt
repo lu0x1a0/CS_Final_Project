@@ -255,3 +255,7 @@ Week 9:
 
     - Removed render slider
     - Added hard treasure limit
+
+    13/11/21
+
+    - Set up Google cloud

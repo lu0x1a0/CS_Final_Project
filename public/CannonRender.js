@@ -1,3 +1,13 @@
+/**
+ * calculates the distance of range to be diplayed wrt to 
+ * the angle between ship's bow and where the mouse is pointing at.
+ * @param {*} theta angle wrt bow of ship
+ * @param {*} a  x radius
+ * @param {*} b  y radius
+ * @param {*} x0 shift from origin on x axis
+ * @param {*} y0 shift from origin on y axis
+ * @return {*} 
+ */
 function EllipseRange(theta,a,b,x0,y0) {
     // solve quadratic
     var aa = (b*cos(theta))**2+(a*sin(theta))**2
@@ -8,6 +18,12 @@ function EllipseRange(theta,a,b,x0,y0) {
     return r1
 }
 
+/**
+ * render the player's range in game as an indictator of outreach to possible target
+ * and prevents user from clicking at the centre of ship.  
+ *
+ * @class CannonRender
+ */
 class CannonRender {
 
     constructor(cannon, player) {
@@ -18,7 +34,11 @@ class CannonRender {
         this.player = player
         this.ellipserange = cannon.ellipsestat//{a:100,b:70}
     }
-
+    /**
+     * calculate where on canvas to show the appropriate range
+     *
+     * @memberof CannonRender
+     */
     showRange() {
 
         this.pos = this.player.pos
@@ -38,17 +58,11 @@ class CannonRender {
             this.angle-this.visionfield/2,this.angle+this.visionfield/2)
         
         rotate(this.player.dir)
-        // might replace the full ellipse below with an above arc of same size
-        //ellipse(
-        //    this.ellipserange.x0+this.pos.x*cos(-this.player.dir)-this.pos.y*sin(-this.player.dir),
-        //    this.ellipserange.y0+this.pos.x*sin(-this.player.dir)+this.pos.y*cos(-this.player.dir),
-        //    this.ellipserange.a,
-        //    this.ellipserange.b
-        //)
-        //rotate(-this.player.dir)
         pop()        
     }
-
+    /**
+     * convert the radian domain to between -pi and pi 
+     */
     convertraddomain(angle) {
         if (angle>PI){
             remain = angle%(2*PI)
@@ -64,7 +78,7 @@ class CannonRender {
             return angle
         }
     }
-
+    // prevent clicking at centre of self as a target to fire at
     checkclickinrange() {
         if (mag(mouseY - height / 2, mouseX - width / 2) > 0){
             return true

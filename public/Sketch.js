@@ -33,7 +33,7 @@ function setup() {
 
 
   // Volume sliders
-  music_slider = createSlider(0, 0.5, 0.0, 0.01)
+  music_slider = createSlider(0, 0.5, 0.1, 0.01)
   music_slider.position(10, 10)
 
   sfx_slider = createSlider(0, 1.0, 0.4, 0.01)
@@ -121,12 +121,6 @@ function startGame(usernameInput) {
     }
   )
 
-  // socket.on("playerdeath",
-  //   function(data) {
-  //     state.add_death(data.pos, data.dir)
-  //   }
-  // )
-
 }
 
 
@@ -174,7 +168,7 @@ function showMainMenu(){
   }
 }
 
-
+// contains statistics, charts, and retry buttons
 function showDeathMenu(data){
 
   var Username = document.getElementById('username-input')
@@ -263,7 +257,7 @@ function showDeathMenu(data){
     showMainMenu()
   }
 }
-
+// takes input time statistics and produce a corresponding plotly graph
 function doChart(chart_id,rawdata,chart_title){
     // plot the charts - gold
   var xArray = rawdata.x//[50,60,70,80,90,100,110,120,130,140,150];

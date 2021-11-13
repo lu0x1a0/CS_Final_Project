@@ -1,5 +1,10 @@
 const {CONST} = require("../Constants.js")
-
+/**
+ *
+ * toggler of a/set of properties of an object between two values that are 
+ * dependent on current game state given an expiry period
+ * @class TimedEffect
+ */
 class TimedEffect{
     // would come to use if it deals with function.
     constructor(setattrfunc,modifier,resetattrfunc,period){
@@ -15,12 +20,18 @@ class TimedEffect{
     countdown(){
         if (this.period <= 0){
             this.resetattrfunc()
+            // signal to end the effect
             return 1
         }else{
             this.period -= 1
         }
     }
 }
+/**
+ *  toggler of a/set of properties of an object between two fixed values 
+ *  given an expiry period
+ * @class TimedAmplifiedEffect
+ */
 class TimedAmplifiedEffect{
     // deals with attributes only
     constructor(obj,attr,original_val, new_val ,period){
@@ -50,6 +61,7 @@ class TimedAmplifiedEffect{
             } else{
                 this.obj[this.attr] = this.original_val
             }
+            // signal to end the effect
             return 1
         }else{
             this.period -= 1
@@ -58,14 +70,26 @@ class TimedAmplifiedEffect{
         }
     }
 }
-
+/**
+ * return an effect to append to a player that 
+ * changes the size of the cannonball fired by that player
+ *
+ * @param {*} player
+ * @return {*} 
+ */
 function LargeBall(player){
     return new TimedAmplifiedEffect(
         player.cannon,"calibre",player.cannon.basecalibre,
         5*player.cannon.basecalibre,CONST.WEAPON_EFFECT_PERIOD
     )
 }
-
+/**
+ * return an effect to append to a player that 
+ * increases its maximum travelling speed
+ *
+ * @param {*} player
+ * @return {*} 
+ */
 function FastSpeed(player){
     return new TimedAmplifiedEffect(
         player,
@@ -75,7 +99,12 @@ function FastSpeed(player){
         CONST.WEAPON_EFFECT_PERIOD
     )
 }
-
+/**
+ * return an effect to append to a player that increases the maximum 
+ * range a projectile fired by that player can travel
+ * @param {*} player
+ * @return {*} 
+ */
 function LargeRange(player){
     return new TimedAmplifiedEffect(
         player.cannon, 
@@ -101,8 +130,21 @@ function LargeRange(player){
         CONST.WEAPON_EFFECT_PERIOD
     )
 }
-
-//function InvinceArmor(){}
+/**
+ * return an effect to append to a player that prevents the player from 
+ * taking damage within a fixed interval
+ * @param {*} player
+ * @return {*} 
+ */
+function InvinceArmor(player,period = CONST.WEAPON_EFFECT_PERIOD){
+    return new TimedAmplifiedEffect(
+        player, 
+        "invincible",
+        false,
+        true, 
+        period
+    )
+}
 
 
 module.exports = {
@@ -110,6 +152,6 @@ module.exports = {
         LargeBall:LargeBall,
         LargeRange:LargeRange,
         FastSpeed:FastSpeed,
-
+        InvinceArmor:InvinceArmor
     }
 }

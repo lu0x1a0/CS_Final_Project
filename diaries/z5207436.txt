@@ -1,5 +1,102 @@
+Sean Luo
+z5207436
+Tutorial: Tues 4pm (Song)
+
 wk1 - started choosing project ideas, pitched a spin-off of family-feud style bingo and refined the general idea of an svg canvas, agar.io style pirate game.
 
 created a list of epics and started to idealises user-stories.
 
 wk2 - pitched more user-stories and collaborated with Prem on story board.
+
+wk3 27 Sep - 03 Oct - 
+    27-28 Sep
+        - finalized project proposal 
+            - copied user storied between jira and project proposal
+            - finalized interface diagram of the project
+    01 Oct
+        - Team meeting
+        - Organized Sprint 1 user story divisions
+    2-3 Oct
+        - added map boundary constraint
+        - changed:
+            default key to movement of fixed position 
+            ->
+            key causes directional acceleration with velocity evaluated at 
+                each draw
+        - added initial client-side implementation of cannon and projectile/cannonball 
+            as a learning step of p5.js
+wk4 04-10/Oct-
+    04
+        - moved projectiles and other multi client game 
+          state syncing class to server side. formalized heartbeat 
+          function on server.
+        - fixed clientside lagged render of player position.
+        - tried deployment on heroku.
+        - implemented basic cannonball movement damage.
+    05
+        - fixed some land boundary crashes and merge error after 
+          moving things to serverside
+    06  
+        - fixed persistant acceleration bug with keypress.
+        - added ship sprite and rotation
+    07  
+        - added backend support and front end display on opponent ship.
+        - added some p5.js push+pop to conpartmentalize individual sprite display.
+
+wk5 11-17/Oct -
+    11 
+        - modified shooting range so that you cant shoot at your behind.
+    12 
+        - put all server side constants into 1 file for ease of management 
+            (broke the system)
+    14
+        - implemented collision damage between ships that considers velocity 
+            of impact.
+    17 
+        - restored 360 deg shooting and shifted the cannonball spawn
+          position away from ship to prevent self damage.
+        - disabled client socket auto reconnect to server. Without which 
+            would cause crashes everytime the server restarts.
+        - increased cannonball travel speed.
+        - refactored player variable from array to object. this allows handling 
+            of collision caused death better as to prevent multiple removes of
+            same player while looping.  
+        - added front-end health bar
+wk6 18-24/Oct -
+    18 -
+        - made cannon distance independent from player mouse 
+          input distance from center of canvas
+        - added rudimentary death menu
+    19-20 -
+        - attempt to address the problem of shooting cant reach enemy that you 
+          are chasing by introducing elliptical range and pile on velocity
+          from traveling ship
+wk7 25-31/Oct -
+    26-31:
+        - heaps of bug fixes and changed range display API to ellipse.
+        
+wk8 - 01-07/Nov
+    03/Nov - 
+        - made the frontend to call socket.io api wrt the browser window link so 
+          we dont have to repeatedly change the hardcode link when deploying on cloud.
+        - implemented whirlpool story
+    04-06/Nov - 
+        - finished whirlpool, got three weapon stories implemented. 
+        - refactored the cannon to weapons for more meaningful code organization.
+        - reduced ramming damage to half before because now ram damage is called on 
+          both the rammer and rammee according to loop logic.
+    07/Nov - 
+        - started working on statistics, refactored all the 
+          backend-frontend json function.
+wk9 - 08-14/Nov
+    08/Nov -
+        - got death statistic display working on the front end with plotly.js
+    09/Nov -
+        - Added some documents
+    13/Nov -
+        - Created the setup script for the project on the lubuntu 
+          virtual machine on virtualbox.
+        - Forbid cannonball to cause self damage to player and made
+          the starting position closer
+        - Added invincibility armour backend and refactored start up invince into it.
+    

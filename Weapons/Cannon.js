@@ -3,6 +3,11 @@ const cos = Math.cos
 const sqrt = Math.sqrt
 const {mag,setMag,addVec} = require("../utils.js")
 const {CONST} = require("../Constants.js")
+/**
+ * @class Cannon
+ * keeps in track properties of the player's long range attack and 
+ * manages how projectiles are fired
+ */
 class Cannon{
     constructor(rangestat,visionfield,player){
         this.speedmult = 1
@@ -37,7 +42,14 @@ class Cannon{
         this.ellipsestat['x0'] = this.ellipsestat.a-this.ellipsestat.b
         this.ellipsestat['y0'] = 0    
     }
-    
+    /**
+     * return the maximum distance that a cannonball can travel from the 
+     * ship wrt to front/bow of the player (parametrised as theta)  
+     * The range varies according angle at (0,0) to the edge of a shifted ellipse.
+     * It is found by solving a quadratic of the radius and angle in polar form.
+     * @param {*} theta
+     * @memberof Cannon
+     */
     ellipserange(theta) {
         //theta is wrt the bow/front of the ship
         var a  = this.ellipsestat.a*this.rangemult
@@ -52,17 +64,32 @@ class Cannon{
         //r2 = (-bb - sqrt(bb**2-4*aa*cc) )/(2*aa)
         return r1
     }
+    /**
+     * the cannon shares the player's position, this property is updated every 
+     * heartbeat and managed separated for OOP clarity
+     * @memberof Cannon
+     */
     update(){
       this.pos = this.player.pos
     }
-
+    /**
+     * create, dictates and return the lifetime trajectory of a fired cannonball.
+     * 
+     * @param {*} targetX : two scalar attribute that forms a vector of direction of 
+     *                      fire wrt to the cannon's position
+     * @param {*} targetY :
+     * @return {*} 
+     * @memberof Cannon
+     */
     fire(targetX,targetY){
         var move = {x:targetX,y:targetY}
         if (mag(move)!==0){
             this.angle = Math.atan2(targetY,targetX)
             var startpos = {x:this.pos.x,y:this.pos.y}
             // move slightly off player's collision zone so the ball doesn't hit the player
-            var shift = setMag({x:targetX,y:targetY},this.player.size/2+this.calibre)
+            //var shift = setMag({x:targetX,y:targetY},this.player.size/2+this.calibre)
+            var shift = setMag({x:targetX,y:targetY},this.calibre/2)
+            
             var shiftstart = addVec(startpos,shift)
 
             // adj speed according to player velocity
@@ -89,7 +116,11 @@ class Cannon{
         }
     }
 }
-
+/**
+ *
+ * manages when and where a cannonball instance should be removed from the game.
+ * @class Cannonball
+ */
 class Cannonball{
     constructor(start,end,speed, shotByPlayer=true,calibre,playerid){
         this.pos = {x:start.x,y:start.y};
@@ -107,7 +138,8 @@ class Cannonball{
         //for(var i = 0; i < players.length;i++){
         for (var i in players){
             //if the distance between two points are less than two collision circle - contact.
-            if (mag(players[i].pos.x-this.pos.x,players[i].pos.y-this.pos.y)<(players[i].size/2+this.diameter) ){
+            if (mag(players[i].pos.x-this.pos.x,players[i].pos.y-this.pos.y)<(players[i].size/2+this.diameter) &&
+                players[i].id !== this.playerid){
                 this.done = true
                 return players[i]
             }
