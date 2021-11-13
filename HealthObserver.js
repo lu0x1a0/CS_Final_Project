@@ -2,6 +2,13 @@
 const CONST = require('./Constants.js').CONST
 const {Weapons} = require('./Weapons/WeaponCollect.js')
 const {playerslocjson} = require("./utils.js")
+/**
+ *
+ *
+ * @class HealthObserver
+ * monitors death events of players and when notified, boot them 
+ * from the game and send them statistics.
+ */
 class HealthObserver{
     constructor(playerlist,server, monstat,gamemap){
         this.playerlist = playerlist
@@ -10,10 +17,17 @@ class HealthObserver{
         this.monitorstatistics = monstat
         this.gamemap = gamemap
     }
+    /**
+     *  
+     * called by player inside entities when that player died.
+     * - tallies kill statistics for players[idfrom]
+     * - add treasure onto the map
+     * - remove playerid from the game
+     * - send dead statistic.
+     * @memberof HealthObserver
+     */
     playerDied(playerid,idfrom){
         console.log('playerdied: ',playerid)
-        //var treasure = this.playerlist[playerid].dropTreasure()
-        // this.treasurehandler.addtreasure(treasure)
         var deathpos = this.playerlist[playerid].pos
         var deathdir = this.playerlist[playerid].dir
         
@@ -33,17 +47,6 @@ class HealthObserver{
             killstat: this.playerlist[playerid].gamestat.killstat,    
         })
         delete this.playerlist[playerid]
-
-        // // Emit death coords/pos to all
-        // this.server.sockets.emit('playerdeath', {
-        //     pos : deathpos,
-        //     dir : deathdir        
-        // })
-        
-
-        // re-added disconnect to that player pressing key doesnt trigger server update,
-        // bcos player already removed from json
-       // this.server.to(playerid).disconnectSockets(true)
 
         this.monitorstatistics['numships'] -= 1
     }
