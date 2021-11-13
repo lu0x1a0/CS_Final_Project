@@ -2,19 +2,19 @@ const CONST = require('./Constants.js').CONST
 
 function shuffle(array) {
     let currentIndex = array.length,  randomIndex;
-    
+
     // While there remain elements to shuffle...
     while (currentIndex != 0) {
-    
+
         // Pick a remaining element...
         randomIndex = Math.floor(Math.random() * currentIndex);
         currentIndex--;
-    
+
         // And swap it with the current element.
         [array[currentIndex], array[randomIndex]] = [
         array[randomIndex], array[currentIndex]];
     }
-    
+
     return array;
 }
 
@@ -35,7 +35,7 @@ function IndexCheck(V,map) {
 
 function ComputeAdjacentVertex(V,map) {
     var AV = [];
-    //Check Map Dimensions 
+    //Check Map Dimensions
 
     if (IndexCheck([V[0]-1,V[1]+1],map) && map[V[0]-1][V[1]+1] != 'L' && map[V[0]-1][V[1]+1] != 'T' && map[V[0]-1][V[1]+1] != 'H') {
         AV.push([V[0]-1,V[1]+1])
@@ -48,7 +48,7 @@ function ComputeAdjacentVertex(V,map) {
     if (IndexCheck([V[0]+1,V[1]+1],map) && map[V[0]+1][V[1]+1] != 'L' && map[V[0]+1][V[1]+1] != 'T'  && map[V[0]+1][V[1]+1] != 'H') {
         AV.push([V[0]+1,V[1]+1])
     }
-    
+
     if (IndexCheck([V[0]+1,V[1]-1],map) && map[V[0]+1][V[1]-1] != 'L' &&  map[V[0]+1][V[1]-1] != 'T' &&  map[V[0]+1][V[1]-1] != 'H') {
         AV.push([V[0]+1,V[1]-1])
     }
@@ -76,19 +76,19 @@ class ArrayKeyedMap extends Map {
     get(array) {
       return super.get(this.toKey(array));
     }
-    
+
     set(array, value) {
       return super.set(this.toKey(array), value);
     }
-    
+
     has(array) {
       return super.has(this.toKey(array));
     }
-    
+
     delete(array) {
       return super.delete(this.toKey(array));
     }
-    
+
     toKey(array) {
         if (typeof(array) == 'string') {
             return array
@@ -111,13 +111,13 @@ function FloydWarshall(path,cost) {
     }
 }
 /*
-// Generates a heat map for every single point 
+// Generates a heat map for every single point
 function FloodAlgorithm(index,tuplelist,map) {
     //For every single tuplelist we generate a heat map
     //Each coordinate is associatd with a tuplelist
     let PositiveHeatMaps = new Array(index.length)
     for (let coords = 0; coords < tuplelist.length; ++coords) {
-        //HeatMaps[coords], initialise a new map 
+        //HeatMaps[coords], initialise a new map
         PositiveHeatMaps[coords] = new Array(map.length)
         for (let i = 0; i < map.length; ++i) {
             PositiveHeatMaps[coords][i] = new Array(map[i].length);
@@ -132,13 +132,13 @@ function FloodAlgorithm(index,tuplelist,map) {
 
 
 
-        
-        
+
+
     }
 
 }
 */
-  
+
 
 function Generation(map,mapfile) {
     let tuplelist = []
@@ -196,7 +196,7 @@ function Generation(map,mapfile) {
         graph.set(tuplelist[i], x) //Maps a [x,y] to [[x,y],[x,y], ...]
     }
 
-    
+
     // Level Wise iterations of places near turrets.
     let ForbiddenVals = new ArrayKeyedMap()
     let TurretLevelVal = new ArrayKeyedMap()
@@ -220,16 +220,15 @@ function Generation(map,mapfile) {
             }
         }
         levels++;
-        //console.log(levels)
     }
 
     //Level Wise iterations of places near land Have a slight penalty for this too.
     let LandLevelVal = new ArrayKeyedMap()
-    levels = 0 
+    levels = 0
     while (LandListQ.length != 0 && levels < CONST.NEARBY_LAND_ITERATIONS) {
         let level_size = LandListQ.length
         while(level_size--) {
-            let V = LandListQ.shift() 
+            let V = LandListQ.shift()
             //Need to index check.
             let AV = ComputeAdjacentVertex(V,map)
             for (let i = 0; i < AV.length; ++i) {
@@ -246,13 +245,13 @@ function Generation(map,mapfile) {
         }
         levels++
     }
-    
+
 
     for (let [key, value] of graph) {
         for (let i = 0; i < value.length; i++) {
             if (TurretLevelVal.has(value[i])) {
                 cost[tupleVal.get(key)][tupleVal.get(value[i])] = CONST.MAP_TURRET_STARTING_VALUE - TurretLevelVal.get(value[i])*CONST.TURRET_LOSING_RATE
-            } 
+            }
             else if (LandLevelVal.has(value[i])) {
                 cost[tupleVal.get(key)][tupleVal.get(value[i])] = CONST.LAND_COST_INIT_PENATY - LandLevelVal.get(value[i])*CONST.LAND_LOSING_RATE
             } else {
@@ -303,7 +302,7 @@ function Generation(map,mapfile) {
                 return acc;
             }, {})
         }
-    
+
         const res = selfIterator(myMap)
         return JSON.stringify(res);
     }
@@ -319,23 +318,22 @@ function Generation(map,mapfile) {
 
     //Or any other Map
     if (mapfile != 'MapHuge') {
-        console.log("this??")
         let obj = {
-            'path' : JSON.stringify(path), 
+            'path' : JSON.stringify(path),
             'cost' : JSON.stringify(cost),
             'tupleVal' : stringifyMap(tupleVal),
             'index' : JSON.stringify(index, replacer),
             'ForbiddenVals' : stringifyMap(ForbiddenVals)
         }
-    
+
         let fs = require('fs'),
             JSONObj = JSON.stringify(obj);
-            
+
         let str = "./JSON/" + mapfile + ".json";
         fs.writeFileSync(str, JSONObj)
     } else {
         let obj = {
-            'path' : JSON.stringify(path), 
+            'path' : JSON.stringify(path),
         }
 
         let obj1 = {
@@ -351,7 +349,7 @@ function Generation(map,mapfile) {
             JSONObj = JSON.stringify(obj),
             JSONObj1 = JSON.stringify(obj1),
             JSONObj2 = JSON.stringify(obj2);
-            
+
         let str = "./JSON/" + mapfile + "path" + ".json";
         let str1 = "./JSON/" + mapfile + "cost" + ".json";
         let str2 = "./JSON/" + mapfile + "other" + ".json";

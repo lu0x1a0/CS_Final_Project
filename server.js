@@ -108,8 +108,6 @@ function Initialise() {
     Path.Generation(gamemap2.map, "MapRocky")
     Path.Generation(gamemap3.map, "MapPiers")
     Path.Generation(gamemap4.map, "MapHuge")
-    //
-    console.log("Ran???")
 }
 
 //Initialise()
@@ -286,7 +284,6 @@ function heartbeat() {
 
 botIdx = 0
 function InitialiseBot(gamemap) {
-    console.log("A New Bot is being added")
     //What sort of data do the bots have?
 
     var position = gamemap.get_spawn()
@@ -299,26 +296,14 @@ function InitialiseBot(gamemap) {
 }
 
 
-// This shit is never called cos HealthObserver does the work...
-//
-// function playerDeath(id){
-//     // Emit death coords
-//     console.log("players[id].pos  ", players[id].pos)
-//     io.sockets.emit('dead', {coords : players[id].pos})
-//     console.log("dead and emit")
-// }
-
-
 // RUNS WHEN A NEW CONNECTION JOINS
 function newConnection(socket) {
-    console.log("new connection " + socket.id)
 
     // Generate a new player and add them to the list of players when first connecting
     // Also send gamemap
     socket.on('start',
         function(data) {
 
-            //console.log(data)
             if (monitorstatistics['numships'] == 0) {
                 InitialiseBot(gamemap)
             }
@@ -334,8 +319,6 @@ function newConnection(socket) {
             players[player.id] = player
 
             monitorstatistics['numships'] += 1
-            //console.log("-----------start---------------")
-            //console.log(players)
 
             // Send gamemap and player spawn on start
             io.sockets.emit('client_start', {
@@ -358,21 +341,13 @@ function newConnection(socket) {
         function(data) {
             var player
 
-            //console.log('-----------------updatepressed-----------------------')
-            //console.log(data)
-            //console.log(player)
-            //console.log(players)
-            //for (var i = 0; i < players.length; i++ ) {
-            //    if (socket.id == players[i].id) {
-            //        player = players[i]
-            //    }
-            //}
 
             player = players[socket.id]
             if (player) {
                 if (data.pressedkeycode ===K_W){
                     player.yacc = -CONST.PLAYER_ACCELERATION
-                    //console.log(player.xacc)
+                    player.updateSpacePressed(false)
+                    player.SpaceCounter = 0
                 } else if (data.pressedkeycode ===K_A){
                     player.xacc = -CONST.PLAYER_ACCELERATION
                     player.updateSpacePressed(false)
@@ -422,24 +397,13 @@ function newConnection(socket) {
                     player.SpaceCounter = 0
                 }
             }
-            //console.log('-----------------updatereleased-----------------------')
-            //console.log(data)
         }
     )
 
 
     socket.on("disconnect", (reason) => {
-        //console.log("--------------------reason-------------------")
-        //console.log(reason)
         var id = socket.id
         delete players[id]
-        //for (var i = 0; i < players.length; i++ ) {
-        //  if (id == players[i].id) {
-        //    players.splice(i,1)
-        //    break
-        //  }
-        //}
-
       }
     )
 }
