@@ -39,9 +39,10 @@ function setup() {
   sfx_slider = createSlider(0, 1.0, 0.4, 0.01)
   sfx_slider.position(10, 50)
 
-  // Render distance slider
-  render_slider = createSlider(1, 20, 16, 1)
-  render_slider.position(10, 100)
+
+  // // Render distance slider
+  // render_slider = createSlider(1, 20, 16, 1)
+  // render_slider.position(10, 50)
 
   // Start title theme
   render.soundrender.start_music_title()
@@ -288,7 +289,6 @@ function draw() {
   // Update volume
   render.soundrender.set_music_vol(music_slider.value())
   render.soundrender.set_sfx_vol(sfx_slider.value())
-  render.set_viewdistance(render_slider.value())
 
   if (gameStarted == 1 || dead) {
     render.render(state.get_state(), dead)
