@@ -259,3 +259,6 @@ Week 9:
     13/11/21
 
     - Set up Google cloud
+    - Minor bug fixes
+    - Created components diagram
+    - Wrote report overview

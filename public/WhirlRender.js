@@ -5,7 +5,7 @@ class WhirlRender {
     }
 
     preload() {
-        this.img_whirl  = loadImage('assets/img_whirl.png');
+        this.img_whirl  = loadImage('assets/imgs/img_whirl.png');
     }
 
     first_load(gamemap) {
