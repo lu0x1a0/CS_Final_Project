@@ -20,7 +20,6 @@ let K_Space = 32
 
 
 const args = process.argv;
-console.log(args)
 var PORT = 8080
 if (args[2]) {
     PORT = args[2]
