@@ -17,9 +17,17 @@ let K_S = 83
 let K_D = 68
 let K_Space = 32
 
+
+
+const args = process.argv;
+console.log(args)
+var PORT = 8080
+if (args[2]) {
+    PORT = args[2]
+}
+
 //process.env.PORT is used for heroku to connect when running locally use LocalHost:5000
 //8080 for google
-var PORT = 5000;
 
 var express = require("express")
 //import express from 'express'
@@ -117,7 +125,15 @@ let coststr = "cost.json"
 let otherstr = "other.json"
 
 let fs = require('fs')
-let MapFiles = 'MapHuge' //Just have to change this now
+let MapFiles = 'MapHuge'
+if (args[3]) {
+  if ((args[3] == 'MapHuge') || (args[3] == 'MapSquare') || (args[3] == 'MapPiers') || (args[3] == 'MapRocky')) {
+    MapFiles = args[3]
+  } else {
+    MapFiles = 'MapHuge'
+  }
+}
+ //Just have to change this now
 
 if (MapFiles == 'MapHuge') {
     var gamemap = new GameMap(Maps.MapHuge)

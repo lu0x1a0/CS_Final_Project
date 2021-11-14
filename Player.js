@@ -11,7 +11,7 @@ const {Cannon} = require('./Weapons/Cannon.js')
 /**
  *
  *
- * @class Player 
+ * @class Player
  * Declared for each ship,
  * Handles Player input (wasd adds acceleration)
  * Handles Player Damage logic
@@ -55,7 +55,7 @@ class Player{
             kill: 0,
             goldstat :{
                 gold_time: [starttime],
-                gold_amount: [this.gold],    
+                gold_amount: [this.gold],
             },
             killstat :{
                 kill_time : [starttime],
@@ -65,9 +65,9 @@ class Player{
     }
     /**
      *
-     * Called everytime the player killed another 
+     * Called everytime the player killed another
      * ship and timestamps it for later
-     * 
+     *
      */
     addkillstat(){
         this.gamestat.kill += 1;
@@ -75,8 +75,8 @@ class Player{
         this.gamestat.killstat.kill_time.push(Date.now())
     }
     /**
-     *  
-     * Called everytime the player collects a treasure 
+     *
+     * Called everytime the player collects a treasure
      * and timestamps it for later
      */
     addgoldstat(gold){
@@ -86,7 +86,7 @@ class Player{
     }
 
     /**
-     *  
+     *
      * check whether this ship and any other ship's elliptical collision region is intersecting.
      */
     collisionCheck(players,eventmanager){
@@ -109,9 +109,9 @@ class Player{
     }
     /**
      * handles collision logic including push back and collision damage.
-     * this is called for each ship in collision as the separation/addition 
+     * this is called for each ship in collision as the separation/addition
      * of speed to position is handled in gamemap
-     * 
+     *
      */
     onCollision(collided,this_dir_rad,collided_dir_rad,total_dist,collided_angle,eventmanager){
         ////pass forward momentum
@@ -120,9 +120,9 @@ class Player{
         this.collisionDamage(collided,collided_angle,eventmanager)
     }
     /**
-     * 
-     * assign collision damage to this ship and the ship which 
-     * this ship collided with, with the adjusted angle penalty. 
+     *
+     * assign collision damage to this ship and the ship which
+     * this ship collided with, with the adjusted angle penalty.
      * (angle of collision for each ship dictates how much damage is received)
      * (more on the side, less on the front and rear)
      */
@@ -153,7 +153,7 @@ class Player{
     }
     /**
      * let this ship to take damage, and add audiovisual event to the front end.
-     * On death notifies HealthObserver to remove this ship from game. 
+     * On death notifies HealthObserver to remove this ship from game.
      */
     takeDamage(damage, eventmanager,idfrom){
         if (!this.invincible) {
@@ -201,7 +201,7 @@ class Player{
                 delete this.effects[key]
             }
         }
-        
+
         // Tick invincibility
         // this.invincTick()
         // Determine if we are on treasure
@@ -221,15 +221,14 @@ class Player{
     /**
      *
      * Called inside heartbeat along with this.update,
-     * checks for conditions for treasure fishng and whether 
-     * that treasure can be collected. Once collected, remove treasure 
-     * from gamemap (param) add corresponding treasures to the player 
-     * (including weapons, health and gold) 
+     * checks for conditions for treasure fishng and whether
+     * that treasure can be collected. Once collected, remove treasure
+     * from gamemap (param) add corresponding treasures to the player
+     * (including weapons, health and gold)
      */
     updateTreasure(gamemap, eventmanager) {
         if (this.OnTreasure && this.SpacePressed) {
             if (this.SpaceCounter == CONST.TREASURE_FISH_TIME) {
-                console.log("TREASURE RECIEVED")
                 //Remove Treasure coordinates
                 let encap = {x: Math.floor(this.pos.x/gamemap.tilesize), y: Math.floor(this.pos.y/gamemap.tilesize)};
                 let treasure = gamemap.treasurelist.get_treasure(encap)

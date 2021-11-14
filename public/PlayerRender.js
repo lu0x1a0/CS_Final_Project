@@ -113,8 +113,10 @@ class PlayerRender {
           icon = "<img src=/assets/icon/range.png height=25 width=25></img>"
         } else if (key == 'FastSpeed') {
           icon = "<img src=/assets/icon/speed.png height=25 width=25></img>"
-        }else if (key == 'LargeBall') {
+        } else if (key == 'LargeBall') {
           icon = "<img src=/assets/icon/ball.png height=25 width=25></img>"
+        } else if (key == 'InvinceArmor') {
+          icon = "<img src=/assets/icon/star.png height=25 width=25></img>"
         }
         l += "<tr><td>" + icon +"</td><td>" + key + "</td><td>"+ Math.ceil(this.effects[key]/20) + "</td></tr>" //20 is the divisor for heartbeat interval
       }

@@ -47,6 +47,8 @@ class EventRender {
                         image(this.icon_range, animationlist[i].pos.x, animationlist[i].pos.y, 16*(animationlist[i].frame/4+1), 16*(animationlist[i].frame/4+1))
                     } else if (animationlist[i].treasure_type == 'FastSpeed') {
                         image(this.icon_speed, animationlist[i].pos.x, animationlist[i].pos.y, 16*(animationlist[i].frame/4+1), 16*(animationlist[i].frame/4+1))
+                    } else if (animationlist[i].treasure_type == 'InvinceArmor') {
+                        image(this.icon_star, animationlist[i].pos.x, animationlist[i].pos.y, 16*(animationlist[i].frame/4+1), 16*(animationlist[i].frame/4+1))
                     }
                     noTint()
                     break
