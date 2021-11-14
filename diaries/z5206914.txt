@@ -262,3 +262,9 @@ Week 9:
     - Minor bug fixes
     - Created components diagram
     - Wrote report overview
+    
+    14/11/21
+    
+    - Report overview continued
+    - Report sections for Map Generation
+    - Report sections for Sprites, Animations and Sound
