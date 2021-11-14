@@ -1,7 +1,7 @@
 class EventRender {
 
     constructor(){ }
-  
+
     preload() {
       // Images
       this.frames_death = []
@@ -16,11 +16,12 @@ class EventRender {
       this.icon_health = loadImage('assets/icon/health.png')
       this.icon_range = loadImage('assets/icon/range.png')
       this.icon_speed = loadImage('assets/icon/speed.png')
+      this.icon_star = loadImage('assets/icon/star.png')
     }
 
     display(center, viewdistance, animationlist) {
         for (let i = 0; i < animationlist.length; i++) {
-            
+
             // Don't render if out of view
             if (Math.floor(animationlist[i].pos.x/this.tilesize) > center.x + viewdistance
                 || Math.floor(animationlist[i].pos.x/this.tilesize) < center.x - viewdistance
