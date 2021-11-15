@@ -38,7 +38,8 @@ module.exports = {
             xlen : 32,
             ylen : 32,
             max_treasure : 8,
-            max_whirls : 0
+            max_whirls : 0,
+            min_players : 2,
         },
 
         MapPiers : {
@@ -86,7 +87,8 @@ module.exports = {
             xlen : 24,
             ylen : 38,
             max_treasure : 8,
-            max_whirls : 2
+            max_whirls : 2,
+            min_players : 4,
         },
 
 
@@ -122,7 +124,8 @@ module.exports = {
             xlen : 24,
             ylen : 24,
             max_treasure : 8,
-            max_whirls : 2
+            max_whirls : 2,
+            min_players : 2,
         },
 
         
@@ -211,9 +214,8 @@ module.exports = {
             xlen : 55,
             ylen : 78,
             max_treasure : 16,
-            max_whirls : 8
+            max_whirls : 8,
+            min_players : 5,
         },
-
-
     }
 };

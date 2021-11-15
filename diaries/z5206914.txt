@@ -268,3 +268,10 @@ Week 9:
     - Report overview continued
     - Report sections for Map Generation
     - Report sections for Sprites, Animations and Sound
+
+Week 10:
+
+    15/11/21
+
+    - Minor game balances
+    - Minor menu tweaks

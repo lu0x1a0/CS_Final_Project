@@ -240,9 +240,10 @@ function heartbeat() {
     }
 
     // populate the map when number of players are low.
-    if (monitorstatistics['numships'] <= CONST.MAX_BOTS_ONSERVER) {
+    while (monitorstatistics['numships'] < gamemap.min_players) {
         InitialiseBot(gamemap)
     }
+
     // parse projectile movements and deal the correspond damage when necessary
     for (var key in projectiles) {
         if (projectiles.hasOwnProperty(key)) {
@@ -317,11 +318,6 @@ function newConnection(socket) {
     // Also send gamemap
     socket.on('start',
         function(data) {
-
-            if (monitorstatistics['numships'] == 0) {
-                InitialiseBot(gamemap)
-            }
-
 
             if (data.username == '') {
               data.username = nameGenerator.name()
