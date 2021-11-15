@@ -89,9 +89,9 @@ class GameMapRender {
 
     display(center, viewdistance, frameNo) {
     
-        imageMode(CORNER);
-        // Display background map
+        imageMode(CORNER)
 
+        // Display each tile of the map
         for (let x = Math.max(0, center.x-viewdistance); x < Math.min(this.xlen, center.x+viewdistance+1); x++) {
             for (let y = Math.max(0, center.y-viewdistance); y < Math.min(this.ylen, center.y+viewdistance+1); y++) {
                 

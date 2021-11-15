@@ -97,7 +97,7 @@ class Render {
         // Event render
         this.eventrender.display(centertile, this.VIEWDISTANCE, state.animationlist)
 
-        // Render border
+        // Render border (ie 'frame' what is being rendered by black)
         fill(color(0,0,0))
         // Left
         rect(centerpoint.x-(this.VIEWDISTANCE+1)*this.tilesize, centerpoint.y-(this.VIEWDISTANCE+1)*this.tilesize, this.tilesize, 2*(this.VIEWDISTANCE+1)*this.tilesize)
@@ -113,8 +113,6 @@ class Render {
             var player = state.playerlist[i]
 
             if (player.id !== this.id) {
-                // Other players
-
                 
                 // Don't render if out of view
                 if (Math.floor(player.pos.x/this.tilesize) > centertile.x + this.VIEWDISTANCE
@@ -122,6 +120,7 @@ class Render {
                     || Math.floor(player.pos.y/this.tilesize) > centertile.y + this.VIEWDISTANCE
                     || Math.floor(player.pos.y/this.tilesize) < centertile.y - this.VIEWDISTANCE)  { continue }
 
+                // Other players
                 showship(
                     player.dir,
                     player.pos,
@@ -162,7 +161,7 @@ class Render {
             this.playerrender.cannonballshow(projectile)
         }
 
-        // Increase frameNo
+        // Increase frameNo after rendering
         this.frameNo++
     }
 }
