@@ -19,10 +19,11 @@ class GameMap {
         this.map = this.map.reduce((prev, next) => next.map((item, i) => (prev[i] || []).concat(next[i])), []);
 
         // Map parameters
-        this.xlen = map.xlen;
-        this.ylen = map.ylen;
-        this.tilesize = CONST.TILESIZE;
-        this.max_treasure = map.max_treasure;
+        this.xlen = map.xlen
+        this.ylen = map.ylen
+        this.tilesize = CONST.TILESIZE
+        this.max_treasure = map.max_treasure
+        this.min_players = map.min_players
 
         // Initialize
         this.treasurelist = new TreasureList(this)

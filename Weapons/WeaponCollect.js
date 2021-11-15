@@ -136,7 +136,7 @@ function LargeRange(player){
  * @param {*} player
  * @return {*} 
  */
-function InvinceArmor(player,period = CONST.WEAPON_EFFECT_PERIOD){
+function InvinceArmor(player,period = CONST.SHORT_WEAPON_EFFECT_PERIOD){
     return new TimedAmplifiedEffect(
         player, 
         "invincible",

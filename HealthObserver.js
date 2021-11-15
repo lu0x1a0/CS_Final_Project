@@ -27,8 +27,6 @@ class HealthObserver{
      * @memberof HealthObserver
      */
     playerDied(playerid,idfrom){
-        //var treasure = this.playerlist[playerid].dropTreasure()
-        // this.treasurehandler.addtreasure(treasure)
         var deathpos = this.playerlist[playerid].pos
         var deathdir = this.playerlist[playerid].dir
 
@@ -37,7 +35,6 @@ class HealthObserver{
             Math.floor(this.playerlist[playerid].gold*CONST.GOLD_PERCENT_DROP),
         )
         if (this.playerlist.hasOwnProperty(idfrom)){
-            //this.playerlist[idfrom].gamestat['kill'] += 1;
             this.playerlist[idfrom].addkillstat()
         }
         this.server.to(playerid).emit('dead', {

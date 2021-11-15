@@ -29,7 +29,7 @@ CONST = {
     STATION_HEAL_DIAMETER : 24,
     STATION_HEAL_SPEED_FACTOR : 1,
 
-    WHIRL_DAMAGE : 5,
+    WHIRL_DAMAGE : 2.5,
 
     // Bot constants
     BOT_LOW_HEALTH : 50,
@@ -47,6 +47,7 @@ CONST = {
     STATION_REPAIR_TIME : 20*12,
     WHIRLMOVETICK : 2000/(1000/20), //2 seconds,
     WEAPON_EFFECT_PERIOD : 20*20, // 20 Seconds
+    SHORT_WEAPON_EFFECT_PERIOD : 20*8, // 20 Seconds
 
     // Treasure constants
     TREASURE_GOLD : 10,

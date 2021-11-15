@@ -100,23 +100,23 @@ class SoundRender {
                 switch (soundlist[i].type) {
                     case 'cannon_fire':
                         this.sfx_cannon_fire.volume(this.sfx_vol*vol_factor)
-                        this.sfx_cannon_fire.play(/*0,1,this.sfx_vol*vol_factor*/)
+                        this.sfx_cannon_fire.play()
                         break;
                     case 'get_treasure':
                         this.sfx_get_treasure.volume(this.sfx_vol*vol_factor)
-                        this.sfx_get_treasure.play(/*0,1,this.sfx_vol*vol_factor*/)
+                        this.sfx_get_treasure.play()
                         break;
                     case 'damage':
                         this.sfx_damage.volume(this.sfx_vol*vol_factor)
-                        this.sfx_damage.play(/*0,1,this.sfx_vol*vol_factor*/)
+                        this.sfx_damage.play()
                         break;
                     case 'death':
                         this.sfx_death.volume(this.sfx_vol*vol_factor)
-                        this.sfx_death.play(/*0,1,this.sfx_vol*vol_factor*/)
+                        this.sfx_death.play()
                         break;
                     case 'heal':
                         this.sfx_heal.volume(this.sfx_vol*vol_factor)
-                        this.sfx_heal.play(/*0,1,this.sfx_vol*vol_factor*/)
+                        this.sfx_heal.play()
                         break;
                     default:
                         break;
@@ -125,6 +125,7 @@ class SoundRender {
         }
     }
 
+    // Calculate the factor to reduce volume for far away sounds
     vol_factor(coords1, coords2) {
 
         var tile_dist = (Math.sqrt(Math.pow(coords1.x-coords2.x, 2) + Math.pow(coords1.y-coords2.y, 2)))/this.tilesize
@@ -141,5 +142,4 @@ class SoundRender {
             return 0
         }
     }
-
 }

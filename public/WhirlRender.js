@@ -37,5 +37,4 @@ class WhirlRender {
         this.angle += PI/18
         this.angle %= PI*2
     }
-
 }

@@ -62,7 +62,5 @@ class TurretRender {
                 pop()
             }
         }
-
     }
-
 }
