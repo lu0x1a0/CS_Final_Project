@@ -45,8 +45,8 @@ class PlayerRender {
   show() {
     push()
     rotate(this.dir+PI)
-    var imgx = this.pos.x //-40
-    var imgy = this.pos.y //- 24
+    var imgx = this.pos.x
+    var imgy = this.pos.y
     imageMode(CENTER);
 
     // Tint if invincible
@@ -62,8 +62,6 @@ class PlayerRender {
     image(this.img_boat,imgx*cos(-this.dir-PI)-imgy*sin(-this.dir-PI),imgx*sin(-this.dir-PI)+imgy*cos(-this.dir-PI));
     noTint()
     rotate(-this.dir-PI)
-    //fill(255);
-    //ellipse(this.pos.x, this.pos.y, this.size, this.size);
 
     pop()
 
@@ -143,12 +141,13 @@ class PlayerRender {
     }
   }
 }
+
 // used to show enemy ship on the screen
 function showship(dir,pos,img_boat,username,size,health,funcs,gold,OnTreasure,SpaceCounter,treasure_fish_time, invincible, hit){
   push()
   rotate(dir+PI)
-  var imgx = pos.x //-40
-  var imgy = pos.y //- 24
+  var imgx = pos.x
+  var imgy = pos.y
   imageMode(CENTER)
 
   if (invincible) {

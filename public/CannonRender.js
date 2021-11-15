@@ -14,7 +14,6 @@ function EllipseRange(theta,a,b,x0,y0) {
     var bb = -2* ( b**2*x0*cos(theta)+a**2*y0*sin(theta)  )
     var cc = (b*x0)**2+(a*y0)**2-(a*b)**2
     var r1 = (-bb + sqrt(bb**2-4*aa*cc) )/(2*aa)
-    //r2 = (-bb - sqrt(bb**2-4*aa*cc) )/(2*aa)
     return r1
 }
 
@@ -32,7 +31,7 @@ class CannonRender {
         this.visionfield = cannon.visionfield
         this.angle = 0
         this.player = player
-        this.ellipserange = cannon.ellipsestat//{a:100,b:70}
+        this.ellipserange = cannon.ellipsestat
     }
     /**
      * calculate where on canvas to show the appropriate range
@@ -44,13 +43,9 @@ class CannonRender {
         this.pos = this.player.pos
         this.angle = atan2(mouseY - height / 2, mouseX - width / 2);
         push()
-        fill(100,63);
-        //*2 because it is the diameter of full circle
+        fill(100,63)
 
-        //arc(this.pos.x,this.pos.y,this.range*2,this.range*2,
-        //    this.angle-this.visionfield/2,this.angle+this.visionfield/2)
         ellipseMode(RADIUS)
-        //circle(this.pos.x,this.pos.y,this.range)
         
         var dirrange = EllipseRange(this.angle-this.player.dir,this.ellipserange.a,this.ellipserange.b,this.ellipserange.x0,this.ellipserange.y0,)
         translate(this.player.vel.x,this.player.vel.y)

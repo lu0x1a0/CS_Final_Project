@@ -30,11 +30,10 @@ class Player{
         this.yacc = 0
         this.maxspeed = CONST.PLAYER_MAX_SPEED
         this.drag = CONST.PLAYER_DRAG
-        //this.cannon = new Cannon(this.size*CONST.CANNON_VISION_FACTOR, CONST.CANNON_START_ANGLE, this)
         this.cannon = new Cannon(CONST.RANGESTAT,CONST.CANNON_START_ANGLE,this)
         this.health = CONST.PLAYER_HEALTH
         this.hitbox_size = CONST.PLAYER_HITBOX_SIZE
-        this.dim = {a:80/2,b:48/2} // to replace hitbox_size
+        this.dim = {a:80/2,b:48/2}
         this.gold = CONST.PLAYER_START_GOLD;
         this.hit = false
 
@@ -92,9 +91,7 @@ class Player{
     collisionCheck(players,eventmanager){
 
         // we assume a circle/elliptical collision zone that pushes the player
-        //for(var i = 0; i< players.length; i++){
         for(var i in players){
-            //console.log(i)
             if (players[i].id !== this.id){
                 var posangle = Math.atan2(players[i].pos.y-this.pos.y,players[i].pos.x-this.pos.x)
                 var center_distance = mag(players[i].pos.x-this.pos.x,players[i].pos.y-this.pos.y)
@@ -134,7 +131,6 @@ class Player{
         var absdiff2 = Math.abs(altangle-this.dir)
             // side damage
         if ((absdiff> Math.PI/6 && absdiff < 5*Math.PI/6) || (absdiff2> Math.PI/6 && absdiff2 < 5*Math.PI/6) ) {
-            //((absdiff>field && absdiff<(Math.PI-field)) || (absdiff2> field && absdiff2<(Math.PI-field)))
             this.takeDamage(CONST.SIDE_DAMAGE_MULTIPLIER*speed, eventmanager,collided.id)
         }
             // front or back damage
@@ -202,8 +198,7 @@ class Player{
             }
         }
 
-        // Tick invincibility
-        // this.invincTick()
+
         // Determine if we are on treasure
         this.updateOnTreasure(Gmap.is_on_treasure(this.pos))
 
@@ -297,5 +292,4 @@ class Player{
 
 module.exports = {
     Player: Player,
-    //Cannonball:Cannonball
 }
