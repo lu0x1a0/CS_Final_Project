@@ -284,3 +284,10 @@ li.death-menu-nav {
     height:32px;
     background: url('/assets/icon/speaker.png') no-repeat top left;
 }
+
+.buttonPlank {
+    border: none;
+    width:128px;
+    height:64px;
+    background: url('/assets/imgs/img_buttonPlank.png') no-repeat top left;
+}
