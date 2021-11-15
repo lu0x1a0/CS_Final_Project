@@ -199,7 +199,7 @@ function showDeathMenu(data){
       deathstat.innerHTML = "You came " + (i+1) +"/"+ players.length + " with "+ players[i].gold +" gold!"
       //break;
     }
-    goldlist += "<li>"+players[i].username+": "+ players[i].gold +"</li>"
+    goldlist += "<li>"+players[i].username.substring(0, 14)+": "+ players[i].gold +"</li>"
   }
   goldlist += "</ol>"
   deathstat.innerHTML += goldlist
@@ -299,7 +299,7 @@ function draw() {
           var table = ""
           for (var i = 0; i < players.length ; i++ ) {
             if (i >= 5) { break }
-            table = table + "<tr><td>" + players[i].gold +"</td><td>" + " - "+ "</td><td>" + players[i].username.substring(0, 15) + "</td></tr>"
+            table = table + "<tr><td>" + players[i].gold +"</td><td>" + " - "+ "</td><td>" + players[i].username.substring(0, 18) + "</td></tr>"
           }
           leaderboard_Display.innerHTML = table
         } else {

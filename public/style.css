@@ -99,8 +99,8 @@ html, body {
 
 .leaderboardText {
   position: fixed;
-  top: 100px;
-  left: 45%;
+  top: 150px;
+  left: 40%;
   -ms-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
   text-align: left;
@@ -130,7 +130,7 @@ html, body {
 
 .boostsText {
   position: fixed;
-  top: 300px;
+  top: 370px;
   left: 35%;
   -ms-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
@@ -141,8 +141,8 @@ html, body {
 
 .goldText {
   position: fixed;
-  top: 460px;
-  left: 100px;
+  top: 540px;
+  left: 35%;
   -ms-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
   text-align: left;
@@ -164,8 +164,8 @@ html, body {
   background-image: url("assets/imgs/img_status_scroll.png");
   background-size: contain;
   background-repeat: no-repeat;
-  height: 605px;
-  width: 315px;
+  height: 750px;
+  width: 420px;
 }
 
 #home-page p {
@@ -224,8 +224,8 @@ html, body {
 
 #leaderboard {
   position: fixed;
-  top: calc(605px/2);
-  right: calc(-315px/2);
+  top: calc(750px/2);
+  right: calc(-240px);
   opacity: 0.9;
 }
 
