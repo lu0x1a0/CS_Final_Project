@@ -414,9 +414,10 @@ function newConnection(socket) {
     // called when clientside initiated disconnect
     socket.on("disconnect", (reason) => {
         var id = socket.id
-        delete players[id]
-
-        monitorstatistics['numships'] -= 1
+        if (players[id]){
+            delete players[id]
+            monitorstatistics['numships'] -= 1    
+        }
       }
     )
 }
