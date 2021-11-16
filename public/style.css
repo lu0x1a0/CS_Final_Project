@@ -99,7 +99,7 @@ html, body {
 
 .leaderboardText {
   position: fixed;
-  top: 150px;
+  top: 125px;
   left: 40%;
   -ms-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
@@ -130,7 +130,7 @@ html, body {
 
 .boostsText {
   position: fixed;
-  top: 370px;
+  top: 400px;
   left: 35%;
   -ms-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
@@ -141,7 +141,7 @@ html, body {
 
 .goldText {
   position: fixed;
-  top: 540px;
+  top: 570px;
   left: 35%;
   -ms-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
