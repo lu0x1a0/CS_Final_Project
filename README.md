@@ -7,6 +7,7 @@ Note: Also Need to install virtualbox extension pack to allow copy paste of gith
 
 #### Unpack the project source code
 > git clone https://github.com/unsw-cse-comp3900-9900-21T3/capstone-project-3900-t16a-wearefromthesametutorial.git
+
 Or just unzip the project.zip folder
 
 #### If on virtual machine, run the following to setup node.js
