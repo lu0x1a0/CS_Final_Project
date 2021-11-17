@@ -99,4 +99,9 @@ wk9 - 08-14/Nov
         - Forbid cannonball to cause self damage to player and made
           the starting position closer
         - Added invincibility armour backend and refactored start up invince into it.
-    
+wk10 - 
+    16/Nov
+
+    - Final project preparations
+    - Final project demo
+    - added screenshots and completed APA reference in report
