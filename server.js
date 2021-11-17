@@ -126,12 +126,16 @@ function Initialise() {
 // Call below when we make changes to map files
 // Initialise()
 
+//Now all we have to do is
+var AllFileNames = ['MapHuge', 'MapSquare', 'MapPiers', 'MapRocky', 'MapTiny']
+
 let pathstr = "path.json"
 let coststr = "cost.json"
 let otherstr = "other.json"
 
 let fs = require('fs')
 let MapFiles = 'MapHuge'
+
 if (args[3]) {
   if ((args[3] == 'MapHuge') ||(args[3] == 'MapTiny') || (args[3] == 'MapSquare') || (args[3] == 'MapPiers') || (args[3] == 'MapRocky')) {
     MapFiles = args[3]

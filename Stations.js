@@ -24,7 +24,6 @@ class StationList {
     }
 
 
-
     fire_all(players) {
 
         var new_cannonballs = {}
