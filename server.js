@@ -110,14 +110,16 @@ function Initialise() {
     let gamemap2 = new GameMap(Maps.MapRocky)
     let gamemap3 = new GameMap(Maps.MapPiers)
     let gamemap4 = new GameMap(Maps.MapHuge)
+    let gamemap5 = new GameMap(Maps.MapTiny)
 
-    Path.Generation(gamemap1.map, "MapSquare")
-    Path.Generation(gamemap2.map, "MapRocky")
-    Path.Generation(gamemap3.map, "MapPiers")
-    Path.Generation(gamemap4.map, "MapHuge")
+    // Path.Generation(gamemap1.map, "MapSquare")
+    // Path.Generation(gamemap2.map, "MapRocky")
+    // Path.Generation(gamemap3.map, "MapPiers")
+    // Path.Generation(gamemap4.map, "MapHuge")
+    Path.Generation(gamemap5.map, "MapTiny")
 }
 
-//Initialise()
+Initialise()
 
 let pathstr = "path.json"
 let coststr = "cost.json"
@@ -126,7 +128,7 @@ let otherstr = "other.json"
 let fs = require('fs')
 let MapFiles = 'MapHuge'
 if (args[3]) {
-  if ((args[3] == 'MapHuge') || (args[3] == 'MapSquare') || (args[3] == 'MapPiers') || (args[3] == 'MapRocky')) {
+  if ((args[3] == 'MapHuge') ||(args[3] == 'MapTiny') || (args[3] == 'MapSquare') || (args[3] == 'MapPiers') || (args[3] == 'MapRocky')) {
     MapFiles = args[3]
   } else {
     MapFiles = 'MapHuge'
@@ -142,6 +144,8 @@ if (MapFiles == 'MapHuge') {
     var gamemap = new GameMap(Maps.MapPiers)
 } else if (MapFiles == 'MapRocky') {
     var gamemap = new GameMap(Maps.MapRocky)
+} else if (MapFiles == 'MapTiny') {
+    var gamemap = new GameMap(Maps.MapTiny)
 }
 
 let paths;
