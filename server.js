@@ -112,14 +112,14 @@ function Initialise() {
     let gamemap4 = new GameMap(Maps.MapHuge)
     let gamemap5 = new GameMap(Maps.MapTiny)
 
-    // Path.Generation(gamemap1.map, "MapSquare")
-    // Path.Generation(gamemap2.map, "MapRocky")
-    // Path.Generation(gamemap3.map, "MapPiers")
-    // Path.Generation(gamemap4.map, "MapHuge")
+    Path.Generation(gamemap1.map, "MapSquare")
+    Path.Generation(gamemap2.map, "MapRocky")
+    Path.Generation(gamemap3.map, "MapPiers")
+    Path.Generation(gamemap4.map, "MapHuge")
     Path.Generation(gamemap5.map, "MapTiny")
 }
 
-Initialise()
+//Initialise()
 
 let pathstr = "path.json"
 let coststr = "cost.json"
