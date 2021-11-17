@@ -7,6 +7,8 @@ const BotEntity = require('./Bot.js')
 const CONST = require('./Constants.js').CONST
 const Maps = require('./MapFiles.js').Maps
 const HealthObserver = require('./HealthObserver.js').HealthObserver
+const GameMap = require("./GameMap.js").GameMap
+const EventManager = require("./EventManager.js").EventManager
 const nameGenerator = require('./nameGenerator')
 const Path = require('./ShortestPath.js')
 
@@ -28,6 +30,9 @@ if (args[2]) {
 //process.env.PORT is used for heroku to connect when running locally use LocalHost:5000
 //8080 for google
 
+
+//------------------------------ SOCKET SETUP -------------------------------//
+
 var express = require("express")
 //import express from 'express'
 var app = express()
@@ -43,7 +48,7 @@ io.sockets.on('connection',newConnection)
 
 //------------------------------ BACKEND SETUP -------------------------------//
 
-// Initialize GameMap -- MAP SELECTION NOT IMPLEMENTED
+// Initialize GameMap
 function reviver(key, value) {
     if(typeof value === 'object' && value !== null) {
       if (value.dataType === 'Map') {
@@ -103,7 +108,6 @@ function Parse(data) {
     return [path, cost, tupleValx, index, ForbiddenValsx]
 }
 
-const GameMap = require("./GameMap.js").GameMap
 
 function Initialise() {
     let gamemap1 = new GameMap(Maps.MapSquare)
@@ -119,7 +123,8 @@ function Initialise() {
     Path.Generation(gamemap5.map, "MapTiny")
 }
 
-//Initialise()
+// Call below when we make changes to map files
+// Initialise()
 
 let pathstr = "path.json"
 let coststr = "cost.json"
@@ -134,8 +139,8 @@ if (args[3]) {
     MapFiles = 'MapHuge'
   }
 }
- //Just have to change this now
 
+// Map switch
 if (MapFiles == 'MapHuge') {
     var gamemap = new GameMap(Maps.MapHuge)
 } else if (MapFiles == 'MapSquare') {
@@ -186,7 +191,6 @@ if (MapFiles == 'MapHuge') {
 }
 
 // Initialize EventManager
-const EventManager = require("./EventManager.js").EventManager
 var eventmanager = new EventManager()
 
 // List of all players and bots connected to the server
@@ -197,6 +201,8 @@ var healthobserver = new HealthObserver(players, io, monitorstatistics,gamemap)/
 
 //------------------------------ JSON HELPER FUNCTIONS -------------------------------//
 const {playerslocjson,projectileslocjson} = require("./utils.js")
+
+
 
 
 //------------------------------ SERVER EVENTS -------------------------------//
@@ -230,9 +236,9 @@ function heartbeat() {
     }
     gamemap.stationlist.repair()
 
-    // loop through players and update their velocity, position and fishing status
+    // Update players based on server events
     for (var i in players){
-        // checks that players[i] is not removed from the object by previous damages
+        // Checks that players[i] is not removed from the object by previous damages
         if (players[i]){
             var player = players[i]
             players[i].updateTreasure(gamemap, eventmanager)
@@ -243,23 +249,25 @@ function heartbeat() {
         }
     }
 
-    // populate the map when number of players are low.
+    // Populate the map when number of players are low.
     while (monitorstatistics['numships'] < gamemap.min_players) {
         InitialiseBot(gamemap)
     }
 
-    // parse projectile movements and deal the correspond damage when necessary
+    // Projectile update loop
     for (var key in projectiles) {
         if (projectiles.hasOwnProperty(key)) {
+
             projectiles[key].update()
+            
             if (projectiles[key].done){
-                //projectiles.splice(key,1)
+                // Completed projectiles
                 delete projectiles[key]
                 continue
-            }else{
+            } else{
+                // Incomplete - must check collisions
                 hit = projectiles[key].contactcheck(players, gamemap.turretlist.turret_array, gamemap.stationlist.station_array)
                 if (projectiles[key].done){
-                    //projectiles.splice(key,1)
                     if (key[0] == 'h') {
                         hit.heal(CONST.STATION_HEAL, eventmanager)
                     } else {
@@ -275,16 +283,16 @@ function heartbeat() {
     // Refresh treasure
     gamemap.try_add_treasure()
 
+
     let BotCannonBalls = BotEntity.Bot.getCannonBalls()
     for (let id in BotCannonBalls) {
         projectiles[id+(new Date()).getTime()] = BotCannonBalls[id]
         eventmanager.add_sound("cannon_fire", BotCannonBalls[id].pos)
     }
-
     BotEntity.Bot.ResetCannonBalls()
 
-    // Data we send to front end
 
+    // Send data to front end
     io.sockets.emit('heartbeat', {
         t:Date.now(),
         players:playerslocjson(players),
@@ -296,10 +304,9 @@ function heartbeat() {
         soundlist:eventmanager.pop_sounds(),
         animationlist:eventmanager.pop_animations(),
     })
-
 }
 
-// add bot ship to the game
+// Function to add bot ship to the game
 botIdx = 0
 function InitialiseBot(gamemap) {
     //What sort of data do the bots have?
@@ -315,23 +322,23 @@ function InitialiseBot(gamemap) {
 
 
 
-// RUNS WHEN A NEW CONNECTION/webpage JOINS
+// Runs when a new connection joins
 function newConnection(socket) {
 
     // Generate a new player and add them to the list of players when first connecting
-    // Also send gamemap
+    // Also send gamemap information
     socket.on('start',
         function(data) {
 
+            // Username generation
             if (data.username == '') {
               data.username = nameGenerator.name()
             }
 
+            // Creating player
             var position = gamemap.get_spawn()
             var player = new entities.Player(socket.id, data.username, position.x, position.y, 0, healthobserver)
-            //players.push(player)
             players[player.id] = player
-
             monitorstatistics['numships'] += 1
 
             // Send gamemap and player spawn on start
@@ -350,11 +357,10 @@ function newConnection(socket) {
         }
     )
 
-    //finds the player in the list of players and updates them based on new information sent from the client
+    // Reading player inputs
     socket.on('updatepressed',
         function(data) {
             var player
-
 
             player = players[socket.id]
             if (player) {
@@ -379,7 +385,7 @@ function newConnection(socket) {
                     cannonball = player.fire(data.targetX,data.targetY)
                     eventmanager.add_sound("cannon_fire", player.pos)
                     if (cannonball){
-                        // use playerid+current time stamp as id, might not safe from server attack with spamming io
+                        // use 'p'+playerid+current time stamp as id (perhaps not safe from server attack)
                         projectiles['p'+player.id+(new Date()).getTime()] = cannonball
                     }
                     player.SpaceCounter = 0
@@ -389,16 +395,13 @@ function newConnection(socket) {
             }
         }
     )
-    // change acceleration to zero when the player released wasd if they
-    //  arnt already accelerating in opposite direction
+
+    // Change acceleration to zero when the player released wasd if they
+    //  aren't already accelerating in opposite direction
     socket.on('updatereleased',
         function(data){
             var player
-            //for (var i = 0; i < players.length; i++ ) {
-            //    if (socket.id == players[i].id) {
-            //        player = players[i]
-            //    }
-            //}
+
             player = players[socket.id]
             if (player){
                 if ((data.releasedkeycode === K_W && player.yacc<0) ||
