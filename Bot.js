@@ -1,6 +1,5 @@
 const entities = require('./Player.js')
 const mag = require("./utils.js").mag
-const addVec = require("./utils.js").addVec
 const setMag = require("./utils.js").setMag
 
 //const Cannonball = require('./entities.js').Cannonball
@@ -9,35 +8,11 @@ const setMag = require("./utils.js").setMag
 const CONST = require('./Constants.js').CONST
 const sin = Math.sin
 const cos = Math.cos
-const sqrt = Math.sqrt
 
 /*
-    A couple of things we need to add are:
-    Multiple Escape Pivots which helps the bot
-    choose where to go when escaping.
-
-    Hovering Pivot when a bot wants to explore/hover
-    around some safe area when there are no nearby
-    bots around as moving to another point may
-    mean the escape algorithm is redundant. Hover Pivots
-    maybe around an escape pivot too, and hovering pivots
-    are only formed when
-
-    When the bot is hovering, it should have a hovering speed
-    as to not stuff up the animations, since it won't be
-    going at full speed in that area.
-
-    Escape Radial Length. The nearest player must be within
-    a specific magnitude from the bot, for it to trigger
-    the escape algorithm. If it is within a safe space why
-    should it move that specific area?
-
-    To do:
-    Implement Bot Radius, if player is still following bot
-    and player is stil within bots radius and bot arrives to
-    the random pivot then the escape pivots will also update,
-    so the bot can go to its new position.
+    Just some simple helper functions here
 */
+
 function CreateVec(a,b) {
     let result = [];
     for (let i=0; i<a.length; i++) {
@@ -75,24 +50,21 @@ function MapY(y,tilesize) {
     return Math.floor(y/tilesize)
 }
 
+//This Shuffles an array, used for BFS-wise edge generation
 function shuffle(array) {
-    let currentIndex = array.length,  randomIndex;
-
-    // While there remain elements to shuffle...
-    while (currentIndex != 0) {
-
-        // Pick a remaining element...
-        randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex--;
-
-        // And swap it with the current element.
-        [array[currentIndex], array[randomIndex]] = [
-        array[randomIndex], array[currentIndex]];
+    let curr = array.length;
+    let rand; 
+    // While there are elems to reshuffle.
+    while (curr != 0) {
+        // Pick rand remaning element
+        rand = Math.floor(Math.random() * curr);
+        curr--;
+        // swap with curr
+        [array[curr], array[rand]] = [
+        array[rand], array[curr]];
     }
-
     return array;
 }
-
 
 class Bot extends entities.Player {
     constructor(id,username, x, y, dir, healthobserver) {
@@ -124,6 +96,7 @@ class Bot extends entities.Player {
         Bot.CannonBalls = {}
     }
 
+    // Increment EscapePivTicks, so we can update pivots on intervals.
     EscapeTick(Gmap, forbidden) {
         this.EscapePivTicks++;
         if (this.EscapePivTicks >= CONST.BOT_ESCAPEPIVOT_UPDATE) {
@@ -132,6 +105,7 @@ class Bot extends entities.Player {
         }
     }
 
+    //Increment ShootingTicks, so we can shoot cannonballs on intervals.
     ShootingTick() {
         if (!this.shoot) {
             this.ShootingTicks += 1
@@ -142,6 +116,7 @@ class Bot extends entities.Player {
         }
     }
 
+    //Override entities update and call updateBot
     update(players,soundmanager,paths,costs,tupleval,index,Gmap, forbidden) {
         // Called on every heartbeat
         //check whether to remove effect
@@ -168,6 +143,7 @@ class Bot extends entities.Player {
         this.collisionCheck(players,soundmanager)
     };
 
+    //generate an array of players for easier use.
     PlayersList(players) {
         let newplayers = []
         for (let i in players){
@@ -177,20 +153,15 @@ class Bot extends entities.Player {
         }
         return newplayers
     }
+    
     /*
-        How should update treasure work?
-        1. It will increment via the entity functions. UpdateTreasure() will be called in regards to bot.
-        2. In Bot File we will need to code up how it recognises that it is on the treasure, using this.onTreasure
-        3. GoToTreasure() function will essentially keep going towards the nearest treasure until its matrix coordinates align.
-           If it does then this.SpacePressed and this.OnTreasure is true.
-        4. this.SpaceCount will increment according to the UpdateTreasure() function.
-        5. However, in any place the bot decides to move or shoot, which is specificallly
-            in DecisionHandler() , this.SpacePressed and this.OnTreasure will be false.
-            in Shooting(), this.SpacePressed will also be false.
+        An Escape algorithm which decides where to go based on maximising angles. 
+        A Pivot is a randomly generated point. As running away from a player does NOT
+        have a CONVEX solution, by introducing pivots we avoid that problem. 
+        Relatively lightweight solution, whereby the BOT has the location of the nearest player
+        and it chooses the pivot whereby the angle formed when you have a line from the nearest player
+        and the bot and the random pivot and the bot, is maximised out of those random pivots. 
     */
-
-
-
     Escape(Gmap,min) {
         //Runs away from the nearest if and only if
         //Generate all angles
@@ -247,6 +218,13 @@ class Bot extends entities.Player {
         return min
     }
 
+    //Generate coordinates for where my pivot points will be, note that they will try to not be near turrets. 
+    /*
+    Even if the map is P% bad points and (1-P)% good points, the probability of choosing bad points more then 
+    n times before reaching a good point will ultimately converge as n gets larger anyway, and P won't be 
+    above 60-70%, assuming p = 0.7, the probability that we choose bad points 3 times in a row is 0.343.
+    Also, consider that we only generate_coords after certain X ticks.
+    */
     generate_coords(Xmin,Xmax,Ymin,Ymax,Gmap,forbidden) {
         let randx = RandInterval(Xmin, Xmax);
         let randy = RandInterval(Ymin,Ymax)
@@ -258,8 +236,8 @@ class Bot extends entities.Player {
         return [randx, randy]
     }
 
+    //Pivot Generation, 1 Pivot is generated for each equal quarter subsection of the map. 
     GeneratePivots(Gmap, forbidden) {
-
         this.topright = this.generate_coords(this.XBoundary+1, 2*this.XBoundary-1,0,this.YBoundary,Gmap, forbidden)
         this.topleft = this.generate_coords(0,this.XBoundary,0,this.YBoundary,Gmap, forbidden)
         this.bottomleft = this.generate_coords(0,this.XBoundary,this.YBoundary+1,2*this.YBoundary-1,Gmap, forbidden)
@@ -268,17 +246,9 @@ class Bot extends entities.Player {
         this.RandomPivots.push(this.topleft)
         this.RandomPivots.push(this.bottomleft)
         this.RandomPivots.push(this.bottomright)
-
-
-        /*
-        this.RandomPivots.push(this.generate_coords(this.XBoundary+1, 2*this.XBoundary-1,0,this.YBoundary,Gmap))
-        this.RandomPivots.push(this.generate_coords(0,this.XBoundary,0,this.YBoundary,Gmap))
-        this.RandomPivots.push(this.generate_coords(0,this.XBoundary,this.YBoundary+1,2*this.YBoundary-1,Gmap))
-        this.RandomPivots.push(this.generate_coords(this.XBoundary+1,2*this.XBoundary-1,this.YBoundary+1,2*this.YBoundary-1,Gmap))
-        */
-        //update this.RandomPivots if we want to add more random points throughout the graph
     }
 
+    //Shooting Cannonball.
     Shooting(x,y) {
         if (this.shoot) {
             this.updateSpacePressed = false
@@ -292,28 +262,8 @@ class Bot extends entities.Player {
             this.shoot = false;
         }
     }
-    /*
-    Conditions
-        UpdateBot explanation
-        1. Check if there are no other ships in the map.
-           If there isnt check if you are onTreasure, if not GoToTreasure().
 
-        2. Check if you are onTreasure().
-
-        Find NEAREST PLAYER.
-
-        3. Check if the nearest player is within X distance from you, if not GoToTreasure()
-
-        3. Check if my health is below a certain threshold, if it is and the nearest player is within my danger or escape radius zone
-           if it is I run away to a random pivot.
-
-        4. Check if my health is below another certain threshold, if the nearest player is within my shoot radius then I maintain a certain
-           distance from that player yet I make sure to shoot at that player.
-
-        5. Check if my health is above a certain threshold, be very aggressive and go to the nearest player. Shoot and Ram them.
-
-    */
-    //Gives the coordinate of the nearest treasure
+    //Gives the player who's nearest to the bot location.
     NearestPlayerObj(newplayers,costs,tupleval,from,tilesize) {
         let x = MapX(newplayers[0].pos.x,tilesize)
         let y = MapY(newplayers[0].pos.y,tilesize)
@@ -330,6 +280,7 @@ class Bot extends entities.Player {
         return player
     }
 
+    //Handles decisions where bot decides to go for the treasure objective.
     GoToTreasure(paths,costs,tupleval,index,Gmap,from) {
         let treasure = this.NearestTreasure(costs,tupleval,from,Gmap)
         //Check if treasure is in the same coordinate as bot
@@ -345,12 +296,15 @@ class Bot extends entities.Player {
             this.vel.x = 0
             this.vel.y = 0
             return //Dont need to do anything if we are already here.
-        } //else if we are not we keep going to the same place
-        let indx = index.get(paths[tupleval.get([treasure.x,treasure.y])][tupleval.get(from)])
-        this.DecisionHandler(from, indx, Gmap.map)
+        } else { //If not, we continue going to that place.
+            let min = [treasure.x, treasure.y]
+            let indx = index.get(paths[tupleval.get(min)][tupleval.get(from)])
+            this.DecisionHandler(from, indx, Gmap.map)
+        }
         return
     }
 
+    //Finds the Nearest Treasure near that BOT
     NearestTreasure(costs,tupleval,from,Gmap) {
         let treasure = Gmap.treasurelist.treasure_array[0]
         let x = treasure.x
@@ -367,6 +321,28 @@ class Bot extends entities.Player {
         }
         return treasure
     }
+
+    /*
+    Conditions
+        UpdateBot explanation
+        1. Check if there are no other ships in the map. 
+           If there isnt check if you are onTreasure, if not GoToTreasure().
+        
+        2. Check if you are onTreasure().
+
+        Find NEAREST PLAYER.
+
+        3. Check if the nearest player is within X distance from you, if not GoToTreasure()
+
+        4. Check if my health is below a certain threshold, if it is and the nearest player is within my danger or escape radius zone
+           if it is I run away to a random pivot.
+
+        5. Check if my health is below another certain threshold, if the nearest player is within my shoot radius then I maintain a certain
+           distance from that player yet I make sure to shoot at that player.
+        
+        6. Check if my health is above a certain threshold, be very aggressive and go to the nearest player. Shoot and Ram them. 
+
+    */
 
     updateBot(players,paths,costs,tupleval,index,Gmap) {
 
@@ -416,10 +392,11 @@ class Bot extends entities.Player {
                 this.Shooting(closestplayer.pos.x, closestplayer.pos.y)
             }
         } else {
-            if (magnitude > threshold) {
+            if (magnitude > threshold-150) {
                 let end = index.get(paths[tupleval.get(min)][tupleval.get(start)])
                 this.DecisionHandler(start, end, Gmap.map)
-            } else {
+            } 
+            else if (magnitude < threshold) {
                 this.Shooting(closestplayer.pos.x, closestplayer.pos.y)
             }
         }
@@ -462,44 +439,6 @@ class Bot extends entities.Player {
             this.dir = Math.atan2(this.vel.y,this.vel.x)
         }
     }
-
-    ComputeAdjacentVertex(V,map) {
-        var AV = [];
-
-        if (map[V[0]-1][V[1]+1] != 'L' && map[V[0]-1][V[1]+1] != 'T') {
-            AV.push([V[0]-1,V[1]+1])
-        }
-
-        if (map[V[0]-1][V[1]-1] != 'L' && map[V[0]-1][V[1]-1] != 'T') {
-            AV.push([V[0]-1,V[1]-1])
-        }
-
-        if (map[V[0]+1][V[1]+1] != 'L' && map[V[0]+1][V[1]+1] != 'T') {
-            AV.push([V[0]+1,V[1]+1])
-        }
-
-        if (map[V[0]+1][V[1]-1] != 'L' &&  map[V[0]+1][V[1]-1] != 'T') {
-            AV.push([V[0]+1,V[1]-1])
-        }
-
-        if (map[V[0]][V[1]-1] != 'L' &&  map[V[0]][V[1]-1] != 'T') {
-            AV.push([V[0],V[1]-1])
-        }
-
-        if (map[V[0]][V[1]+1] != 'L' && map[V[0]][V[1]+1] != 'T') {
-            AV.push([V[0],V[1]+1])
-        }
-
-        if (map[V[0]+1][V[1]] != 'L' && map[V[0]+1][V[1]] != 'T') {
-            AV.push([V[0]+1,V[1]])
-            }
-
-        if (map[V[0]-1][V[1]] != 'L' && map[V[0]-1][V[1]] != 'T' ) {
-            AV.push([V[0]-1,V[1]])
-        }
-        AV = shuffle(AV)
-        return AV;
-    }
 }
 
 Bot.CannonBalls = {}
@@ -507,23 +446,3 @@ Bot.CannonBalls = {}
 module.exports = {
     Bot : Bot
 }
-
-/*
-    1. Check if bot is below 40
-        If bot is below 40 check if nearest player is within its danger radius.
-            If it is go to next best action to get away from it.
-        If it isnt, then just hover (havent implemented this most likely wont now)
-
-    2. If Bot is above 40 but below 70.
-        Check if nearest player is within its firing range.
-            If player is within firing range shoot at the player (maybe implement soom randomization here)
-
-            Should the bot move ? Or should it stay stationary ? and let the next iteration handle the next move?
-
-        If it isn't keep following the player.
-
-    3. If Bot is above 70
-        Keep following player until you can ram the nearest player.
-        If you can also shoot, shoot the player too.
-
-*/
