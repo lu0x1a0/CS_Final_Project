@@ -20,6 +20,7 @@ function preload() {
 }
 
 
+// Called to initialise all media
 function setup() {
 
   frameRate(60)
@@ -30,8 +31,6 @@ function setup() {
   render.setup()
   showMainMenu()
 
-
-
   // Volume sliders
   music_slider = createSlider(0, 0.5, 0.1, 0.01)
   music_slider.position(10, 10)
@@ -39,33 +38,26 @@ function setup() {
   sfx_slider = createSlider(0, 1.0, 0.4, 0.01)
   sfx_slider.position(10, 50)
 
-
-  // // Render distance slider
-  // render_slider = createSlider(1, 20, 16, 1)
-  // render_slider.position(10, 50)
-
   // Start title theme
   render.soundrender.start_music_title()
 
-  // https://pirategametestthingy.herokuapp.com/
-  // http://localhost:5000
-  //"https://civil-glyph-331607.ts.r.appspot.com/"
+  // URL associated with the app
   var addr = window.location.href
   socket = io.connect(addr,{reconnection: false} )
 
 }
 
 
-//Is called after the button on the homepage is pressed
-//Generates a play
-//Creates a variable containing the player data and sends it to the server
+// Called after the button on the homepage is pressed
+// Generates a player
+// Sends client start signal to server
 function startGame(usernameInput) {
 
   socket.emit('start', {
     username:usernameInput,
   })
 
-  // Must receive map before beginning game
+  // On connection: receives map and state
   socket.once('client_start',
     function(newstatedata) {
 
@@ -73,9 +65,7 @@ function startGame(usernameInput) {
       render.set_id(socket.id)
       render.load_gamemap(newstatedata.gamemap)
       state.load_gamemap(newstatedata.gamemap)
-
       state.load(newstatedata)
-
 
       state.set_first_timestamp(newstatedata.t)
 
@@ -89,22 +79,15 @@ function startGame(usernameInput) {
   )
 
 
-  //Updates player list when new information is sent to the server
+  // On heartbeat: updates state
   socket.on('heartbeat', function(data) {
-
-    // Load state
     state.load(data)
-
   })
-  socket.on("disconnect", (reason) => {
-    if (reason === "io server disconnect") {
-      // the disconnection was initiated by the server, you need to reconnect manually
-      //socket.connect()
-    }
-    // else the socket will automatically try to reconnect
-  })
+  
+  // On disconnect: the socket will automatically try to reconnect
+  socket.on("disconnect", (reason) => {  })
 
-
+  // On death: death sequence
   socket.on("dead",
     function(data) {
 
@@ -125,16 +108,16 @@ function startGame(usernameInput) {
 
 
 //If the game has started draws all players on the screen
-//
 let K_W = 87
 let K_A = 65
 let K_S = 83
 let K_D = 68
 let K_Space = 32
 
-// micro version of homepage because of loop referencing
+// Homepage
 function showMainMenu(){
-  //import the values from the home page
+
+  // Import the values from the home page
   var Username = document.getElementById('username-input')
   var button = document.getElementById('play-button')
   var buttonTutorial = document.getElementById('tutorial-button')
@@ -148,8 +131,8 @@ function showMainMenu(){
   render.soundrender.start_music_title()
 
   leaderboard.classList.add('hidden')
-  //When the play button is clicked hide the homepage and generate the player with the given username
 
+  // When the play button is clicked hide the homepage and generate the player with the given username
   buttonTutorial.onclick = function() {
     playMenu.classList.add('hidden')
     tutorial.classList.remove('hidden')
@@ -160,7 +143,6 @@ function showMainMenu(){
     tutorial.classList.add('hidden')
   }
 
-
   button.onclick = function(){
       leaderboard.classList.remove('hidden')
       playMenu.classList.add('hidden')
@@ -168,7 +150,7 @@ function showMainMenu(){
   }
 }
 
-// contains statistics, charts, and retry buttons
+// Contains statistics, charts, retry buttons
 function showDeathMenu(data){
 
   var Username = document.getElementById('username-input')
@@ -197,14 +179,13 @@ function showDeathMenu(data){
   for (var i = 0; i<players.length;i++){
     if (players[i].id == socket.id){
       deathstat.innerHTML = "You came " + (i+1) +"/"+ players.length + " with "+ players[i].gold +" gold!"
-      //break;
     }
     goldlist += "<li>"+players[i].username.substring(0, 14)+": "+ players[i].gold +"</li>"
   }
   goldlist += "</ol>"
   deathstat.innerHTML += goldlist
 
-  //do charts
+  // Plotly charts
   doChart(
     "death-stat-gold",
     {
@@ -232,9 +213,7 @@ function showDeathMenu(data){
   }
 
   retry.onclick = function(){
-
-    // Clean up
-    //leaderboard.delete()
+    // Clean up on 'retry'
     gameStarted = 0
     render.soundrender.stop_music_dead()
 
@@ -244,10 +223,9 @@ function showDeathMenu(data){
     deathMenu.classList.add('hidden')
     startGame(Username.value)
   }
-  mainmenu.onclick = function(){
 
-    // Clean up
-    //leaderboard.delete()
+  mainmenu.onclick = function(){
+    // Clean up on 'main menu'
     gameStarted = 0
     dead = 0
     render.soundrender.stop_music_dead()
@@ -257,11 +235,12 @@ function showDeathMenu(data){
     showMainMenu()
   }
 }
-// takes input time statistics and produce a corresponding plotly graph
+
+// Takes input time statistics and produce a corresponding plotly graph
 function doChart(chart_id,rawdata,chart_title){
-    // plot the charts - gold
-  var xArray = rawdata.x//[50,60,70,80,90,100,110,120,130,140,150];
-  var yArray = rawdata.y//[7,8,8,9,9,9,10,11,14,14,15];
+  // Plot charts - gold
+  var xArray = rawdata.x
+  var yArray = rawdata.y
   // Define Data
   var data = [{
     x: xArray,
@@ -270,14 +249,14 @@ function doChart(chart_id,rawdata,chart_title){
   }];
   // Define Layout
   var layout = {
-    //xaxis: {range: [40, 160], title: ""},
-    //yaxis: {range: [5, 16], title: ""},
     xaxis: {showticklabels:false},
     title: chart_title
   };
   // Display using Plotly
   Plotly.newPlot(chart_id, data, layout);
 }
+
+
 function draw() {
 
   // Update volume
@@ -285,32 +264,33 @@ function draw() {
   render.soundrender.set_sfx_vol(sfx_slider.value())
 
   if (gameStarted == 1 || dead) {
+
+    // Game rendering
     render.render(state.get_state(), dead)
 
-      if (leaderBoard_update_counter >= 80) {
-        leaderBoard_update_counter = 0
-        const leaderboard_Display = document.getElementById("leaderboardDisplay")
+    // Leaderboard construction
+    if (leaderBoard_update_counter >= 80) {
+      leaderBoard_update_counter = 0
+      const leaderboard_Display = document.getElementById("leaderboardDisplay")
 
-          var players = state.get_state().playerlist
-          players.sort(function (x, y) {
-            return y.gold - x.gold
-          })
+        var players = state.get_state().playerlist
+        players.sort(function (x, y) {
+          return y.gold - x.gold
+        })
 
-          var table = ""
-          for (var i = 0; i < players.length ; i++ ) {
-            if (i >= 5) { break }
-            table = table + "<tr><td>" + players[i].gold +"</td><td>" + " - "+ "</td><td>" + players[i].username.substring(0, 18) + "</td></tr>"
-          }
-          leaderboard_Display.innerHTML = table
-        } else {
-          leaderBoard_update_counter++;
+        var table = ""
+        for (var i = 0; i < players.length ; i++ ) {
+          if (i >= 5) { break }
+          table = table + "<tr><td>" + players[i].gold +"</td><td>" + " - "+ "</td><td>" + players[i].username.substring(0, 18) + "</td></tr>"
         }
-  }
-  else {
-    //background(255)
+        leaderboard_Display.innerHTML = table
+      } else {
+        leaderBoard_update_counter++;
+      }
   }
 }
 
+// Emit fire on click
 function mouseClicked() {
   if(gameStarted){
     var data = {
@@ -319,12 +299,12 @@ function mouseClicked() {
       targetY:mouseY - height / 2,
     }
     socket.emit('updatepressed',data)
-    //player.tryfire()
   }
 }
+
+// Emit keypress
 function keyPressed(){
   if(gameStarted){
-    //if (keyCode === K_Space){
     if(keyIsDown(K_W) || keyIsDown(K_A) || keyIsDown(K_S) || keyIsDown(K_D) || keyIsDown(K_Space)){
       data = {
         pressedkeycode: keyCode
@@ -333,6 +313,8 @@ function keyPressed(){
     }
   }
 }
+
+// Emit key release
 function keyReleased(){
   if (gameStarted){
     data = {releasedkeycode:keyCode}
