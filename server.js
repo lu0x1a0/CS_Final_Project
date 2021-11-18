@@ -22,7 +22,7 @@ let K_Space = 32
 
 
 const args = process.argv;
-var PORT = process.env.PORT | 8080
+var PORT = process.env.PORT || 8080
 if (args[2]) {
     PORT = args[2]
 }
